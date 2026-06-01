@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台灣股市開盤分析 | Taiwan Market Morning Brief — 2026-06-01</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0e1a;
+    color: #e0e6f0;
+    font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  .card {
+    background: #131829;
+    border: 1px solid #1e2a45;
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    animation: fadeIn 0.4s ease;
+  }
+  .header-card {
+    background: linear-gradient(135deg, #0d1a3a 0%, #0a1628 100%);
+    border: 1px solid #1e3a6e;
+    text-align: center;
+    padding: 30px;
+  }
+  h1 { font-size: 26px; color: #5b9ef4; letter-spacing: 1px; }
+  h2 { font-size: 12px; color: #7e9cc0; font-weight: normal; margin-top: 4px; letter-spacing: 2px; text-transform: uppercase; }
+  .date-badge {
+    display: inline-block;
+    background: #1a2f55;
+    color: #5b9ef4;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #7e9cc0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #1e2a45;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title span.icon { font-size: 16px; }
+  .up { color: #00c851; }
+  .down { color: #ff4444; }
+  .neutral { color: #888; }
+  .highlight { color: #ffd700; font-weight: bold; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .metric-card {
+    background: #0d1525;
+    border-radius: 6px;
+    padding: 14px;
+    text-align: center;
+  }
+  .metric-label { font-size: 11px; color: #7e9cc0; margin-bottom: 4px; }
+  .metric-value { font-size: 20px; font-weight: 700; }
+  .metric-change { font-size: 12px; margin-top: 2px; }
+  .metric-sub { font-size: 11px; color: #555; margin-top: 2px; }
+  .highlighted-metric { border: 1px solid rgba(255, 215, 0, 0.3); background: #1a1600; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: #0d1525; color: #7e9cc0; font-size: 11px; text-transform: uppercase; padding: 8px 10px; text-align: right; }
+  th:first-child { text-align: left; }
+  td { padding: 8px 10px; border-bottom: 1px solid #1a2035; font-size: 13px; text-align: right; }
+  td:first-child { text-align: left; color: #b0c4de; font-weight: 500; }
+  tr:hover { background: #0d1a30; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+  .tag-bull { background: #003d1a; color: #00c851; }
+  .tag-bear { background: #3d0000; color: #ff4444; }
+  .tag-neut { background: #1a1a1a; color: #888; }
+  .tag-hot { background: #3d1a00; color: #ff8800; }
+  .sector-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .sector-cell {
+    padding: 10px 8px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 12px;
+  }
+  .sector-name { font-size: 11px; margin-bottom: 4px; color: #aaa; }
+  .sector-val { font-weight: bold; font-size: 13px; }
+  .gauge-container { display: flex; align-items: center; gap: 20px; }
+  .gauge-bar { flex: 1; height: 24px; border-radius: 12px; background: linear-gradient(to right, #ff4444, #888888, #00c851); position: relative; }
+  .gauge-needle { position: absolute; top: -4px; width: 4px; height: 32px; background: #ffffff; border-radius: 2px; transform: translateX(-50%); }
+  .gauge-labels { display: flex; justify-content: space-between; font-size: 11px; color: #555; margin-top: 4px; }
+  .news-item { padding: 10px 0; border-bottom: 1px solid #1a2035; }
+  .news-item:last-child { border-bottom: none; }
+  .news-headline { font-size: 13px; margin-bottom: 4px; }
+  .taiex-highlight {
+    background: linear-gradient(135deg, #001a0d 0%, #0a1f0a 100%);
+    border: 1px solid #00c851;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+  .taiex-range { font-size: 28px; font-weight: bold; color: #00c851; }
+  .disclaimer { font-size: 11px; color: #555; line-height: 1.8; }
+  @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+    .sector-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Section 1: Header -->
+  <div class="card header-card">
+    <h1>🇹🇼 台灣股市開盤分析</h1>
+    <h2>Taiwan Market Morning Brief</h2>
+    <div class="date-badge">📅 2026年6月1日（週一）| June 1, 2026 — 08:10 TST</div>
+    <div style="margin-top:10px;font-size:12px;color:#4a6fa0;">由 Claude AI 自動生成 | Powered by Claude AI · Anthropic</div>
+  </div>
+
+  <!-- Section 2: 總覽摘要 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">📊</span>總覽摘要 Executive Summary</div>
+    <p style="font-size:14px;line-height:1.9;color:#c8d8e8;">
+      台指期夜盤（5月29日週五夜盤）收在 <strong class="up">45,069 點</strong>，較週五 TAIEX 收盤（44,732.94）高出約 <strong>336 點</strong>，暗示台股今（週一）早盤有望強勢開高。
+      美股方面，三大指數（DJIA / S&P 500 / NASDAQ）於 5 月 29 日全面收漲，
+      SOX 費城半導體指數收 <strong class="highlight">12,829</strong>，加上 TSM ADR 收 <strong class="up">$418.45</strong>（年漲 +31%），台積電個股強勢持續；
+      更有 NVIDIA CEO 黃仁勳宣佈每年在台投資 <strong>1,500 億美元</strong>，市場信心大振。
+      亞股早盤方面，日本日經 225 開盤約 <strong>65,134</strong>，韓股 KOSPI 高位震盪，整體亞股偏多同向；
+      惟 WTI 原油因美伊停火談判利多下跌 1.73%，能源類股承壓，但整體市場風險情緒正面，台股開高走強機率高。
+    </p>
+  </div>
+
+  <!-- Section 3: 台指期夜盤 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">🌙</span>台指期夜盤 TAIFEX Night Session (5/29 夜盤)</div>
+    <div class="grid-3">
+      <div class="metric-card highlighted-metric">
+        <div class="metric-label">台指期夜盤收盤</div>
+        <div class="metric-value up">45,069</div>
+        <div class="metric-change down">▼ -246 pts（vs. 開盤參考價）</div>
+        <div class="metric-sub">週五夜盤，週一開盤前最新數據</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">TAIEX 週五收盤 (5/29)</div>
+        <div class="metric-value up">44,732.94</div>
+        <div class="metric-change up">▲ +1,096.5 (+2.51%) 歷史新高</div>
+        <div class="metric-sub">成交量 1.8 兆台幣天量</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">隱含開盤估算</div>
+        <div class="metric-value up">~45,050</div>
+        <div class="metric-change up">▲ +317 vs. 上週五收盤</div>
+        <div class="metric-sub">夜盤溢價 +0.71%，方向偏多</div>
+      </div>
+    </div>
+    <p style="margin-top:12px;font-size:12px;color:#7e9cc0;">
+      ⚠️ 台指期週五盤中曾強漲 950 點，尾盤因消息反覆回落，最終收 45,069；整體仍守 45,000 之上，方向偏多。
+    </p>
+  </div>
+
+  <!-- Section 4: 美股收盤 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">🇺🇸</span>美股收盤 US Markets Close (May 29, 2026)</div>
+    <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+      <div class="metric-card">
+        <div class="metric-label">DJIA 道瓊</div>
+        <div class="metric-value up">51,032</div>
+        <div class="metric-change up">▲ +363 (+0.72%)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">S&amp;P 500</div>
+        <div class="metric-value up">7,580.06</div>
+        <div class="metric-change up">▲ +0.22%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">NASDAQ</div>
+        <div class="metric-value up">26,972.62</div>
+        <div class="metric-change up">▲ +0.20%</div>
+      </div>
+      <div class="metric-card highlighted-metric">
+        <div class="metric-label">⭐ SOX 費半</div>
+        <div class="metric-value highlight">12,829.38</div>
+        <div class="metric-change up">半導體主升段</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Russell 2000</div>
+        <div class="metric-value down">2,919.34</div>
+        <div class="metric-change down">▼ -17.23 (-0.59%)</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:#7e9cc0;">
+      📈 5月全月表現：NASDAQ +8.0% | S&amp;P 500 +5.0% | DJIA +3.0% — 科技領漲，月線全面強勢收紅
+    </div>
+  </div>
+
+  <!-- Section 5: 台灣 ADR -->
+  <div class="card">
+    <div class="section-title"><span class="icon">🏭</span>台灣 ADR Taiwan ADRs (May 29, 2026 Close)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>ADR 代碼</th>
+          <th>台股代號</th>
+          <th>公司</th>
+          <th>收盤 (USD)</th>
+          <th>漲跌 / 備注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="highlight">TSM ⭐</span></td>
+          <td>2330</td>
+          <td>台積電 TSMC</td>
+          <td class="up">$418.45</td>
+          <td class="up">YTD +31% | 盤中觸 $427.96 新高 | NVDA投資利多</td>
+        </tr>
+        <tr>
+          <td>UMC</td>
+          <td>2303</td>
+          <td>聯電 United Micro</td>
+          <td class="neutral">$22.68</td>
+          <td class="neutral">—</td>
+        </tr>
+        <tr>
+          <td>ASX</td>
+          <td>3711</td>
+          <td>日月光 ASE Tech</td>
+          <td class="neutral">$32.00</td>
+          <td class="neutral">AI 封裝需求穩定</td>
+        </tr>
+        <tr>
+          <td>HIMX</td>
+          <td>3072</td>
+          <td>奇景光電 Himax</td>
+          <td class="up">$20.58</td>
+          <td class="neutral">—</td>
+        </tr>
+        <tr>
+          <td>CHT</td>
+          <td>2412</td>
+          <td>中華電信 Chunghwa Tel</td>
+          <td class="neutral">~$43.34</td>
+          <td class="neutral">近期估算（5月初數據）</td>
+        </tr>
+        <tr>
+          <td>AUOTY</td>
+          <td>2409</td>
+          <td>友達 AUO Corp</td>
+          <td class="neutral">數據暫不可用</td>
+          <td class="neutral">—</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;font-size:11px;color:#555;">
+      TSM 現金股利 $0.955，除息日 2026/6/11。| TSMC 因 Nvidia 宣佈每年 $1,500 億美元投資台灣而強勢領漲。
+    </div>
+  </div>
+
+  <!-- Section 6: 日韓早盤 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">🌏</span>日韓早盤 Asia Open Snapshot (~08:10 TST)</div>
+    <div class="grid-4">
+      <div class="metric-card">
+        <div class="metric-label">日經 Nikkei 225</div>
+        <div class="metric-value up">65,134</div>
+        <div class="metric-change up">早盤開高</div>
+        <div class="metric-sub">上週曾突破 66,000 新高</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">TOPIX</div>
+        <div class="metric-value up">~3,957</div>
+        <div class="metric-change neutral">前收盤估算</div>
+        <div class="metric-sub">廣基指數，與日經同向</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">KOSPI</div>
+        <div class="metric-value neutral">~6,750</div>
+        <div class="metric-change neutral">高位震盪</div>
+        <div class="metric-sub">過熱疑慮壓制多頭</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">KOSDAQ</div>
+        <div class="metric-value neutral">~1,112</div>
+        <div class="metric-change neutral">小型股指數</div>
+        <div class="metric-sub">—</div>
+      </div>
+    </div>
+    <p style="margin-top:12px;font-size:13px;color:#c8d8e8;">
+      📌 <strong>亞股解讀：</strong>日韓早盤整體偏多同向，日本 Nikkei 維持 65,000 之上，顯示亞股對美股5月強勢漲幅消化良好。
+      韓股 KOSPI 雖維持高位，但受「過熱」疑慮輕微壓制，短線可能震盪整理。
+      整體亞股方向偏多，對台股今日開盤具正面助力。
+    </p>
+  </div>
+
+  <!-- Section 7: 恐慌指數與債市 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">📉</span>恐慌指數與債市 Fear &amp; Fixed Income</div>
+    <div class="grid-3">
+      <div class="metric-card">
+        <div class="metric-label">VIX 恐慌指數</div>
+        <div class="metric-value up">15.32</div>
+        <div class="metric-change up">▼ -0.42 (-2.67%) 恐慌下降</div>
+        <div class="metric-sub">低波動，市場情緒穩健</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">美國 10Y 公債殖利率</div>
+        <div class="metric-value neutral">4.45%</div>
+        <div class="metric-change neutral">2Y: 3.98%</div>
+        <div class="metric-sub">利差正常，債市穩定</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">WTI 原油（美元/桶）</div>
+        <div class="metric-value down">$87.36</div>
+        <div class="metric-change down">▼ -1.73% 美伊停火衝擊</div>
+        <div class="metric-sub">5月累跌 16.2%，能源承壓</div>
+      </div>
+    </div>
+    <p style="margin-top:10px;font-size:12px;color:#7e9cc0;">
+      VIX 維持 15 以下低位，市場對短線風險評估溫和；美債殖利率 4.45% 暫無大幅反彈壓力，有利科技股估值維持。
+    </p>
+  </div>
+
+  <!-- Section 8: 匯率 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">💱</span>匯率 Exchange Rate</div>
+    <div class="grid-3">
+      <div class="metric-card highlighted-metric">
+        <div class="metric-label">USD / TWD 美元兌台幣</div>
+        <div class="metric-value neutral">31.430</div>
+        <div class="metric-change neutral">前收 31.397 | 日內區間 31.396–31.499</div>
+        <div class="metric-sub">2026年均值約 31.642 TWD</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">2026 台幣走勢</div>
+        <div class="metric-value neutral">偏強</div>
+        <div class="metric-change neutral">外資買超台股支撐</div>
+        <div class="metric-sub">AI/半導體資金持續流入</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">匯率對台股影響</div>
+        <div class="metric-value neutral">中性偏正</div>
+        <div class="metric-change neutral">台幣升值利電子業</div>
+        <div class="metric-sub">進口原料成本降低</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 9: 類股熱力圖 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">🔥</span>美股類股熱力圖 US Sector Heat Map (May 29)</div>
+    <div class="sector-grid">
+      <div class="sector-cell" style="background:#003d1a;">
+        <div class="sector-name">科技 Technology</div>
+        <div class="sector-val up">▲ 強漲</div>
+      </div>
+      <div class="sector-cell" style="background:#002d10;">
+        <div class="sector-name">半導體 Semis</div>
+        <div class="sector-val up highlight">▲ SOX 主升</div>
+      </div>
+      <div class="sector-cell" style="background:#001a08;">
+        <div class="sector-name">AI / 雲端 Cloud</div>
+        <div class="sector-val up">▲ NVDA帶動</div>
+      </div>
+      <div class="sector-cell" style="background:#002510;">
+        <div class="sector-name">軟體 Software</div>
+        <div class="sector-val up">▲ MSFT +5.45%</div>
+      </div>
+      <div class="sector-cell" style="background:#3d0000;">
+        <div class="sector-name">能源 Energy</div>
+        <div class="sector-val down">▼ 油價-1.73%</div>
+      </div>
+      <div class="sector-cell" style="background:#1a1500;">
+        <div class="sector-name">金融 Financials</div>
+        <div class="sector-val neutral">→ 中性</div>
+      </div>
+      <div class="sector-cell" style="background:#1a0d00;">
+        <div class="sector-name">消費 Consumer</div>
+        <div class="sector-val down">▼ WMT -2.6%</div>
+      </div>
+      <div class="sector-cell" style="background:#1a0a0a;">
+        <div class="sector-name">醫療 Healthcare</div>
+        <div class="sector-val down">▼ JNJ -2.4%</div>
+      </div>
+      <div class="sector-cell" style="background:#001510;">
+        <div class="sector-name">通訊 Telecom</div>
+        <div class="sector-val neutral">→ 小幅收漲</div>
+      </div>
+      <div class="sector-cell" style="background:#0d1010;">
+        <div class="sector-name">工業 Industrials</div>
+        <div class="sector-val neutral">→ 持平</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 10: 台股關鍵個股 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">🏗️</span>台股關鍵個股 Taiwan Key Stocks Watch</div>
+    <table>
+      <thead>
+        <tr>
+          <th>代號</th>
+          <th>公司名稱</th>
+          <th>ADR / 近期表現</th>
+          <th>本週開盤展望</th>
+          <th>重要催化劑</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="highlight">2330</span></td>
+          <td>台積電 TSMC</td>
+          <td class="up">TSM $418.45 (+31% YTD)</td>
+          <td><span class="tag tag-bull">強勢偏多</span></td>
+          <td>Nvidia $1,500億/年投台 | 3nm漲價15% | 除息 6/11</td>
+        </tr>
+        <tr>
+          <td>2317</td>
+          <td>鴻海 Foxconn</td>
+          <td class="neutral">—</td>
+          <td><span class="tag tag-bull">AI伺服器受惠</span></td>
+          <td>AI伺服器出貨強勁，COMPUTEX週受矚目</td>
+        </tr>
+        <tr>
+          <td>2454</td>
+          <td>聯發科 MediaTek</td>
+          <td class="neutral">—</td>
+          <td><span class="tag tag-neut">觀望整理</span></td>
+          <td>終端需求復甦觀察 | TSMC漲價3nm影響評估</td>
+        </tr>
+        <tr>
+          <td>3711</td>
+          <td>日月光 ASE Tech</td>
+          <td class="neutral">ASX $32.00</td>
+          <td><span class="tag tag-bull">封裝需求強</span></td>
+          <td>AI CoWoS先進封裝需求持續，AI半導體上游受惠</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;font-size:11px;color:#555;">注：台股個股確切收盤價以TAIEX官方數據為準；本表以ADR、夜盤及產業趨勢為主要參考依據。</div>
+  </div>
+
+  <!-- Section 11: 今日重點新聞 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">📰</span>今日重點新聞 Key News Headlines</div>
+
+    <div class="news-item">
+      <div class="news-headline">🟢 <strong>Nvidia CEO 黃仁勳宣佈每年在台投資約 1,500 億美元</strong></div>
+      <p style="font-size:12px;color:#7e9cc0;margin-top:4px;">直接推升 TSM ADR 至 $427.96（+3.8%），創52週新高。TSMC 作為 AI 製造核心受惠明確，長期利多效應尚未完全消化。</p>
+      <span class="tag tag-bull">強勢利多 ⭐</span>
+    </div>
+
+    <div class="news-item">
+      <div class="news-headline">🟢 <strong>台灣超越印度成全球第五大股市（市值達 $4.95 兆美元）</strong></div>
+      <p style="font-size:12px;color:#7e9cc0;margin-top:4px;">由 TSMC 年漲 31% 帶動，台灣資本市場國際地位大幅提升，持續吸引外資配置。</p>
+      <span class="tag tag-bull">長期正面</span>
+    </div>
+
+    <div class="news-item">
+      <div class="news-headline">🟢 <strong>Intel CEO Lip-Bu Tan 本週訪台，COMPUTEX 主題演講定於 6/2</strong></div>
+      <p style="font-size:12px;color:#7e9cc0;margin-top:4px;">Intel 與 TSMC 合作洽商，COMPUTEX 展週（6/1–6/6）帶動半導體供應鏈相關個股持續受到關注。</p>
+      <span class="tag tag-bull">短期催化</span>
+    </div>
+
+    <div class="news-item">
+      <div class="news-headline">🟡 <strong>TSMC 擬調漲 3nm 製程報價最多 15%（2026 下半年起）</strong></div>
+      <p style="font-size:12px;color:#7e9cc0;margin-top:4px;">漲價有利台積電毛利率，但下游設計廠（聯發科等）成本壓力增加，分析師評估分化。</p>
+      <span class="tag tag-hot">雙面刃</span>
+    </div>
+
+    <div class="news-item">
+      <div class="news-headline">🔴 <strong>美伊初步停火協議傳達成，WTI 原油跌至 $87.36（月跌 16.2%）</strong></div>
+      <p style="font-size:12px;color:#7e9cc0;margin-top:4px;">能源類股承壓，但油價下跌有助通膨降溫，對整體股市及台灣製造業成本偏正面。Trump 尚未正式簽署。</p>
+      <span class="tag tag-bear">能源利空 / 市場利多</span>
+    </div>
+  </div>
+
+  <!-- Section 12: 開盤展望 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">🎯</span>開盤展望 Opening Outlook</div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:13px;color:#7e9cc0;margin-bottom:8px;">市場情緒指標 Sentiment Gauge</p>
+        <div class="gauge-container">
+          <span style="font-size:12px;color:#ff4444;">看空</span>
+          <div class="gauge-bar" style="position:relative;">
+            <div class="gauge-needle" style="left: 70%;"></div>
+          </div>
+          <span style="font-size:12px;color:#00c851;">看多</span>
+        </div>
+        <div class="gauge-labels"><span>極度悲觀</span><span>中性</span><span>極度樂觀</span></div>
+        <p style="font-size:13px;color:#00c851;margin-top:10px;font-weight:bold;">整體偏多（Bullish ~70%）</p>
+        <div style="margin-top:12px;padding:10px;background:#0d1525;border-radius:6px;font-size:12px;color:#7e9cc0;">
+          多方因素：台指期夜盤 +336 pt | TSM ADR強 | Nvidia投資利多 | COMPUTEX週催化 | VIX低位<br>
+          空方風險：上週 TAIEX 單日暴漲 1,096pt 後技術面需消化 | Russell 2000 小幅走弱 | 能源板塊承壓
+        </div>
+      </div>
+      <div class="taiex-highlight">
+        <div style="font-size:13px;color:#7e9cc0;margin-bottom:8px;">🇹🇼 TAIEX 估算開盤區間</div>
+        <div class="taiex-range">44,900 – 45,400</div>
+        <div style="font-size:12px;color:#aaa;margin-top:12px;line-height:1.9;">
+          <span class="up">多方情境（強勢延伸）：45,200–45,400+</span><br>
+          <span class="up">基準情境（夜盤對應）：~45,050</span><br>
+          <span class="down">空方情境（獲利回吐）：44,800–45,000</span>
+        </div>
+        <div style="margin-top:12px;padding:8px;background:#002510;border-radius:4px;font-size:12px;color:#00c851;">
+          關鍵支撐：45,000 整數關口<br>
+          關鍵壓力：45,500 / 46,000
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px;padding:12px;background:#0d1525;border-radius:6px;font-size:13px;line-height:1.9;color:#c8d8e8;">
+      <strong style="color:#5b9ef4;">📋 開盤三要素綜合研判：</strong><br>
+      1. <strong class="up">台指期夜盤（最高優先）</strong>：收 45,069，高出 TAIEX 上週收盤 +336 點，多方力道明確<br>
+      2. <strong class="up">TSM ADR（關鍵優先）</strong>：$418.45（YTD +31%），Nvidia 大額投資效應持續發酵，半導體族群領漲<br>
+      3. <strong class="up">日韓早盤（重要參考）</strong>：日股 65,000+ 穩守，COMPUTEX 週（6/2 起）科技股聚焦效應持續<br>
+      <span class="tag tag-bull" style="margin-top:8px;display:inline-block;">建議策略：順勢偏多，留意 45,000 整數關口支撐，COMPUTEX 週題材股持續追蹤</span>
+    </div>
+  </div>
+
+  <!-- Section 13: 免責聲明 -->
+  <div class="card">
+    <div class="section-title"><span class="icon">⚠️</span>免責聲明 Disclaimer</div>
+    <p class="disclaimer">
+      本報告由 Claude AI 自動生成，僅供參考之用，不構成任何投資建議、買賣邀約或推介。
+      所有市場數據均來自公開網路搜尋，可能存在延遲、不完整或誤差，實際交易請以各大券商及交易所官方數據為準。
+      投資人應自行評估投資風險，本報告製作者不承擔任何因依賴本報告而產生之損失責任。
+      台灣期貨交易所（TAIFEX）、臺灣證券交易所（TWSE）及各數據來源之版權均屬原版權人所有。
+      <br><br>
+      This report is auto-generated by Claude AI for informational purposes only and does not constitute investment advice.
+      All market data is sourced from public web searches and may be delayed, incomplete, or inaccurate.
+      Please verify with official exchange data before making any trading decisions.
+      Past performance is not indicative of future results. All investments involve risk, including possible loss of principal.
+      <br><br>
+      📅 生成時間 Generated: 2026-06-01 08:10 TST &nbsp;|&nbsp; 📊 資料基準日 Data as of: May 29, 2026 (US Markets) / June 2, 2026 早盤 (Asia)
+    </p>
+  </div>
+
+</div>
+</body>
+</html>
