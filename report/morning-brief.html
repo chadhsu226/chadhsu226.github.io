@@ -6,264 +6,94 @@
   <title>台灣股市開盤分析 | Taiwan Market Morning Brief - 2026-06-02</title>
   <style>
     :root {
-      --bg-primary: #0a0e1a;
-      --bg-card: #0f1628;
-      --bg-card2: #141d35;
-      --accent-blue: #1a2a5e;
-      --green: #00c851;
-      --red: #ff4444;
-      --neutral: #888;
-      --text-primary: #e8edf5;
-      --text-secondary: #a0aec0;
-      --gold: #fbbf24;
-      --purple: #a78bfa;
-      --cyan: #22d3ee;
+      --bg-primary: #0a0e1a; --bg-card: #0f1628; --bg-card2: #141d35;
+      --green: #00c851; --red: #ff4444; --neutral: #888;
+      --text-primary: #e8edf5; --text-secondary: #a0aec0;
+      --gold: #fbbf24; --cyan: #22d3ee;
       --border: rgba(255,255,255,0.07);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', 'Noto Sans TC', -apple-system, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-
-    /* HEADER */
-    header {
-      background: linear-gradient(135deg, #0a0e1a 0%, #111b3a 50%, #0d1428 100%);
-      border-bottom: 2px solid #1e3a6e;
-      padding: 28px 0 22px;
-      animation: fadeIn 0.6s ease;
-    }
-    .header-content { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
-    .header-title h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #60a5fa, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .header-title p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px; }
-    .header-meta { text-align: right; }
-    .report-date { font-size: 1.1rem; font-weight: 600; color: var(--cyan); }
-    .report-time { font-size: 0.85rem; color: var(--text-secondary); }
-    .live-badge {
-      display: inline-block; background: #1a3a1a; color: var(--green);
-      border: 1px solid var(--green); border-radius: 20px;
-      padding: 3px 10px; font-size: 0.75rem; font-weight: 600;
-      animation: pulse 2s infinite; margin-top: 6px;
-    }
-
-    /* SECTIONS */
-    section {
-      margin: 24px 0;
-      animation: fadeIn 0.5s ease;
-    }
-    .section-title {
-      font-size: 1.05rem; font-weight: 700; color: var(--cyan);
-      border-left: 4px solid var(--cyan); padding-left: 12px;
-      margin-bottom: 14px; letter-spacing: 0.5px;
-    }
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-    }
-    .card2 {
-      background: var(--bg-card2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-    }
-
-    /* SUMMARY */
-    .summary-text {
-      font-size: 0.95rem;
-      color: var(--text-primary);
-      line-height: 1.9;
-      border-left: 3px solid #1e3a6e;
-      padding-left: 16px;
-    }
-    .tag-bullish { color: var(--green); font-weight: 700; }
-    .tag-bearish { color: var(--red); font-weight: 700; }
-
-    /* METRICS GRID */
-    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-    .metric-card {
-      background: var(--bg-card2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 14px;
-      text-align: center;
-    }
-    .metric-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; letter-spacing: 0.3px; }
-    .metric-value { font-size: 1.25rem; font-weight: 700; margin: 6px 0 4px; }
-    .metric-change { font-size: 0.82rem; font-weight: 600; }
-    .metric-note { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; }
-    .up { color: var(--green); }
-    .down { color: var(--red); }
-    .neutral { color: var(--neutral); }
-    .highlight-card { border: 1px solid rgba(0,200,81,0.3); background: rgba(0,200,81,0.05); }
-    .highlight-sox { border: 1px solid rgba(251,191,36,0.4); background: rgba(251,191,36,0.05); }
-    .na { color: var(--neutral); font-size: 0.85rem; }
-
-    /* TABLE */
-    .data-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    .data-table th {
-      background: rgba(255,255,255,0.05);
-      color: var(--text-secondary); font-weight: 600;
-      padding: 10px 14px; text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    .data-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .data-table tr:last-child td { border-bottom: none; }
-    .data-table tr:hover td { background: rgba(255,255,255,0.02); }
-    .ticker { font-weight: 700; color: var(--cyan); font-size: 0.9rem; }
-    .tsm-row { background: rgba(0,200,81,0.04); }
-    .tsm-row:hover td { background: rgba(0,200,81,0.07) !important; }
-
-    /* HEATMAP */
-    .heatmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
-    .heat-cell {
-      border-radius: 8px; padding: 12px 10px; text-align: center;
-      font-size: 0.82rem; font-weight: 600;
-    }
-    .heat-cell .sector-name { font-size: 0.72rem; color: rgba(255,255,255,0.85); margin-bottom: 4px; }
-    .heat-cell .sector-change { font-size: 1rem; font-weight: 700; }
-    .heat-strong-up { background: rgba(0,200,81,0.25); border: 1px solid rgba(0,200,81,0.4); }
-    .heat-up { background: rgba(0,200,81,0.12); border: 1px solid rgba(0,200,81,0.2); }
-    .heat-flat { background: rgba(136,136,136,0.12); border: 1px solid rgba(136,136,136,0.2); }
-    .heat-down { background: rgba(255,68,68,0.12); border: 1px solid rgba(255,68,68,0.2); }
-
-    /* FUTURES */
-    .futures-banner {
-      background: linear-gradient(135deg, #0c1f0c, #0a1a0a);
-      border: 1px solid rgba(0,200,81,0.3);
-      border-radius: 12px; padding: 20px;
-      display: grid; grid-template-columns: 1fr 1fr 1fr;
-      gap: 20px; align-items: center;
-    }
-    .futures-main { }
-    .futures-label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; }
-    .futures-value { font-size: 2rem; font-weight: 800; color: var(--green); }
-    .futures-change { font-size: 0.95rem; color: var(--green); font-weight: 600; }
-    .futures-implied { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 14px; text-align: center; }
-    .futures-implied .label { font-size: 0.75rem; color: var(--text-secondary); }
-    .futures-implied .value { font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-top: 4px; }
-
-    /* NEWS */
-    .news-item {
-      display: flex; gap: 14px; align-items: flex-start;
-      padding: 14px 0; border-bottom: 1px solid var(--border);
-    }
-    .news-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .news-num { font-size: 1.2rem; font-weight: 800; color: rgba(255,255,255,0.15); min-width: 24px; }
-    .news-content { flex: 1; }
-    .news-headline { font-size: 0.92rem; font-weight: 600; color: var(--text-primary); line-height: 1.5; }
-    .news-tag {
-      display: inline-block; margin-top: 5px;
-      font-size: 0.7rem; font-weight: 700; border-radius: 4px;
-      padding: 2px 8px;
-    }
-    .tag-pos { background: rgba(0,200,81,0.2); color: var(--green); border: 1px solid rgba(0,200,81,0.3); }
-    .tag-neg { background: rgba(255,68,68,0.2); color: var(--red); border: 1px solid rgba(255,68,68,0.3); }
-    .tag-neutral-tag { background: rgba(136,136,136,0.2); color: #aaa; border: 1px solid rgba(136,136,136,0.3); }
-
-    /* SENTIMENT GAUGE */
-    .outlook-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .gauge-wrapper { text-align: center; padding: 20px; }
-    .gauge-title { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px; }
-    .gauge-value { font-size: 2.5rem; font-weight: 800; color: var(--green); }
-    .gauge-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; }
-    .range-box { background: var(--bg-card2); border-radius: 10px; padding: 16px; }
-    .range-title { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px; }
-    .range-values { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-    .range-low { font-size: 1.3rem; font-weight: 700; color: #60a5fa; }
-    .range-high { font-size: 1.3rem; font-weight: 700; color: var(--gold); }
-    .range-arrow { font-size: 1.5rem; color: var(--text-secondary); }
-    .sentiment-bar {
-      height: 10px; border-radius: 20px; margin: 14px 0;
-      background: linear-gradient(to right, var(--red) 0%, var(--neutral) 50%, var(--green) 100%);
-    }
-    .sentiment-indicator {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: var(--green); border: 3px solid white;
-      position: relative; left: 78%; top: -15px;
-      box-shadow: 0 0 12px rgba(0,200,81,0.6);
-    }
-
-    /* VIX/BOND */
-    .macro-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .macro-card {
-      background: var(--bg-card2); border-radius: 10px; padding: 16px;
-      border: 1px solid var(--border); text-align: center;
-    }
-    .macro-label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 6px; }
-    .macro-value { font-size: 1.3rem; font-weight: 700; }
-    .macro-sub { font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px; }
-
-    /* FX */
-    .fx-display { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-    .fx-value { font-size: 3rem; font-weight: 800; color: var(--gold); }
-    .fx-detail { }
-    .fx-label { font-size: 0.85rem; color: var(--text-secondary); }
-    .fx-range { font-size: 0.9rem; color: var(--text-primary); font-weight: 600; margin-top: 4px; }
-    .fx-signal { margin-top: 8px; font-size: 0.82rem; }
-
-    /* DISCLAIMER */
-    .disclaimer {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 10px; padding: 16px 20px; font-size: 0.78rem;
-      color: var(--text-secondary); line-height: 1.7;
-    }
-
-    /* TWO COL */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-    /* RESPONSIVE */
-    @media (max-width: 700px) {
-      .header-content { flex-direction: column; }
-      .header-meta { text-align: left; }
-      .futures-banner { grid-template-columns: 1fr; }
-      .outlook-grid { grid-template-columns: 1fr; }
-      .macro-grid { grid-template-columns: repeat(2, 1fr); }
-      .two-col { grid-template-columns: 1fr; }
-      .header-title h1 { font-size: 1.35rem; }
-    }
-
-    footer { padding: 24px 0; text-align: center; color: var(--text-secondary); font-size: 0.78rem; border-top: 1px solid var(--border); margin-top: 40px; }
-    .data-note { font-size: 0.72rem; color: var(--neutral); font-style: italic; margin-top: 8px; }
-
-    /* Asia Interpretation box */
-    .interp-box {
-      background: rgba(34, 211, 238, 0.06); border: 1px solid rgba(34,211,238,0.2);
-      border-radius: 8px; padding: 12px 16px; margin-top: 12px;
-      font-size: 0.85rem; color: var(--text-secondary);
+    body { font-family: 'Segoe UI','Noto Sans TC',-apple-system,sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    header { background: linear-gradient(135deg,#0a0e1a,#111b3a 50%,#0d1428); border-bottom: 2px solid #1e3a6e; padding: 28px 0 22px; animation: fadeIn 0.6s ease; }
+    .header-content { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; }
+    .header-title h1 { font-size:1.75rem; font-weight:700; background:linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .header-title p { color:var(--text-secondary); font-size:0.9rem; margin-top:4px; }
+    .header-meta { text-align:right; }
+    .report-date { font-size:1.1rem; font-weight:600; color:var(--cyan); }
+    .report-time { font-size:0.85rem; color:var(--text-secondary); }
+    .live-badge { display:inline-block; background:#1a3a1a; color:var(--green); border:1px solid var(--green); border-radius:20px; padding:3px 10px; font-size:0.75rem; font-weight:600; animation:pulse 2s infinite; margin-top:6px; }
+    section { margin:24px 0; animation:fadeIn 0.5s ease; }
+    .section-title { font-size:1.05rem; font-weight:700; color:var(--cyan); border-left:4px solid var(--cyan); padding-left:12px; margin-bottom:14px; }
+    .card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px; }
+    .card2 { background:var(--bg-card2); border:1px solid var(--border); border-radius:10px; padding:16px; }
+    .summary-text { font-size:0.95rem; line-height:1.9; border-left:3px solid #1e3a6e; padding-left:16px; }
+    .tag-bullish { color:var(--green); font-weight:700; }
+    .tag-bearish { color:var(--red); font-weight:700; }
+    .metrics-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }
+    .metric-card { background:var(--bg-card2); border:1px solid var(--border); border-radius:10px; padding:16px 14px; text-align:center; }
+    .metric-label { font-size:0.75rem; color:var(--text-secondary); font-weight:500; }
+    .metric-value { font-size:1.25rem; font-weight:700; margin:6px 0 4px; }
+    .metric-change { font-size:0.82rem; font-weight:600; }
+    .metric-note { font-size:0.7rem; color:var(--text-secondary); margin-top:2px; }
+    .up { color:var(--green); } .down { color:var(--red); } .neutral { color:var(--neutral); }
+    .highlight-sox { border:1px solid rgba(251,191,36,0.4); background:rgba(251,191,36,0.05); }
+    .data-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+    .data-table th { background:rgba(255,255,255,0.05); color:var(--text-secondary); font-weight:600; padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); }
+    .data-table td { padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.04); }
+    .data-table tr:last-child td { border-bottom:none; }
+    .ticker { font-weight:700; color:var(--cyan); }
+    .tsm-row { background:rgba(0,200,81,0.04); }
+    .macro-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .macro-card { background:var(--bg-card2); border-radius:10px; padding:16px; border:1px solid var(--border); text-align:center; }
+    .macro-label { font-size:0.75rem; color:var(--text-secondary); margin-bottom:6px; }
+    .macro-value { font-size:1.3rem; font-weight:700; }
+    .macro-sub { font-size:0.75rem; color:var(--text-secondary); margin-top:4px; }
+    .fx-display { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+    .fx-value { font-size:3rem; font-weight:800; color:var(--gold); }
+    .fx-label { font-size:0.85rem; color:var(--text-secondary); }
+    .fx-change { font-size:0.9rem; font-weight:600; margin-top:4px; }
+    .news-item { display:flex; gap:14px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--border); }
+    .news-item:last-child { border-bottom:none; padding-bottom:0; }
+    .news-num { font-size:1.2rem; font-weight:800; color:rgba(255,255,255,0.15); min-width:24px; }
+    .news-headline { font-size:0.92rem; font-weight:600; line-height:1.5; }
+    .news-tag { display:inline-block; margin-top:5px; font-size:0.7rem; font-weight:700; border-radius:4px; padding:2px 8px; }
+    .tag-pos { background:rgba(0,200,81,0.2); color:var(--green); border:1px solid rgba(0,200,81,0.3); }
+    .tag-neg { background:rgba(255,68,68,0.2); color:var(--red); border:1px solid rgba(255,68,68,0.3); }
+    .tag-neutral-tag { background:rgba(136,136,136,0.2); color:#aaa; border:1px solid rgba(136,136,136,0.3); }
+    .outlook-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .gauge-wrapper { text-align:center; padding:20px; }
+    .gauge-value { font-size:2.5rem; font-weight:800; }
+    .gauge-label { font-size:0.8rem; color:var(--text-secondary); margin-top:4px; }
+    .sentiment-bar { height:10px; border-radius:20px; margin:14px 0; background:linear-gradient(to right,var(--red) 0%,var(--neutral) 50%,var(--green) 100%); position:relative; }
+    .sentiment-indicator { width:20px; height:20px; border-radius:50%; background:white; border:3px solid white; position:absolute; top:-5px; transform:translateX(-50%); box-shadow:0 0 12px rgba(255,255,255,0.6); }
+    .range-box { background:var(--bg-card2); border-radius:10px; padding:16px; }
+    .range-title { font-size:0.8rem; color:var(--text-secondary); margin-bottom:10px; }
+    .range-values { display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+    .range-low { font-size:1.3rem; font-weight:700; color:#60a5fa; }
+    .range-high { font-size:1.3rem; font-weight:700; color:var(--gold); }
+    .data-note { font-size:0.72rem; color:var(--neutral); font-style:italic; margin-top:8px; }
+    .disclaimer { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:16px 20px; font-size:0.78rem; color:var(--text-secondary); line-height:1.7; }
+    footer { padding:24px 0; text-align:center; color:var(--text-secondary); font-size:0.78rem; border-top:1px solid var(--border); margin-top:40px; }
+    @media(max-width:700px) {
+      .outlook-grid,.macro-grid { grid-template-columns:1fr; }
+      .header-content { flex-direction:column; }
+      .header-meta { text-align:left; }
+      .header-title h1 { font-size:1.35rem; }
     }
   </style>
 </head>
 <body>
-<!-- ============================
-     HEADER
-     ============================ -->
+
+<!-- HEADER -->
 <header>
   <div class="container">
     <div class="header-content">
       <div class="header-title">
-        <h1>🇹🇼 台灣股市開盤分析 | Taiwan Market Morning Brief</h1>
-        <p>每日盤前市場情報 · 半導體 · 科技 · ADR · 夜盤分析</p>
+        <h1>🇹🇼 台灣股市開盤分析</h1>
+        <p>Taiwan Market Morning Brief</p>
       </div>
       <div class="header-meta">
         <div class="report-date">2026 年 6 月 2 日（星期二）</div>
@@ -276,476 +106,210 @@
 
 <div class="container">
 
-<!-- ============================
-     SECTION 1: 總覽摘要
-     ============================ -->
-<section>
-  <div class="section-title">01 · 總覽摘要 Market Overview</div>
-  <div class="card">
-    <p class="summary-text">
-      美股昨日（6/1）收盤再創歷史新高，<span class="tag-bullish">S&amp;P 500 收漲 0.22%、NASDAQ 上漲 0.20%、DJIA 上漲 0.72%</span>，主要動能來自 NVIDIA 發布新 AI 晶片 RTX Spark Superchip，帶動半導體板塊強勢，SOX 指數延續 16 連漲態勢，VIX 收低至 15.32，顯示市場恐慌情緒回落。
-      <strong style="color:var(--cyan)">台積電 ADR（TSM）大漲約 4%</strong>，為今日台股最強正向催化劑，隱含台股大型權值股開盤強勢，台指期夜盤維持約 46,450 點偏高水準。日股 Nikkei 225 開盤報 66,363 點，亞股同向走揚；韓國 KOSPI 開盤 8,485 點，明日（6/3）因選舉日將全日休市。
-      整體而言，今日台股開盤展望偏多，<span class="tag-bullish">台積電（2330）、聯發科（2454）等 AI 半導體族群料將帶頭上攻</span>，預估加權指數開盤區間約 46,500–47,200 點，投資人宜留意 WTI 油價飆漲 6% 所帶來的通膨隱憂，以及美股大型科技股集中度偏高、市場廣度不足的潛在風險。
-    </p>
-  </div>
-</section>
-
-<!-- ============================
-     SECTION 2: 台指期夜盤
-     ============================ -->
-<section>
-  <div class="section-title">02 · 台指期夜盤 TAIFEX Night Session</div>
-  <div class="futures-banner">
-    <div class="futures-main">
-      <div class="futures-label">台指期夜盤收盤（估計）</div>
-      <div class="futures-value">46,450</div>
-      <div class="futures-change">▲ +200 pts &nbsp;(+0.43%)</div>
-      <p class="data-note">* 基於 6/1 日盤收盤 46,250 + 美股夜間走勢推估；TSM ADR +4% 為主要驅動</p>
-    </div>
-    <div class="futures-implied">
-      <div class="label">隱含台指開盤估計</div>
-      <div class="value">46,500 – 47,200</div>
-      <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">參考 TSM ADR 漲幅 + 夜盤 + 日股同向</div>
-    </div>
-    <div class="futures-implied">
-      <div class="label">日盤參考（6/1 收）</div>
-      <div class="value" style="color:var(--cyan)">46,250</div>
-      <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">+0.45% (208 pts)</div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================
-     SECTION 3: 美股收盤
-     ============================ -->
-<section>
-  <div class="section-title">03 · 美股收盤 U.S. Market Close (June 1, 2026)</div>
-  <div class="metrics-grid">
-    <div class="metric-card">
-      <div class="metric-label">DJIA 道瓊工業</div>
-      <div class="metric-value up">51,032</div>
-      <div class="metric-change up">▲ +0.72%</div>
-      <div class="metric-note">+46 pts</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">S&amp;P 500</div>
-      <div class="metric-value up">7,580</div>
-      <div class="metric-change up">▲ +0.22%</div>
-      <div class="metric-note">歷史新高</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">NASDAQ Composite</div>
-      <div class="metric-value up">26,973</div>
-      <div class="metric-change up">▲ +0.20%</div>
-      <div class="metric-note">歷史新高</div>
-    </div>
-    <div class="metric-card highlight-sox">
-      <div class="metric-label">⭐ SOX 半導體</div>
-      <div class="metric-value" style="color:var(--gold)">~13,200</div>
-      <div class="metric-change" style="color:var(--gold)">▲ +2.9% (估計)</div>
-      <div class="metric-note">16 連漲 · NVDA +6.3%</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">Russell 2000</div>
-      <div class="metric-value down">2,919</div>
-      <div class="metric-change down">▼ -0.59%</div>
-      <div class="metric-note">小型股偏弱</div>
-    </div>
-  </div>
-  <div class="card2" style="margin-top:12px;font-size:0.83rem;color:var(--text-secondary);">
-    <strong style="color:var(--text-primary)">個股亮點：</strong>
-    NVIDIA +6.3%（RTX Spark AI 晶片）｜Oracle +9.9%｜Dell +10.8%｜Micron +6.6%｜Microsoft +2.3%｜IBM +7.6%
-  </div>
-</section>
-
-<!-- ============================
-     SECTION 4: 台灣 ADR
-     ============================ -->
-<section>
-  <div class="section-title">04 · 台灣 ADR Taiwan ADR Performance</div>
-  <table class="data-table card">
-    <thead>
-      <tr>
-        <th>ADR 代號</th>
-        <th>名稱</th>
-        <th>台股代號</th>
-        <th>收盤價 (USD)</th>
-        <th>漲跌幅</th>
-        <th>備註</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="tsm-row">
-        <td><span class="ticker">TSM ⭐</span></td>
-        <td>台積電 TSMC</td>
-        <td>2330.TW</td>
-        <td>$435.18</td>
-        <td><span class="up">▲ +4.00%</span></td>
-        <td>歷史新高；AI 晶片需求 + 漲價催化</td>
-      </tr>
-      <tr>
-        <td><span class="ticker">UMC</span></td>
-        <td>聯電 UMC</td>
-        <td>2303.TW</td>
-        <td>$22.15</td>
-        <td><span class="up">▲ +0.16%</span></td>
-        <td>成熟製程持平</td>
-      </tr>
-      <tr>
-        <td><span class="ticker">ASX</span></td>
-        <td>日月光 ASE</td>
-        <td>3711.TW</td>
-        <td>$37.02</td>
-        <td><span class="up">▲ +3.47%</span></td>
-        <td>封裝需求強勁</td>
-      </tr>
-      <tr>
-        <td><span class="ticker">HIMX</span></td>
-        <td>奇景光電 Himax</td>
-        <td>3036.TW</td>
-        <td>$21.82</td>
-        <td><span class="up">▲ +6.06%</span></td>
-        <td>顯示驅動 IC 題材發酵</td>
-      </tr>
-      <tr>
-        <td><span class="ticker">CHT</span></td>
-        <td>中華電信</td>
-        <td>2412.TW</td>
-        <td>$44.87</td>
-        <td><span class="up">▲ +2.51%</span></td>
-        <td>電信防禦型走強</td>
-      </tr>
-      <tr>
-        <td><span class="ticker">AUO</span></td>
-        <td>友達光電</td>
-        <td>2409.TW</td>
-        <td><span class="na">數據暫不可用</span></td>
-        <td><span class="na">–</span></td>
-        <td>–</td>
-      </tr>
-    </tbody>
-  </table>
-  <p class="data-note">※ TSM 為 6/2 盤中最新；其餘 ADR 數據為 6/1 收盤。</p>
-</section>
-
-<!-- ============================
-     SECTION 5: 日韓早盤
-     ============================ -->
-<section>
-  <div class="section-title">05 · 日韓早盤 Asia Markets (08:00–08:10 CST)</div>
-  <div class="metrics-grid">
-    <div class="metric-card">
-      <div class="metric-label">🇯🇵 Nikkei 225</div>
-      <div class="metric-value up">66,363</div>
-      <div class="metric-change neutral">開盤參考</div>
-      <div class="metric-note">6/2 早盤開報</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">🇯🇵 TOPIX</div>
-      <div class="metric-value na">數據暫不可用</div>
-      <div class="metric-change neutral">–</div>
-      <div class="metric-note">–</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">🇰🇷 KOSPI</div>
-      <div class="metric-value up">8,485.67</div>
-      <div class="metric-change neutral">6/2 開盤</div>
-      <div class="metric-note">歷史新高區間</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">🇰🇷 KOSDAQ</div>
-      <div class="metric-value up">1,112</div>
-      <div class="metric-change neutral">6/2 開盤</div>
-      <div class="metric-note">–</div>
-    </div>
-  </div>
-  <div class="interp-box">
-    <strong>🌏 亞股解讀：</strong>
-    日韓股市同向走揚，與美股技術面多頭一致，屬「同向多頭」格局。韓國 KOSPI 於歷史高位 8,485 附近，明日（6/3）因選舉日全面休市，流動性短暫收縮。日經 Nikkei 225 開盤約 66,363 點，反映美股夜間正向溢出效應。整體亞股環境對台股今日開盤提供正向支撐。
-  </div>
-</section>
-
-<!-- ============================
-     SECTION 6: VIX 恐慌 & 債市
-     ============================ -->
-<section>
-  <div class="section-title">06 · 恐慌指數與債市 VIX &amp; Bond Market</div>
-  <div class="macro-grid">
-    <div class="macro-card">
-      <div class="macro-label">VIX 恐慌指數</div>
-      <div class="macro-value up">15.32</div>
-      <div class="macro-sub" style="color:var(--green)">▼ -2.67% · 市場情緒偏穩</div>
-    </div>
-    <div class="macro-card">
-      <div class="macro-label">美債 10 年期殖利率</div>
-      <div class="macro-value" style="color:var(--gold)">~4.43%</div>
-      <div class="macro-sub">近期區間 4.31–4.69%（估計）</div>
-    </div>
-    <div class="macro-card">
-      <div class="macro-label">WTI 原油</div>
-      <div class="macro-value down">$92.42</div>
-      <div class="macro-sub" style="color:var(--red)">▲ +5.8% · 美伊緊張升溫</div>
-    </div>
-  </div>
-  <div class="card2" style="margin-top:12px;font-size:0.83rem;">
-    ⚠️ <strong>風險提示：</strong>WTI 油價單日飆漲 6%，突破 $92，主因美伊談判不確定性升高；油價若持續走強，可能對科技股高估值形成壓力，需密切觀察後續發展。VIX 處 15 低位，顯示市場「過度樂觀」風險不容忽視。
-  </div>
-</section>
-
-<!-- ============================
-     SECTION 7: 匯率
-     ============================ -->
-<section>
-  <div class="section-title">07 · 匯率 Foreign Exchange</div>
-  <div class="card">
-    <div class="fx-display">
-      <div>
-        <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:4px;">USD / TWD</div>
-        <div class="fx-value">31.307</div>
-      </div>
-      <div class="fx-detail">
-        <div class="fx-label">今日匯率區間</div>
-        <div class="fx-range">31.306 – 31.464</div>
-        <div class="fx-label" style="margin-top:8px;">開盤參考</div>
-        <div class="fx-range">31.427</div>
-        <div class="fx-signal">
-          <span style="color:var(--green)">● 新台幣小幅升值</span>，有助外資回流台股
-        </div>
-      </div>
-      <div style="flex:1;max-width:300px;">
-        <div class="card2">
-          <div style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:6px;">匯率觀察</div>
-          <div style="font-size:0.84rem;">
-            新台幣 vs 美元維持在 31.3–31.5 區間整理。台股今日若外資持續淨買入，台幣有機會進一步走強至 31.1–31.2 區間，對出口導向廠商（如鴻海、台達電）小幅不利，對台積電新台幣計價獲利則影響有限。
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================
-     SECTION 8: 類股熱力圖
-     ============================ -->
-<section>
-  <div class="section-title">08 · 美股類股熱力圖 U.S. Sector Performance</div>
-  <div class="card">
-    <div class="heatmap-grid">
-      <div class="heat-cell heat-strong-up">
-        <div class="sector-name">科技 Technology</div>
-        <div class="sector-change up">+1.8%</div>
-      </div>
-      <div class="heat-cell heat-strong-up">
-        <div class="sector-name">半導體 Semis</div>
-        <div class="sector-change up">+2.9%</div>
-      </div>
-      <div class="heat-cell heat-up">
-        <div class="sector-name">能源 Energy</div>
-        <div class="sector-change up">+1.2%</div>
-      </div>
-      <div class="heat-cell heat-up">
-        <div class="sector-name">通訊 Comm Svcs</div>
-        <div class="sector-change up">+0.7%</div>
-      </div>
-      <div class="heat-cell heat-up">
-        <div class="sector-name">非必需消費 Disc.</div>
-        <div class="sector-change up">+0.5%</div>
-      </div>
-      <div class="heat-cell heat-flat">
-        <div class="sector-name">金融 Financials</div>
-        <div class="sector-change neutral">+0.2%</div>
-      </div>
-      <div class="heat-cell heat-flat">
-        <div class="sector-name">工業 Industrials</div>
-        <div class="sector-change neutral">+0.3%</div>
-      </div>
-      <div class="heat-cell heat-flat">
-        <div class="sector-name">材料 Materials</div>
-        <div class="sector-change neutral">+0.1%</div>
-      </div>
-      <div class="heat-cell heat-down">
-        <div class="sector-name">醫療 Healthcare</div>
-        <div class="sector-change down">-0.1%</div>
-      </div>
-      <div class="heat-cell heat-down">
-        <div class="sector-name">公用事業 Utilities</div>
-        <div class="sector-change down">-0.3%</div>
-      </div>
-    </div>
-    <p class="data-note" style="margin-top:10px;">※ 類股漲跌幅為估算值，基於個股實際漲跌及板塊邏輯推算。</p>
-  </div>
-</section>
-
-<!-- ============================
-     SECTION 9: 台股關鍵個股
-     ============================ -->
-<section>
-  <div class="section-title">09 · 台股關鍵個股 Taiwan Key Stocks (估計開盤)</div>
-  <table class="data-table card">
-    <thead>
-      <tr>
-        <th>代號</th>
-        <th>名稱</th>
-        <th>ADR/外部信號</th>
-        <th>開盤估計</th>
-        <th>方向</th>
-        <th>關鍵催化</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="tsm-row">
-        <td><span class="ticker">2330</span></td>
-        <td>台積電</td>
-        <td>TSM ADR +4.00%</td>
-        <td><span class="up">NT$2,720–2,780</span></td>
-        <td><span class="up">▲ 強勢</span></td>
-        <td>3nm 漲價 15%、NVIDIA AI 晶片、ADR 歷史新高</td>
-      </tr>
-      <tr>
-        <td><span class="ticker">2317</span></td>
-        <td>鴻海</td>
-        <td>AI 伺服器需求</td>
-        <td><span class="up">偏多開盤</span></td>
-        <td><span class="up">▲ 偏多</span></td>
-        <td>NVIDIA 供應鏈受益，GB300 出貨動能</td>
-      </tr>
-      <tr>
-        <td><span class="ticker">2454</span></td>
-        <td>聯發科</td>
-        <td>HIMX +6%、半導體板塊強</td>
-        <td><span class="up">偏多開盤</span></td>
-        <td><span class="up">▲ 偏多</span></td>
-        <td>AI 手機晶片 Dimensity 需求 + SOX 16 連漲</td>
-      </tr>
-      <tr>
-        <td><span class="ticker">3711</span></td>
-        <td>日月光 ASE</td>
-        <td>ASX ADR +3.47%</td>
-        <td><span class="up">偏多開盤</span></td>
-        <td><span class="up">▲ 偏多</span></td>
-        <td>AI 先進封裝需求持續增溫，CoWoS 訂單充足</td>
-      </tr>
-    </tbody>
-  </table>
-  <p class="data-note">※ 以上為依 ADR 漲幅、外部市場信號之估算，非實際報價。實際開盤以交易所為準。</p>
-</section>
-
-<!-- ============================
-     SECTION 10: 今日重點新聞
-     ============================ -->
-<section>
-  <div class="section-title">10 · 今日重點新聞 Key Headlines</div>
-  <div class="card">
-    <div class="news-item">
-      <div class="news-num">01</div>
-      <div class="news-content">
-        <div class="news-headline">台積電計劃 2026 下半年 3 奈米製程漲價最高 15%，AI 加速器需求成漲價底氣</div>
-        <span class="news-tag tag-pos">台積電 ▲ 強烈利多</span>
-      </div>
-    </div>
-    <div class="news-item">
-      <div class="news-num">02</div>
-      <div class="news-content">
-        <div class="news-headline">NVIDIA 發表 RTX Spark Superchip 正式進軍 PC 市場，股價飆升 6.3%，拉動 SOX 指數締造 16 連漲紀錄</div>
-        <span class="news-tag tag-pos">半導體族群 ▲ 強烈利多</span>
-      </div>
-    </div>
-    <div class="news-item">
-      <div class="news-num">03</div>
-      <div class="news-content">
-        <div class="news-headline">台股市值突破 4.95 兆美元，超越印度躍升全球第五大股市，台積電為最大功臣</div>
-        <span class="news-tag tag-pos">市場里程碑 ▲ 正面</span>
-      </div>
-    </div>
-    <div class="news-item">
-      <div class="news-num">04</div>
-      <div class="news-content">
-        <div class="news-headline">Intel 執行長 Lip-Bu Tan 訪台，出席 Computex 發表前夕與台積電管理層進行策略會談</div>
-        <span class="news-tag tag-neutral-tag">中性偏多 – 合作信號</span>
-      </div>
-    </div>
-    <div class="news-item">
-      <div class="news-num">05</div>
-      <div class="news-content">
-        <div class="news-headline">美伊談判持續僵局，WTI 原油單日飆漲 6% 突破 92 美元，通膨隱憂再起</div>
-        <span class="news-tag tag-neg">能源 / 通膨 ▼ 負面風險</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================
-     SECTION 11: 開盤展望
-     ============================ -->
-<section>
-  <div class="section-title">11 · 開盤展望 Market Outlook</div>
-  <div class="outlook-grid">
-    <div class="card gauge-wrapper">
-      <div class="gauge-title">市場情緒指標 Sentiment Gauge</div>
-      <div class="sentiment-bar"></div>
-      <div class="sentiment-indicator"></div>
-      <div class="gauge-value" style="margin-top:4px;">偏多</div>
-      <div class="gauge-label">Bullish — 78 / 100</div>
-      <div style="margin-top:16px;font-size:0.82rem;color:var(--text-secondary);line-height:1.7;">
-        <div>✅ TSM ADR 歷史新高 (+4%)</div>
-        <div>✅ SOX 16 連漲，NVDA 帶頭</div>
-        <div>✅ VIX 下降至 15.32</div>
-        <div>✅ 日韓亞股同向偏多</div>
-        <div>⚠️ Russell 2000 偏弱 (-0.6%)</div>
-        <div>⚠️ 油價通膨風險 (+6%)</div>
-      </div>
-    </div>
+  <!-- 01 總覽摘要 -->
+  <section>
+    <div class="section-title">01 · 總覽摘要 Market Overview</div>
     <div class="card">
-      <div class="range-box" style="margin-bottom:14px;">
-        <div class="range-title">📊 台指加權指數估計開盤區間</div>
-        <div class="range-values">
-          <div>
-            <div style="font-size:0.72rem;color:var(--text-secondary)">保守下限</div>
-            <div class="range-low">46,500</div>
-          </div>
-          <div class="range-arrow">⟷</div>
-          <div>
-            <div style="font-size:0.72rem;color:var(--text-secondary)">樂觀上限</div>
-            <div class="range-high">47,200</div>
-          </div>
-        </div>
-        <div style="margin-top:10px;font-size:0.78rem;color:var(--text-secondary);">
-          基準：台指期夜盤 46,450 ＋ TSM ADR +4% 隱含效益 ＋ 日股早盤同向
-        </div>
+      <p class="summary-text">昨日（6/1）美股多頭收盤，S&amp;P 500、Nasdaq 雙創新高，Nvidia 大漲 <span class="tag-bullish">+6.3%</span>；惟 TSM ADR 收 <span class="tag-bearish">$409.43（-2.15%）</span>，受伊朗威脅封閉荷姆茲海峽、WTI 原油暴衝至 <span class="tag-bearish">$92</span> 拖累半導體情緒。亞洲早盤日韓全面走弱，日經 225 跌 <span class="tag-bearish">1.32%</span>、KOSPI 重挫 <span class="tag-bearish">1.92%</span>，加權指數今日開盤面臨下行壓力。正面因素在於 COMPUTEX 2026 今日盛大開幕，輝達黃仁勳與 AMD 蘇姿丰齊聚台北，台積電 3nm 漲價傳聞構成基本面支撐，預估開盤區間 <span class="tag-bearish">39,000～39,500</span> 點，宜觀察外資動向與油價走勢。</p>
+    </div>
+  </section>
+
+  <!-- 02 美股收盤 -->
+  <section>
+    <div class="section-title">02 · 美股收盤 U.S. Market Close · June 1, 2026</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">DJIA 道瓊工業</div>
+        <div class="metric-value up">51,079</div>
+        <div class="metric-change up">+0.09%</div>
       </div>
-      <div style="font-size:0.85rem;line-height:1.8;">
-        <div style="margin-bottom:8px;"><strong style="color:var(--cyan)">🏆 關注焦點</strong></div>
-        <div>① <strong>台積電（2330）</strong>：今日主角，ADR +4% 預告強勢開盤，市值恢復全球 AI 晶股龍頭</div>
-        <div style="margin-top:6px;">② <strong>AI 供應鏈</strong>：鴻海（2317）、日月光（3711）等封裝廠跟漲機率高</div>
-        <div style="margin-top:6px;">③ <strong>油價警戒</strong>：WTI $92+ 若持續，電力密集型廠商（TSMC、晶圓廠）成本壓力上升</div>
-        <div style="margin-top:6px;">④ <strong>外資動向</strong>：台幣小幅升值、ADR 大漲，外資回流台股機率高</div>
+      <div class="metric-card">
+        <div class="metric-label">S&amp;P 500</div>
+        <div class="metric-value up">7,580</div>
+        <div class="metric-change up">+0.30%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">NASDAQ Composite</div>
+        <div class="metric-value up">26,973</div>
+        <div class="metric-change up">+0.40%</div>
+      </div>
+      <div class="metric-card highlight-sox">
+        <div class="metric-label">⭐ SOX 半導體</div>
+        <div class="metric-value" style="color:var(--gold)">－</div>
+        <div class="metric-change" style="color:var(--gold)">N/A</div>
+        <div class="metric-note">NVDA +6.3%，半導體強勢</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Russell 2000</div>
+        <div class="metric-value down">2,919</div>
+        <div class="metric-change down">-0.59%</div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============================
-     SECTION 12: 免責聲明
-     ============================ -->
-<section>
-  <div class="section-title">12 · 免責聲明 Disclaimer</div>
-  <div class="disclaimer">
-    本報告由 AI 自動生成，僅供資訊參考，<strong>不構成任何投資建議或交易指引</strong>。所有市場數據均來自公開網路資訊，部分數據為推估值（已標記），實際數據以各交易所及金融機構公告為準。
-    過去績效不代表未來表現，台股及衍生商品投資涉及市場風險，投資人應自行承擔風險並依個人財務狀況審慎評估。
-    本報告產生時間為台灣時間 2026 年 6 月 2 日 08:10，美股夜盤與亞股數據反映盤前最新可取得資訊。
-    <strong>This report is AI-generated for informational purposes only and does not constitute investment advice.</strong>
-    All data sourced from publicly available information; estimated figures are clearly marked. Invest at your own risk.
-  </div>
-</section>
+  <!-- 03 台灣 ADR -->
+  <section>
+    <div class="section-title">03 · 台灣 ADR · June 1, 2026</div>
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr><th>ADR</th><th>台股代號</th><th>收盤價 (USD)</th><th>漲跌幅</th><th>備註</th></tr>
+        </thead>
+        <tbody>
+          <tr class="tsm-row">
+            <td><span class="ticker">TSM ⭐</span></td><td>2330 台積電</td>
+            <td>$409.43</td><td class="down">-2.15%</td><td>COMPUTEX開幕，3nm漲價傳聞</td>
+          </tr>
+          <tr>
+            <td><span class="ticker">UMC</span></td><td>2303 聯電</td>
+            <td>$18.22</td><td class="neutral">N/A</td><td>－</td>
+          </tr>
+          <tr>
+            <td><span class="ticker">ASX</span></td><td>2311 日月光</td>
+            <td>$32.00</td><td class="up">+7.35%</td><td>－</td>
+          </tr>
+          <tr>
+            <td><span class="ticker">HIMX</span></td><td>3010 奇景光電</td>
+            <td>$20.82</td><td class="neutral">N/A</td><td>－</td>
+          </tr>
+          <tr>
+            <td><span class="ticker">CHT</span></td><td>2412 中華電信</td>
+            <td>$43.22</td><td class="down">-0.48%</td><td>－</td>
+          </tr>
+          <tr>
+            <td><span class="ticker">AUO</span></td><td>2409 友達</td>
+            <td>－</td><td class="neutral">N/A</td><td>－</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-</div><!-- /container -->
+  <!-- 04 日韓早盤 -->
+  <section>
+    <div class="section-title">04 · 日韓早盤 Asia Open · 08:00–08:10 CST</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Nikkei 225</div>
+        <div class="metric-value down">66,070</div>
+        <div class="metric-change down">-1.32%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">TOPIX</div>
+        <div class="metric-value down">－</div>
+        <div class="metric-change down">-1.14%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">KOSPI</div>
+        <div class="metric-value down">8,619</div>
+        <div class="metric-change down">-1.92%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">KOSDAQ</div>
+        <div class="metric-value down">1,017</div>
+        <div class="metric-change down">-3.13%</div>
+      </div>
+    </div>
+  </section>
 
-<footer>
-  <div class="container">
-    <p>🤖 Generated by Claude AI · Taiwan Market Morning Brief · 2026-06-02 08:10 CST</p>
-    <p style="margin-top:6px;">Data Sources: Yahoo Finance · Bloomberg · TAIFEX · Economic Daily · Reuters · Investing.com</p>
-  </div>
-</footer>
+  <!-- 05 VIX & 債市 -->
+  <section>
+    <div class="section-title">05 · 恐慌指數與債市 VIX &amp; Rates</div>
+    <div class="macro-grid">
+      <div class="macro-card">
+        <div class="macro-label">VIX 恐慌指數</div>
+        <div class="macro-value up">15.89</div>
+        <div class="macro-sub">油價衝擊，短期警戒升溫</div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-label">美國 10Y 殖利率</div>
+        <div class="macro-value up">4.51%</div>
+        <div class="macro-sub">油價通膨壓力，殖利率攀升</div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-label">WTI 原油</div>
+        <div class="macro-value up">$92.00</div>
+        <div class="macro-sub">伊朗威脅封鎖荷姆茲，急升+6%</div>
+      </div>
+    </div>
+  </section>
 
+  <!-- 06 匯率 -->
+  <section>
+    <div class="section-title">06 · 匯率 USD/TWD</div>
+    <div class="card">
+      <div class="fx-display">
+        <div class="fx-value">31.35</div>
+        <div>
+          <div class="fx-label">USD / TWD</div>
+          <div class="fx-change up">TWD貶值 +0.16%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 今日重點新聞 -->
+  <section>
+    <div class="section-title">07 · 今日重點新聞 Key News</div>
+    <div class="card">
+      <div class="news-item">
+        <div class="news-num">1</div>
+        <div class="news-content">
+          <div class="news-headline">COMPUTEX 2026今日開幕：黃仁勳、蘇姿丰等AI科技巨頭齊聚台北，30家企業高管與會、市值逾10兆美元，台積電為核心供應鏈受惠標的</div>
+          <span class="news-tag tag-pos">正面</span>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-num">2</div>
+        <div class="news-content">
+          <div class="news-headline">台積電3奈米製程擬漲價最高15%：供應鏈消息指2H26起調漲，輝達、AMD、Google、AWS等CSP均已加速3nm採用，TSMC定價能力再獲確認</div>
+          <span class="news-tag tag-pos">正面</span>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-num">3</div>
+        <div class="news-content">
+          <div class="news-headline">伊朗威脅封閉荷姆茲海峽，WTI原油急升逾6%至$92：通膨預期升溫，聯準會12月升息機率達60%，風險資產承壓</div>
+          <span class="news-tag tag-neg">負面</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 開盤展望 -->
+  <section>
+    <div class="section-title">08 · 開盤展望 Market Outlook</div>
+    <div class="card">
+      <div class="outlook-grid">
+        <div class="gauge-wrapper">
+          <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;">市場情緒 Sentiment</div>
+          <div class="gauge-value down">中性偏空</div>
+          <div class="sentiment-bar">
+            <div class="sentiment-indicator" style="left:35%"></div>
+          </div>
+          <div class="gauge-label">亞股普跌與油價衝擊抵銷COMPUTEX AI利多</div>
+        </div>
+        <div class="range-box">
+          <div class="range-title">📊 加權指數開盤預估區間</div>
+          <div class="range-values">
+            <div class="range-low">39,000</div>
+            <div style="font-size:1.5rem;color:var(--text-secondary)">→</div>
+            <div class="range-high">39,500</div>
+          </div>
+          <p class="data-note" style="margin-top:12px">綜合 TSM ADR + 日韓早盤 + VIX 推估</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 免責聲明 -->
+  <section>
+    <div class="disclaimer">
+      ⚠️ <strong>免責聲明：</strong>本報告由 AI 自動生成，僅供參考，不構成任何投資建議。市場資料來源包含 Yahoo Finance 等公開資訊，數據可能有延遲。UMC、HIMX 收盤價為近期最佳可得資料（非 6/1 當日確認收盤）；SOX 指數、TOPIX、AUO 未能取得確認數據。投資人應自行判斷並承擔相關風險。
+    </div>
+  </section>
+
+</div>
+<footer>台灣股市開盤分析 · 每個交易日 08:10 自動生成 · Powered by Claude AI</footer>
 </body>
 </html>
