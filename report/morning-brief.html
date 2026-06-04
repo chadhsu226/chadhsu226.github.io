@@ -3,84 +3,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>台灣股市開盤分析 | Taiwan Market Morning Brief - 2026-06-03</title>
+  <title>台灣股市開盤分析 | Taiwan Market Morning Brief - 2026-06-04</title>
   <style>
     :root {
-      --bg-primary: #0a0e1a; --bg-card: #0f1628; --bg-card2: #141d35;
-      --green: #00c851; --red: #ff4444; --neutral: #888;
-      --text-primary: #e8edf5; --text-secondary: #a0aec0;
-      --gold: #fbbf24; --cyan: #22d3ee;
-      --border: rgba(255,255,255,0.07);
+      --bg: #f5f7fa;
+      --bg-card: #ffffff;
+      --bg-card2: #f0f4f8;
+      --border: #e2e8f0;
+      --text: #1a202c;
+      --text-sub: #64748b;
+      --green: #16a34a;
+      --green-bg: #f0fdf4;
+      --green-border: #bbf7d0;
+      --red: #dc2626;
+      --red-bg: #fef2f2;
+      --red-border: #fecaca;
+      --blue: #2563eb;
+      --blue-bg: #eff6ff;
+      --blue-border: #bfdbfe;
+      --gold: #d97706;
+      --gold-bg: #fffbeb;
+      --gold-border: #fde68a;
+      --purple: #7c3aed;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI','Noto Sans TC',-apple-system,sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    body { font-family: 'Segoe UI','Noto Sans TC',-apple-system,sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
     .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-    header { background: linear-gradient(135deg,#0a0e1a,#111b3a 50%,#0d1428); border-bottom: 2px solid #1e3a6e; padding: 28px 0 22px; animation: fadeIn 0.6s ease; }
+
+    header { background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 50%, #1e3a5f 100%); padding: 28px 0 22px; }
     .header-content { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; }
-    .header-title h1 { font-size:1.75rem; font-weight:700; background:linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .header-title p { color:var(--text-secondary); font-size:0.9rem; margin-top:4px; }
+    .header-title h1 { font-size:1.65rem; font-weight:800; color:#ffffff; }
+    .header-title p { color:#93c5fd; font-size:0.88rem; margin-top:3px; }
     .header-meta { text-align:right; }
-    .report-date { font-size:1.1rem; font-weight:600; color:var(--cyan); }
-    .report-time { font-size:0.85rem; color:var(--text-secondary); }
-    .live-badge { display:inline-block; background:#1a3a1a; color:#00c851; border:1px solid #00c851; border-radius:20px; padding:3px 10px; font-size:0.75rem; font-weight:600; margin-top:6px; }
-    section { margin:24px 0; }
-    .section-title { font-size:1.05rem; font-weight:700; color:#22d3ee; border-left:4px solid #22d3ee; padding-left:12px; margin-bottom:14px; }
-    .card { background:#0f1628; border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:20px; }
-    .summary-text { font-size:0.95rem; line-height:1.9; border-left:3px solid #1e3a6e; padding-left:16px; }
-    .tag-bullish { color:#00c851; font-weight:700; }
-    .tag-bearish { color:#ff4444; font-weight:700; }
-    .metrics-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }
-    .metric-card { background:#141d35; border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px 14px; text-align:center; }
-    .metric-label { font-size:0.75rem; color:#a0aec0; font-weight:500; }
-    .metric-value { font-size:1.25rem; font-weight:700; margin:6px 0 4px; }
-    .metric-change { font-size:0.82rem; font-weight:600; }
-    .metric-note { font-size:0.7rem; color:#a0aec0; margin-top:2px; }
-    .up { color:#00c851; } .down { color:#ff4444; } .neutral { color:#888; }
-    .highlight-sox { border:1px solid rgba(251,191,36,0.4); background:rgba(251,191,36,0.05); }
-    .data-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
-    .data-table th { background:rgba(255,255,255,0.05); color:#a0aec0; font-weight:600; padding:10px 14px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.07); }
-    .data-table td { padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.04); }
+    .report-date { font-size:1.05rem; font-weight:700; color:#ffffff; }
+    .report-time { font-size:0.82rem; color:#93c5fd; margin-top:2px; }
+    .live-badge { display:inline-block; background:rgba(255,255,255,0.15); color:#ffffff; border:1px solid rgba(255,255,255,0.3); border-radius:20px; padding:3px 12px; font-size:0.72rem; font-weight:700; margin-top:6px; }
+
+    section { margin:20px 0; animation:fadeIn 0.4s ease; }
+    .section-title { font-size:0.78rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+    .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+    .card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px; box-shadow:var(--shadow); }
+
+    .summary-text { font-size:0.95rem; line-height:1.9; }
+    .tag-bullish { color:var(--green); font-weight:700; }
+    .tag-bearish { color:var(--red); font-weight:700; }
+
+    .metrics-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+    .metric-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:14px 12px; box-shadow:var(--shadow); }
+    .metric-label { font-size:0.7rem; color:var(--text-sub); font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
+    .metric-value { font-size:1.2rem; font-weight:800; margin:5px 0 3px; }
+    .metric-change { font-size:0.8rem; font-weight:600; }
+    .metric-note { font-size:0.68rem; color:var(--text-sub); margin-top:3px; }
+    .up { color:var(--green); }
+    .down { color:var(--red); }
+    .neutral { color:var(--text-sub); }
+    .highlight-sox { border:1px solid var(--gold-border); background:var(--gold-bg); }
+    .highlight-tsm { border:1px solid var(--green-border); background:var(--green-bg); }
+
+    .futures-banner { background:linear-gradient(135deg,#f0fdf4,#dcfce7); border:1px solid var(--green-border); border-radius:12px; padding:20px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; align-items:center; box-shadow:var(--shadow); }
+    .futures-main .label { font-size:0.7rem; color:var(--text-sub); font-weight:600; text-transform:uppercase; margin-bottom:4px; }
+    .futures-main .value { font-size:2rem; font-weight:800; }
+    .futures-main .change { font-size:0.95rem; font-weight:700; margin-top:2px; }
+    .futures-box { background:white; border:1px solid var(--green-border); border-radius:8px; padding:14px; text-align:center; }
+    .futures-box .label { font-size:0.7rem; color:var(--text-sub); margin-bottom:6px; }
+    .futures-box .value { font-size:1.05rem; font-weight:800; color:var(--blue); }
+
+    .data-table { width:100%; border-collapse:collapse; font-size:0.87rem; }
+    .data-table th { background:var(--bg-card2); color:var(--text-sub); font-weight:700; font-size:0.7rem; text-transform:uppercase; padding:10px 14px; text-align:left; border-bottom:2px solid var(--border); }
+    .data-table td { padding:11px 14px; border-bottom:1px solid var(--border); }
     .data-table tr:last-child td { border-bottom:none; }
-    .ticker { font-weight:700; color:#22d3ee; }
-    .tsm-row { background:rgba(0,200,81,0.04); }
-    .macro-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-    .macro-card { background:#141d35; border-radius:10px; padding:16px; border:1px solid rgba(255,255,255,0.07); text-align:center; }
-    .macro-label { font-size:0.75rem; color:#a0aec0; margin-bottom:6px; }
-    .macro-value { font-size:1.3rem; font-weight:700; }
-    .macro-sub { font-size:0.75rem; color:#a0aec0; margin-top:4px; }
-    .fx-display { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
-    .fx-value { font-size:3rem; font-weight:800; color:#fbbf24; }
-    .fx-label { font-size:0.85rem; color:#a0aec0; }
-    .fx-change { font-size:0.9rem; font-weight:600; margin-top:4px; }
-    .news-item { display:flex; gap:14px; align-items:flex-start; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .data-table tr:hover td { background:var(--bg-card2); }
+    .tsm-row td { background:var(--green-bg); }
+    .ticker { font-weight:800; color:var(--blue); }
+
+    .macro-grid-5 { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+    .macro-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:14px; box-shadow:var(--shadow); text-align:center; }
+    .macro-label { font-size:0.68rem; color:var(--text-sub); font-weight:600; text-transform:uppercase; margin-bottom:6px; }
+    .macro-value { font-size:1.2rem; font-weight:800; }
+    .macro-sub { font-size:0.7rem; color:var(--text-sub); margin-top:4px; }
+    .macro-btc { border:1px solid #e9d5ff; background:#faf5ff; }
+    .macro-gold { border:1px solid var(--gold-border); background:var(--gold-bg); }
+
+    .fx-display { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+    .fx-value { font-size:2.8rem; font-weight:800; color:var(--gold); }
+    .fx-label { font-size:0.8rem; color:var(--text-sub); font-weight:600; }
+    .fx-change { font-size:0.9rem; font-weight:700; margin-top:4px; }
+
+    .news-item { display:flex; gap:14px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--border); }
     .news-item:last-child { border-bottom:none; padding-bottom:0; }
-    .news-num { font-size:1.2rem; font-weight:800; color:rgba(255,255,255,0.15); min-width:24px; }
-    .news-headline { font-size:0.92rem; font-weight:600; line-height:1.5; }
-    .news-tag { display:inline-block; margin-top:5px; font-size:0.7rem; font-weight:700; border-radius:4px; padding:2px 8px; }
-    .tag-pos { background:rgba(0,200,81,0.2); color:#00c851; border:1px solid rgba(0,200,81,0.3); }
-    .tag-neg { background:rgba(255,68,68,0.2); color:#ff4444; border:1px solid rgba(255,68,68,0.3); }
-    .tag-neutral-tag { background:rgba(136,136,136,0.2); color:#aaa; border:1px solid rgba(136,136,136,0.3); }
+    .news-num { font-size:1.1rem; font-weight:800; color:var(--border); min-width:22px; padding-top:2px; }
+    .news-headline { font-size:0.9rem; font-weight:600; line-height:1.6; }
+    .news-tag { display:inline-block; margin-top:6px; font-size:0.68rem; font-weight:700; border-radius:4px; padding:2px 8px; }
+    .tag-pos { background:var(--green-bg); color:var(--green); border:1px solid var(--green-border); }
+    .tag-neg { background:var(--red-bg); color:var(--red); border:1px solid var(--red-border); }
+    .tag-neutral-tag { background:var(--bg-card2); color:var(--text-sub); border:1px solid var(--border); }
+
     .outlook-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-    .gauge-wrapper { text-align:center; padding:20px; }
-    .gauge-value { font-size:2.5rem; font-weight:800; }
-    .gauge-label { font-size:0.8rem; color:#a0aec0; margin-top:4px; }
-    .sentiment-bar { height:10px; border-radius:20px; margin:14px 0; background:linear-gradient(to right,#ff4444 0%,#888 50%,#00c851 100%); position:relative; }
-    .sentiment-indicator { width:20px; height:20px; border-radius:50%; background:white; border:3px solid white; position:absolute; top:-5px; transform:translateX(-50%); box-shadow:0 0 12px rgba(255,255,255,0.6); }
-    .range-box { background:#141d35; border-radius:10px; padding:16px; }
-    .range-title { font-size:0.8rem; color:#a0aec0; margin-bottom:10px; }
-    .range-values { display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
-    .range-low { font-size:1.3rem; font-weight:700; color:#60a5fa; }
-    .range-high { font-size:1.3rem; font-weight:700; color:#fbbf24; }
-    .data-note { font-size:0.72rem; color:#888; font-style:italic; margin-top:8px; }
-    .disclaimer { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px 20px; font-size:0.78rem; color:#a0aec0; line-height:1.7; }
-    footer { padding:24px 0; text-align:center; color:#a0aec0; font-size:0.78rem; border-top:1px solid rgba(255,255,255,0.07); margin-top:40px; }
+    .gauge-wrapper { text-align:center; padding:16px; }
+    .gauge-title { font-size:0.7rem; color:var(--text-sub); font-weight:600; text-transform:uppercase; margin-bottom:12px; }
+    .gauge-value { font-size:2.2rem; font-weight:800; }
+    .sentiment-bar { height:8px; border-radius:20px; margin:14px 0 6px; background:linear-gradient(to right,var(--red) 0%,#fbbf24 50%,var(--green) 100%); position:relative; }
+    .sentiment-indicator { width:18px; height:18px; border-radius:50%; background:white; border:3px solid #1e40af; position:absolute; top:-5px; transform:translateX(-50%); box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+    .gauge-desc { font-size:0.78rem; color:var(--text-sub); margin-top:6px; }
+    .range-box { background:var(--blue-bg); border:1px solid var(--blue-border); border-radius:10px; padding:18px; }
+    .range-title { font-size:0.7rem; color:var(--blue); font-weight:700; text-transform:uppercase; margin-bottom:12px; }
+    .range-values { display:flex; justify-content:space-between; align-items:center; }
+    .range-low { font-size:1.4rem; font-weight:800; color:var(--blue); }
+    .range-high { font-size:1.4rem; font-weight:800; color:var(--purple); }
+    .range-note { font-size:0.7rem; color:var(--text-sub); margin-top:10px; }
+
+    .disclaimer { background:var(--bg-card2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; font-size:0.75rem; color:var(--text-sub); line-height:1.7; }
+    footer { padding:24px 0; text-align:center; color:var(--text-sub); font-size:0.75rem; border-top:1px solid var(--border); margin-top:32px; }
+
     @media(max-width:700px) {
-      .outlook-grid,.macro-grid { grid-template-columns:1fr; }
+      .futures-banner,.outlook-grid { grid-template-columns:1fr; }
+      .macro-grid-5 { grid-template-columns:repeat(2,1fr); }
       .header-content { flex-direction:column; }
       .header-meta { text-align:left; }
-      .header-title h1 { font-size:1.35rem; }
     }
   </style>
 </head>
@@ -91,12 +132,12 @@
     <div class="header-content">
       <div class="header-title">
         <h1>🇹🇼 台灣股市開盤分析</h1>
-        <p>Taiwan Market Morning Brief</p>
+        <p>Taiwan Market Morning Brief · Powered by Claude AI</p>
       </div>
       <div class="header-meta">
-        <div class="report-date">2026 年 6 月 3 日（星期三）</div>
-        <div class="report-time">⏱ 報告產生時間：08:10 CST</div>
-        <div class="live-badge">● LIVE BRIEF</div>
+        <div class="report-date">2026年6月4日（星期四）</div>
+        <div class="report-time">⏱ 08:10 CST 自動生成</div>
+        <div class="live-badge">● LIVE DAILY BRIEF</div>
       </div>
     </div>
   </div>
@@ -104,72 +145,114 @@
 
 <div class="container">
 
+  <!-- 01 總覽摘要 -->
   <section>
-    <div class="section-title">01 · 總覽摘要 Market Overview</div>
+    <div class="section-title">01 · 總覽摘要</div>
     <div class="card">
-      <p class="summary-text">台積電ADR（TSM）昨日收盤<span class="tag-bullish">$435.63</span>，觸及52週新高$449.39，漲幅逾<span class="tag-bullish">+4.8%</span>，主因英偉達執行長黃仁勳宣布每年投資台灣1,500億美元半導體基礎建設，費城半導體指數（SOX）單日大漲約<span class="tag-bullish">+6%</span>，美股三大指數全數收紅，標普500首度站上7,600點。亞股方面，日本日經225指數早盤走強<span class="tag-bullish">+0.91%</span>並創歷史新高，南韓股市因公假休市；整體市場情緒偏多，半導體族群氣勢強勁。台股今日開盤預估受台積電強勢帶動，加權指數開盤區間估落在<span class="tag-bullish">45,800</span>至<span class="tag-bullish">46,100</span>點，惟需留意中東地緣局勢升溫對油價的潛在干擾。</p>
+      <p class="summary-text">台指期夜盤收<span class="tag-bullish">46,306</span>點，較昨日加權指數收盤45,677點溢價約629點，顯示市場期待今日回升，但台積電 ADR 下跌<span class="tag-bearish">2.24%</span>至436.69美元，形成分歧訊號。美股昨日費半（SOX）逆勢上揚<span class="tag-bullish">+1.39%</span>，歐股三大指數小幅收紅；然日股與韓股均跌逾1%，亞股整體氛圍偏弱。台股今日預估開盤區間<span class="tag-bullish">46,150–46,450</span>，費半走強具支撐，惟 TSM ADR 回落與亞股疲弱為主要觀察變數，外資流向與台積電現貨開盤至關重要。</p>
     </div>
   </section>
 
+  <!-- 02 台指期夜盤 -->
   <section>
-    <div class="section-title">02 · 美股收盤 U.S. Market Close · June 2, 2026</div>
+    <div class="section-title">02 · 台指期夜盤</div>
+    <div class="futures-banner">
+      <div class="futures-main">
+        <div class="label">台指期近一 夜盤收盤</div>
+        <div class="value neutral">46,306</div>
+        <div class="change neutral">-4 (-0.01%)</div>
+        <div style="font-size:0.68rem;color:var(--text-sub);margin-top:6px;">來源：tw.stock.yahoo.com/future</div>
+      </div>
+      <div class="futures-box">
+        <div class="label">前日加權指數收盤</div>
+        <div class="value" style="color:var(--text)">45,677</div>
+      </div>
+      <div class="futures-box">
+        <div class="label">隱含開盤預估區間</div>
+        <div class="value">46,150 – 46,450</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 美股收盤 -->
+  <section>
+    <div class="section-title">03 · 美股收盤 · June 3, 2026</div>
     <div class="metrics-grid">
       <div class="metric-card">
-        <div class="metric-label">DJIA 道瓊工業</div>
-        <div class="metric-value up">51,307.79</div>
-        <div class="metric-change up">+0.45%</div>
+        <div class="metric-label">DJIA 道瓊</div>
+        <div class="metric-value down">50,687</div>
+        <div class="metric-change down">-1.21%</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">S&amp;P 500</div>
-        <div class="metric-value up">7,609.78</div>
-        <div class="metric-change up">+0.13%</div>
+        <div class="metric-value down">7,553.68</div>
+        <div class="metric-change down">-0.74%</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">NASDAQ Composite</div>
-        <div class="metric-value up">27,093.90</div>
-        <div class="metric-change up">+0.03%</div>
+        <div class="metric-label">NASDAQ</div>
+        <div class="metric-value down">26,853.98</div>
+        <div class="metric-change down">-0.89%</div>
       </div>
       <div class="metric-card highlight-sox">
-        <div class="metric-label">⭐ SOX 半導體</div>
-        <div class="metric-value" style="color:#fbbf24">－</div>
-        <div class="metric-change" style="color:#fbbf24">+~6.0%</div>
-        <div class="metric-note">Marvell +32% 帶動</div>
+        <div class="metric-label">⭐ SOX 費半</div>
+        <div class="metric-value" style="color:var(--gold)">13,916.96</div>
+        <div class="metric-change" style="color:var(--gold)">+1.39%</div>
+        <div class="metric-note">費半逆勢收紅，半導體族群強勢領漲</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Russell 2000</div>
-        <div class="metric-value up">2,905.76</div>
-        <div class="metric-change up">+0.90%</div>
+        <div class="metric-value neutral">－</div>
+        <div class="metric-change neutral">N/A</div>
       </div>
     </div>
   </section>
 
+  <!-- 04 歐股收盤 -->
   <section>
-    <div class="section-title">03 · 台灣 ADR · June 2, 2026</div>
+    <div class="section-title">04 · 歐股收盤 · June 3, 2026</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">英國 FTSE 100</div>
+        <div class="metric-value up">10,349.90</div>
+        <div class="metric-change up">+0.17%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">德國 DAX</div>
+        <div class="metric-value up">24,921.97</div>
+        <div class="metric-change up">+0.51%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">法國 CAC 40</div>
+        <div class="metric-value up">8,207.04</div>
+        <div class="metric-change up">+0.69%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 台灣 ADR -->
+  <section>
+    <div class="section-title">05 · 台灣 ADR · June 3, 2026</div>
     <div class="card">
       <table class="data-table">
         <thead>
-          <tr><th>ADR</th><th>台股代號</th><th>收盤價 (USD)</th><th>漲跌幅</th><th>備註</th></tr>
+          <tr><th>ADR</th><th>台股</th><th>收盤 (USD)</th><th>漲跌幅</th><th>備註</th></tr>
         </thead>
         <tbody>
           <tr class="tsm-row">
             <td><span class="ticker">TSM ⭐</span></td><td>2330 台積電</td>
-            <td>$435.63</td><td class="up">+4.8%</td><td>AI需求強勁・創52週新高</td>
+            <td>$436.69</td><td class="down">-2.24%</td><td>ADR回落，跟隨美股整體走跌</td>
           </tr>
           <tr>
             <td><span class="ticker">UMC</span></td><td>2303 聯電</td>
-            <td>$22.89</td><td class="up">+4.0%</td><td>－</td>
+            <td>$21.42</td><td class="down">-4.63%</td><td>－</td>
           </tr>
           <tr>
             <td><span class="ticker">ASX</span></td><td>2311 日月光</td>
-            <td>~$41.03</td><td class="neutral">N/A</td><td>－</td>
-          </tr>
-          <tr>
-            <td><span class="ticker">HIMX</span></td><td>3010 奇景光電</td>
-            <td>~$20.78</td><td class="neutral">N/A</td><td>－</td>
+            <td>$39.91</td><td class="up">+1.66%</td><td>－</td>
           </tr>
           <tr>
             <td><span class="ticker">CHT</span></td><td>2412 中華電信</td>
-            <td>~$43.05</td><td class="neutral">N/A</td><td>－</td>
+            <td>$44.90</td><td class="down">-1.10%</td><td>－</td>
           </tr>
           <tr>
             <td><span class="ticker">AUO</span></td><td>2409 友達</td>
@@ -180,121 +263,127 @@
     </div>
   </section>
 
+  <!-- 06 日韓早盤 -->
   <section>
-    <div class="section-title">04 · 日韓早盤 Asia Open · 08:00–08:10 CST</div>
+    <div class="section-title">06 · 日韓早盤 · 08:00–08:10 CST</div>
     <div class="metrics-grid">
       <div class="metric-card">
         <div class="metric-label">Nikkei 225</div>
-        <div class="metric-value up">~40,500</div>
-        <div class="metric-change up">+0.91%（創歷史新高）</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">TOPIX</div>
-        <div class="metric-value up">~2,830</div>
-        <div class="metric-change up">+0.93%</div>
+        <div class="metric-value down">67,470.69</div>
+        <div class="metric-change down">-1.36%</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">KOSPI</div>
-        <div class="metric-value neutral">8,801.49</div>
-        <div class="metric-change neutral">休市（公假）</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">KOSDAQ</div>
-        <div class="metric-value neutral">1,026.03</div>
-        <div class="metric-change neutral">休市（公假）</div>
+        <div class="metric-value down">8,639.41</div>
+        <div class="metric-change down">-1.84%</div>
       </div>
     </div>
   </section>
 
+  <!-- 07 恐慌指數、債市、原物料、加密貨幣 -->
   <section>
-    <div class="section-title">05 · 恐慌指數與債市 VIX &amp; Rates</div>
-    <div class="macro-grid">
+    <div class="section-title">07 · 恐慌指數 · 債市 · 原物料 · 加密貨幣</div>
+    <div class="macro-grid-5">
       <div class="macro-card">
         <div class="macro-label">VIX 恐慌指數</div>
-        <div class="macro-value neutral">15.94</div>
-        <div class="macro-sub">情緒稍緊・仍在低位</div>
+        <div class="macro-value up">16.31</div>
+        <div class="macro-sub">市場波動略升</div>
       </div>
       <div class="macro-card">
         <div class="macro-label">美國 10Y 殖利率</div>
-        <div class="macro-value neutral">4.47%</div>
-        <div class="macro-sub">殖利率微升・債市穩健</div>
+        <div class="macro-value up">4.491%</div>
+        <div class="macro-sub">殖利率微升，債市承壓</div>
       </div>
       <div class="macro-card">
         <div class="macro-label">WTI 原油</div>
-        <div class="macro-value down">$91.00</div>
-        <div class="macro-sub">油價回落1%・中東情勢影響</div>
+        <div class="macro-value down">$95.18</div>
+        <div class="macro-sub">油價回落，通膨疑慮稍減</div>
+      </div>
+      <div class="macro-card macro-gold">
+        <div class="macro-label">黃金 Gold</div>
+        <div class="macro-value" style="color:var(--gold)">$4,491.5</div>
+        <div class="macro-sub up">+$24.6 (+0.55%)</div>
+      </div>
+      <div class="macro-card macro-btc">
+        <div class="macro-label">比特幣 BTC</div>
+        <div class="macro-value" style="color:#7c3aed">$63,749</div>
+        <div class="macro-sub down">-5.03%</div>
       </div>
     </div>
   </section>
 
+  <!-- 08 匯率 -->
   <section>
-    <div class="section-title">06 · 匯率 USD/TWD</div>
+    <div class="section-title">08 · 匯率 USD/TWD</div>
     <div class="card">
       <div class="fx-display">
-        <div class="fx-value">31.35</div>
+        <div class="fx-value">－</div>
         <div>
           <div class="fx-label">USD / TWD</div>
-          <div class="fx-change up">+0.16%（TWD 微貶）</div>
+          <div class="fx-change neutral">資料載入失敗，請查閱即時報價</div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- 09 今日重點新聞 -->
   <section>
-    <div class="section-title">07 · 今日重點新聞 Key News</div>
+    <div class="section-title">09 · 今日重點新聞</div>
     <div class="card">
       <div class="news-item">
         <div class="news-num">1</div>
         <div class="news-content">
-          <div class="news-headline">英偉達CEO黃仁勳承諾每年投資台灣1,500億美元，台積電ADR（TSM）創52週新高$449.39，SOX費半指數單日飆升近+6%</div>
+          <div class="news-headline">費半指數（SOX）逆勢上揚 +1.39%，道瓊雖重挫逾620點，半導體族群卻強勢收紅，顯示市場對 AI 晶片需求前景依然樂觀，對台積電及台灣半導體供應鏈具正面支撐。</div>
           <span class="news-tag tag-pos">正面</span>
         </div>
       </div>
       <div class="news-item">
         <div class="news-num">2</div>
         <div class="news-content">
-          <div class="news-headline">台積電計劃2026年下半年提高3奈米製程報價達15%，全年營收成長指引上調至逾30%（美元計），AI晶片需求持續強勁</div>
+          <div class="news-headline">台積電股東會上，魏哲家確認正積極與客戶洽談漲價事宜，並強調與客戶維持長期夥伴關係；同時指出過去一年股價大漲逾1.5倍、股利成長逾三成，凸顯台積電基本面穩健。</div>
           <span class="news-tag tag-pos">正面</span>
         </div>
       </div>
       <div class="news-item">
         <div class="news-num">3</div>
         <div class="news-content">
-          <div class="news-headline">美國務卿魯比歐指稱伊朗封鎖荷莫茲海峽大段航道，中東緊張局勢升溫，原油市場波動加劇</div>
-          <span class="news-tag tag-neg">負面</span>
+          <div class="news-headline">輝達執行長黃仁勳與聯發科攜手推出 N1X 晶片，採用台積電3奈米製程，再次強化台灣在全球 AI 晶片供應鏈的核心地位，有望帶動台積電及聯發科相關題材持續發酵。</div>
+          <span class="news-tag tag-pos">正面</span>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- 10 開盤展望 -->
   <section>
-    <div class="section-title">08 · 開盤展望 Market Outlook</div>
+    <div class="section-title">10 · 開盤展望</div>
     <div class="card">
       <div class="outlook-grid">
         <div class="gauge-wrapper">
-          <div style="font-size:0.85rem;color:#a0aec0;margin-bottom:12px;">市場情緒 Sentiment</div>
-          <div class="gauge-value up">偏多</div>
+          <div class="gauge-title">市場情緒 Sentiment</div>
+          <div class="gauge-value up">中性偏多</div>
           <div class="sentiment-bar">
-            <div class="sentiment-indicator" style="left:70%"></div>
+            <div class="sentiment-indicator" style="left:60%"></div>
           </div>
-          <div class="gauge-label">台積電ADR創52週新高，英偉達宣布每年投資台灣1,500億美元，帶動半導體族群全面強勢。</div>
+          <div class="gauge-desc">台指期夜盤溢價顯著，費半走強具撐，惟 TSM ADR 回落與亞股走弱為今日最關鍵風險變數</div>
         </div>
         <div class="range-box">
           <div class="range-title">📊 加權指數開盤預估區間</div>
           <div class="range-values">
-            <div class="range-low">45,800</div>
-            <div style="font-size:1.5rem;color:#a0aec0">→</div>
-            <div class="range-high">46,100</div>
+            <div class="range-low">46,150</div>
+            <div style="font-size:1.2rem;color:var(--text-sub)">→</div>
+            <div class="range-high">46,450</div>
           </div>
-          <p class="data-note" style="margin-top:12px">綜合 TSM ADR + 日韓早盤 + VIX 推估</p>
+          <div class="range-note">綜合台指期夜盤 + TSM ADR + 日韓早盤推估</div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- 11 免責聲明 -->
   <section>
     <div class="disclaimer">
-      ⚠️ <strong>免責聲明：</strong>本報告由 AI 自動生成，僅供參考，不構成任何投資建議。市場資料來源包含 Yahoo Finance 等公開資訊，數據可能有延遲。投資人應自行判斷並承擔相關風險。
+      ⚠️ <strong>免責聲明：</strong>本報告由 AI 自動生成，僅供參考，不構成任何投資建議。資料來源為 Yahoo 股市等公開資訊，數據可能有所延遲。投資人應自行判斷並承擔相關風險。
     </div>
   </section>
 
