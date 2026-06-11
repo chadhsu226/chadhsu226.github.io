@@ -3,229 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chih-Hsiang Hsu | Resources</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>教學小工具 | 許智翔</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Noto Serif TC', serif; }
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .serif { font-family: 'Noto Serif TC', serif; }
         .mono { font-family: 'DM Mono', monospace; }
 
-        .card-hover {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.10); }
+        .tool-card:hover .cta { gap: 10px; }
+        .cta { transition: gap 0.2s ease; }
+
+        .back-home {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.85rem; color: #047857; text-decoration: none;
+            opacity: 0.9; transition: opacity 0.15s, gap 0.15s;
         }
-        .card-hover:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        .back-home:hover { opacity: 1; gap: 9px; }
+
+        .pill {
+            display: inline-block; font-size: 11px; padding: 3px 10px;
+            border-radius: 20px; margin: 0 4px 4px 0;
         }
 
-        /* 早報卡片樣式 */
-        .report-card {
-            background: linear-gradient(135deg, #0a0e1a 0%, #131829 100%);
-            border: 1px solid #232a44;
-            color: #e8eaf2;
+        /* 座位工具：迷你座位圖預覽 */
+        .seat-preview {
+            background: #f7f5f0; border: 1px solid #e0dbd3; border-radius: 10px;
+            padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px;
         }
-        .report-card h2 { color: #4d9fff; }
-        .report-card .tag {
-            background: #1a2245;
-            color: #4d9fff;
-            border: 1px solid #2a3a6a;
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 4px;
+        .podium {
+            background: #3d6b4f; color: #fff; font-size: 9px; letter-spacing: 1px;
+            padding: 2px 14px; border-radius: 4px;
         }
-        .report-card .meta { color: #8892a8; font-size: 13px; }
-        .report-card .view-link {
-            color: #4d9fff;
-            border: 1px solid #2a3a6a;
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-size: 14px;
-            display: inline-block;
-            transition: background 0.2s;
-        }
-        .report-card .view-link:hover { background: #1a2245; }
+        .seat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+        .seat-dot { width: 16px; height: 16px; border-radius: 4px; background: #eef6f1; border: 1px solid #cfe2d6; }
+        .seat-dot.fixed { background: #fdf3ec; border-color: #e6c3a8; }
 
-        /* 指數預覽區 */
-        .index-row {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin: 12px 0;
+        /* 計時器工具：迷你投影畫面預覽 */
+        .timer-preview {
+            background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px;
+            padding: 16px 14px; text-align: center;
         }
-        .index-chip {
-            background: #1a2038;
-            border: 1px solid #232a44;
-            border-radius: 6px;
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-        .index-chip .name { color: #8892a8; font-size: 11px; }
-        .index-chip .val { color: #e8eaf2; font-weight: 600; }
-        .index-chip .up { color: #00c851; }
-        .index-chip .down { color: #ff4444; }
-
-        /* 載入狀態 */
-        .loading-pulse {
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
-        /* fade in */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .fade-up { animation: fadeUp 0.5s ease-out both; }
-        .fade-up:nth-child(1) { animation-delay: 0.05s; }
-        .fade-up:nth-child(2) { animation-delay: 0.15s; }
-        .fade-up:nth-child(3) { animation-delay: 0.25s; }
-        .fade-up:nth-child(4) { animation-delay: 0.35s; }
+        .timer-preview .lbl { font-size: 9px; letter-spacing: 2px; color: rgba(240,242,248,0.45); text-transform: uppercase; }
+        .timer-preview .big { font-size: 30px; font-weight: 300; color: #7b8cde; letter-spacing: 1px; line-height: 1.1; margin: 2px 0 8px; }
+        .timer-preview .bar { height: 4px; border-radius: 2px; background: #2a2d3e; overflow: hidden; }
+        .timer-preview .bar > span { display: block; height: 100%; width: 62%; background: #d4a017; border-radius: 2px; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <header class="bg-white py-16 border-b border-gray-200">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">許智翔 (Chih-Hsiang Hsu)</h1>
-            <p class="text-lg text-gray-600">銘傳大學 財務金融系 | Department of Finance, Ming Chuan University</p>
-            <p class="mt-6 text-gray-500 max-w-2xl mx-auto">致力於將統計理論與財務數學知識轉化為數位實踐，提供學生完整的學習路徑與互動資源。</p>
+    <header class="bg-white border-b border-gray-200 py-12">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <a href="https://chadhsu226.github.io/" class="back-home mb-6">← 返回首頁</a>
+            <div class="mt-5">
+                <span class="inline-block text-xs font-medium tracking-widest text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full mb-3 mono">FOR TEACHERS</span>
+                <h1 class="serif text-4xl font-bold text-gray-900 mb-2">教學小工具</h1>
+                <p class="text-gray-500">課堂與考試實用工具 · 許智翔 · 銘傳大學財務金融系</p>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-6 py-12">
+    <main class="container mx-auto px-6 py-12 max-w-4xl">
+        <p class="text-sm text-gray-400 tracking-widest uppercase mb-6 mono">選擇工具</p>
 
-        <!-- 早報卡片（全寬） -->
-        <div class="report-card rounded-xl p-8 mb-8 card-hover fade-up" id="report-section">
-            <div class="flex items-start justify-between flex-wrap gap-4 mb-4">
-                <div>
-                    <div class="flex items-center gap-3 mb-2">
-                        <h2 class="text-2xl font-semibold">📊 今日股市看盤重點</h2>
-                        <span class="tag mono">LIVE DAILY</span>
-                    </div>
-                    <p class="meta" id="report-date">載入中...</p>
-                </div>
-                <a href="report/morning-brief.html" target="_blank" class="view-link mono">
-                    開啟完整早報 →
-                </a>
-            </div>
-
-            <!-- 摘要文字 -->
-            <p class="text-sm mb-4" style="color:#c0c8d8; line-height:1.8;" id="report-summary">
-                <span class="loading-pulse">正在載入今日早報摘要...</span>
-            </p>
-
-            <!-- 指數快覽 -->
-            <div class="index-row" id="report-indices">
-                <!-- 由 JS 動態填入 -->
-            </div>
-
-            <p class="meta mt-4" style="font-size:11px;">
-                ⏰ 每個交易日 08:10 自動更新　|　資料來源：Claude Cowork
-            </p>
-        </div>
-
-        <!-- 四欄課程卡片（2x2） -->
         <div class="grid md:grid-cols-2 gap-8">
 
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up">
-                <h2 class="text-2xl font-semibold mb-4 text-blue-700">統計學</h2>
-                <p class="text-gray-600 mb-6">涵蓋假設檢定、推論統計與迴歸分析，包含詳細數學推導與實務範例。</p>
-                <a href="https://chadhsu226.github.io/Statistics2/" class="text-blue-600 font-medium hover:underline">進入課程 &rarr;</a>
-            </div>
+            <!-- 座位排列產生器 -->
+            <a href="seat.html" class="tool-card block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="h-1.5 bg-emerald-600"></div>
+                <div class="p-7">
+                    <div class="seat-preview mb-6">
+                        <div class="podium">講台</div>
+                        <div class="seat-grid">
+                            <span class="seat-dot"></span><span class="seat-dot fixed"></span><span class="seat-dot"></span><span class="seat-dot"></span><span class="seat-dot"></span>
+                            <span class="seat-dot"></span><span class="seat-dot"></span><span class="seat-dot"></span><span class="seat-dot fixed"></span><span class="seat-dot"></span>
+                            <span class="seat-dot"></span><span class="seat-dot"></span><span class="seat-dot"></span><span class="seat-dot"></span><span class="seat-dot"></span>
+                        </div>
+                    </div>
+                    <h2 class="serif text-2xl font-semibold text-gray-900 mb-2">座位排列產生器</h2>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">
+                        貼上學生名單即可隨機分配座位，支援指定固定座位、設定講台方向，並可直接拖曳微調個別位置。適合考試排座或分組。
+                    </p>
+                    <div class="mb-5">
+                        <span class="pill" style="background:#e8f0eb;color:#3d6b4f;">隨機分配</span>
+                        <span class="pill" style="background:#faf0ea;color:#b85c2a;">固定座位</span>
+                        <span class="pill" style="background:#e8f0eb;color:#3d6b4f;">拖曳微調</span>
+                    </div>
+                    <span class="cta inline-flex items-center text-emerald-700 font-medium mono text-sm">開啟工具 &rarr;</span>
+                </div>
+            </a>
 
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up">
-                <h2 class="text-2xl font-semibold mb-4 text-blue-700">財務數學</h2>
-                <p class="text-gray-600 mb-6">互動式練習題庫，深化證券評價、資本預算與投資組合量化分析。</p>
-                <a href="https://chadhsu226.github.io/financial-math/" class="text-blue-600 font-medium hover:underline">開始練習 &rarr;</a>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up">
-                <h2 class="text-2xl font-semibold mb-4 text-purple-700">行為財務學</h2>
-                <p class="text-gray-600 mb-6">經典文獻導讀影片系列，深入理解市場非理性、噪音交易者與套利限制。</p>
-                <a href="https://chadhsu226.github.io/behavioral-finance/" class="text-purple-600 font-medium hover:underline">觀看影片 &rarr;</a>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up">
-                <h2 class="text-2xl font-semibold mb-4 text-blue-700">Chad's Game Zone</h2>
-                <p class="text-gray-600 mb-6">教學之餘的益智遊戲園地，挑戰您的策略與反應力。</p>
-                <a href="https://chadhsu226.github.io/games/" class="text-blue-600 font-medium hover:underline">遊玩遊戲 &rarr;</a>
-            </div>
+            <!-- 考試計時器 -->
+            <a href="timer.html" class="tool-card block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="h-1.5" style="background:#7b8cde;"></div>
+                <div class="p-7">
+                    <div class="timer-preview mb-6">
+                        <div class="lbl">剩餘時間</div>
+                        <div class="big mono">25:00</div>
+                        <div class="bar"><span></span></div>
+                    </div>
+                    <h2 class="serif text-2xl font-semibold text-gray-900 mb-2">考試計時器</h2>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">
+                        考試倒數計時，可全螢幕投放至投影螢幕讓同學看時間。內建 30 / 10 / 5 分鐘分段顏色提醒，並支援深色與淺色模式切換。
+                    </p>
+                    <div class="mb-5">
+                        <span class="pill" style="background:#eef0fb;color:#4a58c0;">倒數計時</span>
+                        <span class="pill" style="background:#fbf3e0;color:#b07b00;">分段提醒</span>
+                        <span class="pill" style="background:#eef0fb;color:#4a58c0;">可投影</span>
+                    </div>
+                    <span class="cta inline-flex items-center font-medium mono text-sm" style="color:#4a58c0;">開啟工具 &rarr;</span>
+                </div>
+            </a>
 
         </div>
     </main>
 
     <footer class="py-10 text-center text-gray-400 text-sm">
-        &copy; 2026 Chih-Hsiang Hsu. Built with GitHub Pages.
+        &copy; 2026 Chih-Hsiang Hsu · 教學小工具
     </footer>
-
-    <script>
-    // 從早報 HTML 擷取摘要資訊
-    async function loadReportPreview() {
-        try {
-            const res = await fetch('report/morning-brief.html');
-            if (!res.ok) throw new Error('not found');
-            const html = await res.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-
-            // 抓日期（從 title 或 .date 元素）
-            const dateEl = doc.querySelector('.date') || doc.querySelector('[class*="date"]');
-            const titleEl = doc.querySelector('title');
-            let dateStr = '';
-            if (dateEl) dateStr = dateEl.textContent.trim();
-            else if (titleEl) {
-                const m = titleEl.textContent.match(/\d{4}-\d{2}-\d{2}/);
-                if (m) dateStr = m[0];
-            }
-            if (dateStr) {
-                document.getElementById('report-date').textContent = '📅 ' + dateStr + '　早報';
-            }
-
-            // 抓摘要（.summary 區塊的第一段）
-            const summaryEl = doc.querySelector('.summary p') || doc.querySelector('.summary');
-            if (summaryEl) {
-                document.getElementById('report-summary').textContent = summaryEl.textContent.trim().slice(0, 200) + '...';
-            } else {
-                document.getElementById('report-summary').textContent = '今日早報已更新，點擊右上方連結查看完整內容。';
-            }
-
-            // 抓指數數據（.metric 元素）
-            const metrics = doc.querySelectorAll('.metric');
-            const indicesEl = document.getElementById('report-indices');
-            indicesEl.innerHTML = '';
-            let count = 0;
-            metrics.forEach(m => {
-                if (count >= 6) return;
-                const label = m.querySelector('.label');
-                const value = m.querySelector('.value');
-                const change = m.querySelector('.change');
-                if (!label || !value) return;
-                const isUp = m.classList.contains('up');
-                const isDown = m.classList.contains('down');
-                const chip = document.createElement('div');
-                chip.className = 'index-chip';
-                chip.innerHTML = `
-                    <div class="name">${label.textContent.trim()}</div>
-                    <div class="val">${value.textContent.trim()} 
-                        ${change ? `<span class="${isUp ? 'up' : isDown ? 'down' : ''}">${change.textContent.trim()}</span>` : ''}
-                    </div>`;
-                indicesEl.appendChild(chip);
-                count++;
-            });
-
-        } catch(e) {
-            // 早報尚未上傳時的預設狀態
-            document.getElementById('report-date').textContent = '尚無今日早報';
-            document.getElementById('report-summary').textContent = '每個交易日 08:10 自動更新，請稍後再來查看。';
-            document.getElementById('report-indices').innerHTML = '';
-        }
-    }
-
-    loadReportPreview();
-    </script>
 
 </body>
 </html>
