@@ -3,21 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>台灣股市開盤分析 | Taiwan Market Morning Brief - 2026-06-12</title>
+  <title>台灣股市開盤分析 | Taiwan Market Morning Brief - 2026-06-15</title>
   <style>
     :root {
-      --bg: #f5f7fa; --bg-card: #ffffff; --bg-card2: #f0f4f8;
-      --border: #e2e8f0; --text: #1a202c; --text-sub: #64748b;
-      --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
-      --red: #dc2626; --red-bg: #fef2f2; --red-border: #fecaca;
-      --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
-      --gold: #d97706; --gold-bg: #fffbeb; --gold-border: #fde68a;
-      --purple: #7c3aed; --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --bg: #f5f7fa;
+      --bg-card: #ffffff;
+      --bg-card2: #f0f4f8;
+      --border: #e2e8f0;
+      --text: #1a202c;
+      --text-sub: #64748b;
+      --green: #16a34a;
+      --green-bg: #f0fdf4;
+      --green-border: #bbf7d0;
+      --red: #dc2626;
+      --red-bg: #fef2f2;
+      --red-border: #fecaca;
+      --blue: #2563eb;
+      --blue-bg: #eff6ff;
+      --blue-border: #bfdbfe;
+      --gold: #d97706;
+      --gold-bg: #fffbeb;
+      --gold-border: #fde68a;
+      --purple: #7c3aed;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI','Noto Sans TC',-apple-system,sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
     @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
     .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
     header { background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 50%, #1e3a5f 100%); padding: 28px 0 22px; }
     .header-content { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; }
     .header-title h1 { font-size:1.65rem; font-weight:800; color:#ffffff; }
@@ -26,22 +40,28 @@
     .report-date { font-size:1.05rem; font-weight:700; color:#ffffff; }
     .report-time { font-size:0.82rem; color:#93c5fd; margin-top:2px; }
     .live-badge { display:inline-block; background:rgba(255,255,255,0.15); color:#ffffff; border:1px solid rgba(255,255,255,0.3); border-radius:20px; padding:3px 12px; font-size:0.72rem; font-weight:700; margin-top:6px; }
+
     section { margin:20px 0; animation:fadeIn 0.4s ease; }
     .section-title { font-size:0.78rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
     .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
     .card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px; box-shadow:var(--shadow); }
+
     .summary-text { font-size:0.95rem; line-height:1.9; }
     .tag-bullish { color:var(--green); font-weight:700; }
     .tag-bearish { color:var(--red); font-weight:700; }
+
     .metrics-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
     .metric-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:14px 12px; box-shadow:var(--shadow); }
     .metric-label { font-size:0.7rem; color:var(--text-sub); font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
     .metric-value { font-size:1.2rem; font-weight:800; margin:5px 0 3px; }
     .metric-change { font-size:0.8rem; font-weight:600; }
     .metric-note { font-size:0.68rem; color:var(--text-sub); margin-top:3px; }
-    .up { color:var(--green); } .down { color:var(--red); } .neutral { color:var(--text-sub); }
+    .up { color:var(--green); }
+    .down { color:var(--red); }
+    .neutral { color:var(--text-sub); }
     .highlight-sox { border:1px solid var(--gold-border); background:var(--gold-bg); }
     .highlight-tsm { border:1px solid var(--green-border); background:var(--green-bg); }
+
     .futures-banner { background:linear-gradient(135deg,#f0fdf4,#dcfce7); border:1px solid var(--green-border); border-radius:12px; padding:20px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; align-items:center; box-shadow:var(--shadow); }
     .futures-main .label { font-size:0.7rem; color:var(--text-sub); font-weight:600; text-transform:uppercase; margin-bottom:4px; }
     .futures-main .value { font-size:2rem; font-weight:800; }
@@ -49,6 +69,7 @@
     .futures-box { background:white; border:1px solid var(--green-border); border-radius:8px; padding:14px; text-align:center; }
     .futures-box .label { font-size:0.7rem; color:var(--text-sub); margin-bottom:6px; }
     .futures-box .value { font-size:1.05rem; font-weight:800; color:var(--blue); }
+
     .data-table { width:100%; border-collapse:collapse; font-size:0.87rem; }
     .data-table th { background:var(--bg-card2); color:var(--text-sub); font-weight:700; font-size:0.7rem; text-transform:uppercase; padding:10px 14px; text-align:left; border-bottom:2px solid var(--border); }
     .data-table td { padding:11px 14px; border-bottom:1px solid var(--border); }
@@ -56,6 +77,7 @@
     .data-table tr:hover td { background:var(--bg-card2); }
     .tsm-row td { background:var(--green-bg); }
     .ticker { font-weight:800; color:var(--blue); }
+
     .macro-grid-5 { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
     .macro-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:14px; box-shadow:var(--shadow); text-align:center; }
     .macro-label { font-size:0.68rem; color:var(--text-sub); font-weight:600; text-transform:uppercase; margin-bottom:6px; }
@@ -63,10 +85,12 @@
     .macro-sub { font-size:0.7rem; color:var(--text-sub); margin-top:4px; }
     .macro-btc { border:1px solid #e9d5ff; background:#faf5ff; }
     .macro-gold { border:1px solid var(--gold-border); background:var(--gold-bg); }
+
     .fx-display { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
     .fx-value { font-size:2.8rem; font-weight:800; color:var(--gold); }
     .fx-label { font-size:0.8rem; color:var(--text-sub); font-weight:600; }
     .fx-change { font-size:0.9rem; font-weight:700; margin-top:4px; }
+
     .news-item { display:flex; gap:14px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--border); }
     .news-item:last-child { border-bottom:none; padding-bottom:0; }
     .news-num { font-size:1.1rem; font-weight:800; color:var(--border); min-width:22px; padding-top:2px; }
@@ -75,6 +99,7 @@
     .tag-pos { background:var(--green-bg); color:var(--green); border:1px solid var(--green-border); }
     .tag-neg { background:var(--red-bg); color:var(--red); border:1px solid var(--red-border); }
     .tag-neutral-tag { background:var(--bg-card2); color:var(--text-sub); border:1px solid var(--border); }
+
     .outlook-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     .gauge-wrapper { text-align:center; padding:16px; }
     .gauge-title { font-size:0.7rem; color:var(--text-sub); font-weight:600; text-transform:uppercase; margin-bottom:12px; }
@@ -88,9 +113,10 @@
     .range-low { font-size:1.4rem; font-weight:800; color:var(--blue); }
     .range-high { font-size:1.4rem; font-weight:800; color:var(--purple); }
     .range-note { font-size:0.7rem; color:var(--text-sub); margin-top:10px; }
+
     .disclaimer { background:var(--bg-card2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; font-size:0.75rem; color:var(--text-sub); line-height:1.7; }
     footer { padding:24px 0; text-align:center; color:var(--text-sub); font-size:0.75rem; border-top:1px solid var(--border); margin-top:32px; }
-    .data-note { font-size:0.65rem; color:#94a3b8; font-style:italic; }
+
     @media(max-width:700px) {
       .futures-banner,.outlook-grid { grid-template-columns:1fr; }
       .macro-grid-5 { grid-template-columns:repeat(2,1fr); }
@@ -100,6 +126,7 @@
   </style>
 </head>
 <body>
+
 <header>
   <div class="container">
     <div class="header-content">
@@ -108,7 +135,7 @@
         <p>Taiwan Market Morning Brief · Powered by Claude AI</p>
       </div>
       <div class="header-meta">
-        <div class="report-date">2026 年 6 月 12 日（星期五）</div>
+        <div class="report-date">2026年6月15日（星期一）</div>
         <div class="report-time">⏱ 08:10 CST 自動生成</div>
         <div class="live-badge">● LIVE DAILY BRIEF</div>
       </div>
@@ -122,94 +149,89 @@
   <section>
     <div class="section-title">01 · 總覽摘要</div>
     <div class="card">
-      <p class="summary-text">
-        台指期夜盤大漲 <span class="tag-bullish">+1,163 點（+2.69%）收 44,382</span>，反映美股前日強勁表現。川普宣布暫停對伊朗軍事行動、伊核協議有望，帶動道瓊勁升 930 點、S&amp;P 500 漲 1.75%；半導體全面反彈，美光（MU）大漲逾 10%、超微（AMD）漲 8%、英特爾漲 10%。台積電 ADR（TSM）6/11 收 427.92 美元（+0.26%），穩健上揚。今日另有 <span class="tag-bullish">SpaceX（SPCX）首日掛牌</span>，市場氣氛熱絡。警示：美 5 月 CPI 年增 4.2%（創逾三年高），升息疑慮推升 10Y 殖利率至 4.55%。台股開盤預估區間 <span class="tag-bullish">44,250 – 44,550 點</span>，整體情緒偏多，惟通膨壓力持續，高位追漲需留意風險。
-      </p>
+      <p class="summary-text">台指期夜盤收 <span class="tag-bullish">44,704</span> 點（+487 點、+1.10%），台積電 ADR 收 <span class="tag-bullish">$423.93</span>（+0.68%），聯電 ADR 暴漲 <span class="tag-bullish">4.59%</span>，台灣半導體相關 ADR 普遍強勢。美股三大指數 6/12 全面收紅（S&amp;P 500 +0.50%、那斯達克 +0.31%、道瓊 +0.70%），歐股普漲逾 1.6%，全球市場受美伊和談突破及 SpaceX IPO 成功鼓舞，日經 225 今晨已大漲 <span class="tag-bullish">4.84%</span> 突破 <span class="tag-bullish">69,000</span> 歷史新高，南韓 KOSPI 亦勁揚逾 4.6%。台股今日預期強勢開高，主軸聚焦半導體，留意美伊和談後續進展對油價及通膨預期的影響。</p>
     </div>
   </section>
 
   <!-- 02 台指期夜盤 -->
   <section>
-    <div class="section-title">02 · 台指期夜盤（6/11 夜盤結算）</div>
+    <div class="section-title">02 · 台指期夜盤</div>
     <div class="futures-banner">
       <div class="futures-main">
         <div class="label">台指期近一 夜盤收盤</div>
-        <div class="value up">44,382</div>
-        <div class="change up">▲ +1,163（+2.69%）</div>
-        <div style="font-size:0.68rem;color:var(--text-sub);margin-top:6px;">來源：工商時報期交所夜盤行情 / Yahoo 股市</div>
+        <div class="value up">44,704</div>
+        <div class="change up">+487（+1.10%）</div>
+        <div style="font-size:0.68rem;color:var(--text-sub);margin-top:6px;">來源：tw.stock.yahoo.com/future</div>
       </div>
       <div class="futures-box">
-        <div class="label">前日加權指數收盤（6/11）</div>
-        <div class="value" style="color:var(--text)">43,226</div>
+        <div class="label">前日加權指數收盤</div>
+        <div class="value" style="color:var(--text)">44,169</div>
       </div>
       <div class="futures-box">
         <div class="label">隱含開盤預估區間</div>
-        <div class="value">44,250 – 44,550</div>
+        <div class="value">44,550 – 44,850</div>
       </div>
     </div>
   </section>
 
   <!-- 03 美股收盤 -->
   <section>
-    <div class="section-title">03 · 美股收盤 · June 11, 2026</div>
+    <div class="section-title">03 · 美股收盤 · June 12, 2026</div>
     <div class="metrics-grid">
       <div class="metric-card">
         <div class="metric-label">DJIA 道瓊</div>
-        <div class="metric-value up">50,849</div>
-        <div class="metric-change up">+929.97 (+1.86%)</div>
-        <div class="metric-note">伊核停火帶動，日線大漲</div>
+        <div class="metric-value up">51,202</div>
+        <div class="metric-change up">+354 (+0.70%)</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">S&amp;P 500</div>
-        <div class="metric-value up">7,394</div>
-        <div class="metric-change up">+127.31 (+1.75%)</div>
+        <div class="metric-label">S&P 500</div>
+        <div class="metric-value up">7,431</div>
+        <div class="metric-change up">+37 (+0.50%)</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">NASDAQ 綜合</div>
-        <div class="metric-value up">25,810</div>
-        <div class="metric-change up">+630 (+2.50%)</div>
-        <div class="metric-note">SpaceX IPO 帶旺科技氣氛</div>
+        <div class="metric-label">NASDAQ</div>
+        <div class="metric-value up">25,889</div>
+        <div class="metric-change up">+80 (+0.31%)</div>
       </div>
       <div class="metric-card highlight-sox">
         <div class="metric-label">⭐ SOX 費半</div>
-        <div class="metric-value" style="color:var(--gold)">～13,100</div>
-        <div class="metric-change up" style="color:var(--green)">強勁反彈（估）</div>
-        <div class="metric-note">MU +10%, AMD +8%, LRCX +13%, INTC +10%</div>
+        <div class="metric-value" style="color:var(--gold)">－</div>
+        <div class="metric-change" style="color:var(--gold)">－</div>
+        <div class="metric-note">台積電ADR +0.68%；聯電ADR +4.59%</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Russell 2000</div>
-        <div class="metric-value up">～2,920</div>
-        <div class="metric-change up">+50 (+1.7%，估)</div>
+        <div class="metric-value up">2,944</div>
+        <div class="metric-change up">+23 (+0.79%)</div>
       </div>
     </div>
   </section>
 
   <!-- 04 歐股收盤 -->
   <section>
-    <div class="section-title">04 · 歐股收盤 · June 11, 2026</div>
+    <div class="section-title">04 · 歐股收盤 · June 12, 2026</div>
     <div class="metrics-grid">
       <div class="metric-card">
         <div class="metric-label">英國 FTSE 100</div>
-        <div class="metric-value up">～10,400</div>
-        <div class="metric-change up">+170 (+1.6%，估)</div>
-        <div class="metric-note">來源：TAIFEX 富時100期貨推算</div>
+        <div class="metric-value up">10,303</div>
+        <div class="metric-change up">+163 (+1.60%)</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">德國 DAX</div>
-        <div class="metric-value neutral">－</div>
-        <div class="metric-change neutral">資料無法取得</div>
+        <div class="metric-value up">24,211</div>
+        <div class="metric-change up">+427 (+1.80%)</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">法國 CAC 40</div>
-        <div class="metric-value neutral">－</div>
-        <div class="metric-change neutral">資料無法取得</div>
+        <div class="metric-value up">8,200</div>
+        <div class="metric-change up">+148 (+1.80%)</div>
       </div>
     </div>
   </section>
 
   <!-- 05 台灣 ADR -->
   <section>
-    <div class="section-title">05 · 台灣 ADR · June 11, 2026</div>
+    <div class="section-title">05 · 台灣 ADR · June 12, 2026</div>
     <div class="card">
       <table class="data-table">
         <thead>
@@ -218,23 +240,23 @@
         <tbody>
           <tr class="tsm-row">
             <td><span class="ticker">TSM ⭐</span></td><td>2330 台積電</td>
-            <td>427.92</td><td class="up">+1.12 (+0.26%)</td><td>6/11 收盤，AI 先進製程需求穩健</td>
+            <td>$423.93</td><td class="up">+0.68%</td><td>SpaceX IPO帶動科技股情緒</td>
           </tr>
           <tr>
             <td><span class="ticker">UMC</span></td><td>2303 聯電</td>
-            <td>19.88</td><td class="up">+0.12 (+0.60%)</td><td class="data-note">6/10 資料，6/11 費半大漲後應更高</td>
+            <td>$21.63</td><td class="up">+4.59%</td><td>－</td>
           </tr>
           <tr>
             <td><span class="ticker">ASX</span></td><td>2311 日月光</td>
-            <td>35.08</td><td class="up">+0.44 (+1.24%)</td><td class="data-note">6/10 資料，估值偏低</td>
+            <td>－</td><td class="neutral">－</td><td>－</td>
           </tr>
           <tr>
             <td><span class="ticker">CHT</span></td><td>2412 中華電信</td>
-            <td>－</td><td class="neutral">－</td><td>資料無法取得</td>
+            <td>－</td><td class="neutral">－</td><td>－</td>
           </tr>
           <tr>
             <td><span class="ticker">AUO</span></td><td>2409 友達</td>
-            <td>7.50</td><td class="down">-0.27 (-3.47%)</td><td class="data-note">6/10 資料</td>
+            <td>－</td><td class="neutral">－</td><td>－</td>
           </tr>
         </tbody>
       </table>
@@ -247,47 +269,45 @@
     <div class="metrics-grid">
       <div class="metric-card">
         <div class="metric-label">Nikkei 225</div>
-        <div class="metric-value up">反彈開盤中</div>
-        <div class="metric-change up">預估 +1.5–2.5%</div>
-        <div class="metric-note">響應美股大漲，具體點位待確認</div>
+        <div class="metric-value up">69,220</div>
+        <div class="metric-change up">+4.84%（突破69,000歷史高點）</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">KOSPI</div>
-        <div class="metric-value up">反彈開盤中</div>
-        <div class="metric-change up">預估 +1–2%</div>
-        <div class="metric-note">韓半導體同步受惠，SK海力士關注</div>
+        <div class="metric-value up">8,124</div>
+        <div class="metric-change up">+4.63%（期貨多次觸發熔斷）</div>
       </div>
     </div>
   </section>
 
-  <!-- 07 宏觀指標 -->
+  <!-- 07 恐慌指數、債市、原物料、加密貨幣 -->
   <section>
     <div class="section-title">07 · 恐慌指數 · 債市 · 原物料 · 加密貨幣</div>
     <div class="macro-grid-5">
       <div class="macro-card">
         <div class="macro-label">VIX 恐慌指數</div>
-        <div class="macro-value up">22.22</div>
-        <div class="macro-sub">6/10 收盤 +11.83%；CPI 衝擊後偏高</div>
+        <div class="macro-value down">17.68</div>
+        <div class="macro-sub">大幅下滑 -9.05%，市場情緒偏樂觀</div>
       </div>
       <div class="macro-card">
         <div class="macro-label">美國 10Y 殖利率</div>
-        <div class="macro-value up">4.550%</div>
-        <div class="macro-sub">CPI+4.2% 推升殖利率，升息疑慮重燃</div>
+        <div class="macro-value neutral">4.48%</div>
+        <div class="macro-sub">高檔震盪，通膨壓力猶存</div>
       </div>
       <div class="macro-card">
-        <div class="macro-label">Brent 原油</div>
-        <div class="macro-value up">$92</div>
-        <div class="macro-sub">中東衝突持續，油價居高</div>
+        <div class="macro-label">WTI 原油</div>
+        <div class="macro-value down">$84.88</div>
+        <div class="macro-sub">美伊和談進展，油價重挫 -3.23%</div>
       </div>
       <div class="macro-card macro-gold">
         <div class="macro-label">黃金 Gold</div>
-        <div class="macro-value" style="color:var(--gold)">$4,105</div>
-        <div class="macro-sub neutral">6/11 小幅回升（七月低附近）</div>
+        <div class="macro-value" style="color:var(--gold)">$4,216</div>
+        <div class="macro-sub up">+$30 (+0.72%)</div>
       </div>
       <div class="macro-card macro-btc">
         <div class="macro-label">比特幣 BTC</div>
-        <div class="macro-value" style="color:#7c3aed">～$62,000</div>
-        <div class="macro-sub neutral">利率疑慮壓抑，估值</div>
+        <div class="macro-value" style="color:#7c3aed">$63,566</div>
+        <div class="macro-sub up">+1.65%</div>
       </div>
     </div>
   </section>
@@ -297,10 +317,10 @@
     <div class="section-title">08 · 匯率 USD/TWD</div>
     <div class="card">
       <div class="fx-display">
-        <div class="fx-value">31.55</div>
+        <div class="fx-value">31.62</div>
         <div>
-          <div class="fx-label">USD / TWD（估）</div>
-          <div class="fx-change neutral">CPI 升息疑慮使台幣略偏弱</div>
+          <div class="fx-label">USD / TWD</div>
+          <div class="fx-change up">+0.15%（美元小幅走強）</div>
         </div>
       </div>
     </div>
@@ -311,24 +331,24 @@
     <div class="section-title">09 · 今日重點新聞</div>
     <div class="card">
       <div class="news-item">
-        <div class="news-num">01</div>
-        <div>
-          <div class="news-headline">川普週四宣布暫停對伊朗軍事打擊，並表示伊核新協議有望促成，地緣政治緊張驟降，道瓊指數暴漲 929 點、S&amp;P 500 大漲 1.75%；半導體族群更因美光（+10%）、超微（+8%）、英特爾（+10%）、科磊（+12.7%）集體大漲帶動 SOX 強勁反彈，台指期夜盤應聲大漲逾千點。</div>
-          <span class="news-tag tag-pos">重大利多</span>
+        <div class="news-num">1</div>
+        <div class="news-content">
+          <div class="news-headline">SpaceX 完成史上最大 IPO，全球科技股情緒大幅回溫。SpaceX 以 750 億美元完成全球有史以來規模最大的 IPO，在那斯達克首日掛牌即大漲 19%，推升 AI 及半導體相關類股信心，全球風險資產普遍受益。</div>
+          <span class="news-tag tag-pos">正面</span>
         </div>
       </div>
       <div class="news-item">
-        <div class="news-num">02</div>
-        <div>
-          <div class="news-headline">SpaceX 太空探索科技今日（6/12）正式在那斯達克掛牌，代碼 SPCX，為 2026 年最受矚目 IPO。市場期待太空經濟新題材，帶動相關供應鏈（衛星通訊、航太材料、高階晶片）升溫，對台灣電子族群具間接激勵效果。</div>
-          <span class="news-tag tag-pos">題材催化</span>
+        <div class="news-num">2</div>
+        <div class="news-content">
+          <div class="news-headline">美伊和平談判出現重大突破，霍爾木茲海峽有望重開。川普總統宣布美伊協議即將達成，中東地緣政治風險大幅緩解，布蘭特原油單日重挫逾 3%，全球通膨壓力有望進一步下降，股市風險偏好顯著改善。</div>
+          <span class="news-tag tag-pos">正面</span>
         </div>
       </div>
       <div class="news-item">
-        <div class="news-num">03</div>
-        <div>
-          <div class="news-headline">美國 5 月 CPI 年增率升至 4.2%，創逾三年新高，通膨重燃升息疑慮，10 年期公債殖利率攀至 4.55%。市場雖因地緣政治利多強勁反彈，但若 Fed 因通膨被迫升息，高本益比科技股估值將面臨壓力，是後市最大系統性風險。</div>
-          <span class="news-tag tag-neg">通膨警示</span>
+        <div class="news-num">3</div>
+        <div class="news-content">
+          <div class="news-headline">南韓半導體出口爆發，6月前十天年增逾 200%，帶動日韓股市齊飆歷史高點。南韓公布半導體出口年增 205.8%，十天金額突破百億美元創歷史紀錄，三星電子與 SK 海力士開盤大漲 6–8%，日經 225 今日收漲 4.84% 突破 69,000 點，台灣晶圓代工類股亦可望受惠。</div>
+          <span class="news-tag tag-pos">正面</span>
         </div>
       </div>
     </div>
@@ -343,18 +363,18 @@
           <div class="gauge-title">市場情緒 Sentiment</div>
           <div class="gauge-value up">偏多</div>
           <div class="sentiment-bar">
-            <div class="sentiment-indicator" style="left:68%"></div>
+            <div class="sentiment-indicator" style="left:78%"></div>
           </div>
-          <div class="gauge-desc">台指期夜盤大漲 1,163 點，美股全面走強，SpaceX IPO 添柴；惟 CPI 通膨升息疑慮、油價高位，高檔追漲宜謹慎。</div>
+          <div class="gauge-desc">美伊和談突破、SpaceX IPO完成，全球風險情緒大幅提振；台指期夜盤走高，台股今日預估強勢開高，半導體族群為主軸。</div>
         </div>
         <div class="range-box">
           <div class="range-title">📊 加權指數開盤預估區間</div>
           <div class="range-values">
-            <div class="range-low">44,250</div>
+            <div class="range-low">44,550</div>
             <div style="font-size:1.2rem;color:var(--text-sub)">→</div>
-            <div class="range-high">44,550</div>
+            <div class="range-high">44,850</div>
           </div>
-          <div class="range-note">台指期夜盤 44,382 ±150，四捨五入至最近 50</div>
+          <div class="range-note">綜合台指期夜盤 + TSM ADR + 日韓早盤推估</div>
         </div>
       </div>
     </div>
@@ -363,7 +383,7 @@
   <!-- 11 免責聲明 -->
   <section>
     <div class="disclaimer">
-      ⚠️ <strong>免責聲明：</strong>本報告由 AI 自動生成，僅供參考，不構成任何投資建議。台指期數據來源：工商時報期交所夜盤行情（2026/06/11）、Yahoo 股市。美股數據來源：Yahoo Finance、bbntimes。部分數據（SOX、歐股、RUT、BTC、USD/TWD）為估算或非最新，標有「估」字樣。數據可能有所延遲，投資人應自行判斷並承擔相關風險。
+      ⚠️ <strong>免責聲明：</strong>本報告由 AI 自動生成，僅供參考，不構成任何投資建議。資料來源為 Yahoo 股市等公開資訊，數據可能有所延遲。投資人應自行判斷並承擔相關風險。
     </div>
   </section>
 
