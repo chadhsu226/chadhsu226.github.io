@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chih-Hsiang Hsu | Resources</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        html { scroll-behavior: smooth; }
         body { font-family: 'Noto Serif TC', serif; }
         .mono { font-family: 'DM Mono', monospace; }
+        section { scroll-margin-top: 5.5rem; }
 
         .card-hover {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -18,11 +20,42 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.08);
         }
 
-        /* 早報卡片樣式 */
+        /* ===== Hero ===== */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background-color: #fafbff;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .hero-blob {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(70px);
+            opacity: 0.4;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .blob-1 { width: 340px; height: 340px; background: #93c5fd; top: -120px; left: 4%; }
+        .blob-2 { width: 300px; height: 300px; background: #c4b5fd; top: -80px; right: 6%; }
+        .blob-3 { width: 240px; height: 240px; background: #fbcfe8; bottom: -140px; left: 42%; }
+
+        /* ===== 早報卡片樣式 ===== */
         .report-card {
+            position: relative;
             background: linear-gradient(135deg, #0a0e1a 0%, #131829 100%);
             border: 1px solid #232a44;
             color: #e8eaf2;
+        }
+        .report-card::before {
+            content: "";
+            position: absolute;
+            top: -35%;
+            right: -8%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(77,159,255,0.28), transparent 70%);
+            pointer-events: none;
         }
         .report-card h2 { color: #4d9fff; }
         .report-card .tag {
@@ -42,6 +75,8 @@
             font-size: 14px;
             display: inline-block;
             transition: background 0.2s;
+            position: relative;
+            z-index: 1;
         }
         .report-card .view-link:hover { background: #1a2245; }
 
@@ -51,6 +86,8 @@
             gap: 12px;
             flex-wrap: wrap;
             margin: 12px 0;
+            position: relative;
+            z-index: 1;
         }
         .index-chip {
             background: #1a2038;
@@ -78,14 +115,76 @@
             from { opacity: 0; transform: translateY(16px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .fade-up { animation: fadeUp 0.5s ease-out both; }
+        .fade-up { animation: fadeUp 0.6s ease-out both; }
         .fade-up:nth-child(1) { animation-delay: 0.05s; }
         .fade-up:nth-child(2) { animation-delay: 0.15s; }
         .fade-up:nth-child(3) { animation-delay: 0.25s; }
         .fade-up:nth-child(4) { animation-delay: 0.35s; }
-        /* 教學工具卡片 */
+        .fade-up:nth-child(5) { animation-delay: 0.45s; }
+        .fade-up:nth-child(6) { animation-delay: 0.55s; }
+
+        /* ===== 課程卡片 ===== */
+        .icon-badge {
+            width: 56px; height: 56px; border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-from, #6366f1), var(--accent-to, #4f46e5));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; flex-shrink: 0;
+            box-shadow: 0 10px 22px -8px var(--accent-to, #4f46e5);
+        }
+        .icon-badge-sm { width: 44px; height: 44px; border-radius: 12px; font-size: 20px; }
+
+        .course-card {
+            position: relative;
+            display: block;
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            border-radius: 20px;
+            padding: 2.25rem;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 22px 42px -14px var(--glow, rgba(0,0,0,0.12));
+            border-color: transparent;
+        }
+        .course-card-sm { padding: 1.75rem; }
+        .accent-bar {
+            position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--accent-from, #6366f1), var(--accent-to, #4f46e5));
+        }
+        .course-link {
+            display: inline-flex; align-items: center; gap: 4px; font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-from, #6366f1), var(--accent-to, #4f46e5));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .arrow { display: inline-block; transition: transform 0.2s ease; }
+        .course-card:hover .arrow { transform: translateX(4px); }
+
+        /* section kicker */
+        .kicker {
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em;
+            color: #94a3b8; text-transform: uppercase;
+        }
+
+        /* 教學小工具 banner */
+        .tool-banner {
+            position: relative;
+            display: block;
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%);
+            border: 1px solid #a7f3d0;
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .tool-banner:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 42px -16px rgba(16,185,129,0.28);
+        }
+        .tool-banner .arrow { display: inline-block; transition: transform 0.2s ease; }
+        .tool-banner:hover .arrow { transform: translateX(4px); }
         .tag-tool {
-            background: #ecfdf5;
+            background: #ffffff;
             color: #047857;
             border: 1px solid #a7f3d0;
             font-size: 11px;
@@ -94,110 +193,171 @@
         }
         .tool-link {
             color: #047857;
-            border: 1px solid #a7f3d0;
-            padding: 8px 20px;
-            border-radius: 6px;
+            border: 1px solid #6ee7b7;
+            padding: 10px 22px;
+            border-radius: 8px;
             font-size: 14px;
             display: inline-block;
-            transition: background 0.2s;
+            background: #ffffff;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
         }
-        .tool-link:hover { background: #ecfdf5; }
+        .tool-banner:hover .tool-link { background: #047857; color: #fff; border-color: #047857; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <header class="bg-white py-16 border-b border-gray-200">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">許智翔 (Chih-Hsiang Hsu)</h1>
-            <p class="text-lg text-gray-600">銘傳大學 財務金融系 | Department of Finance, Ming Chuan University</p>
-            <p class="mt-6 text-gray-500 max-w-2xl mx-auto">致力於將統計理論與財務數學知識轉化為數位實踐，提供學生完整的學習路徑與互動資源。</p>
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-gray-100">
+        <div class="container mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#top" class="flex items-center gap-3">
+                <span class="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-600 to-blue-500 text-white flex items-center justify-center font-bold text-sm mono">CH</span>
+                <span class="font-semibold text-gray-900 hidden sm:inline">許智翔 Chih-Hsiang Hsu</span>
+            </a>
+            <div class="flex items-center gap-6 text-sm text-gray-500 mono">
+                <a href="#report-section" class="hover:text-gray-900 transition-colors">早報</a>
+                <a href="#courses" class="hover:text-gray-900 transition-colors">課程</a>
+                <a href="#tools" class="hover:text-gray-900 transition-colors">工具</a>
+                <a href="https://github.com/chadhsu226" target="_blank" class="hover:text-gray-900 transition-colors">GitHub ↗</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="top" class="hero py-20 md:py-28 border-b border-gray-200">
+        <div class="hero-blob blob-1"></div>
+        <div class="hero-blob blob-2"></div>
+        <div class="hero-blob blob-3"></div>
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <span class="inline-block mono text-xs tracking-[0.2em] text-indigo-600 bg-indigo-50 border border-indigo-100 px-4 py-1.5 rounded-full mb-6 fade-up">STATISTICS · FINANCE · EDTECH</span>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-3 fade-up">許智翔 <span class="text-gray-400 font-normal">Chih-Hsiang Hsu</span></h1>
+            <p class="text-lg text-gray-600 fade-up">銘傳大學 財務金融系 | Department of Finance, Ming Chuan University</p>
+            <p class="mt-6 text-gray-500 max-w-2xl mx-auto leading-relaxed fade-up">致力於將統計理論與財務數學知識轉化為數位實踐，提供學生完整的學習路徑與互動資源。</p>
         </div>
     </header>
 
-    <main class="container mx-auto px-6 py-12">
+    <main class="container mx-auto px-6 py-16">
 
         <!-- 早報卡片（全寬） -->
-        <div class="report-card rounded-xl p-8 mb-8 card-hover fade-up" id="report-section">
-            <div class="flex items-start justify-between flex-wrap gap-4 mb-4">
-                <div>
-                    <div class="flex items-center gap-3 mb-2">
-                        <h2 class="text-2xl font-semibold">📊 今日股市看盤重點</h2>
-                        <span class="tag mono">LIVE DAILY</span>
+        <div class="report-card rounded-2xl p-8 mb-16 card-hover fade-up overflow-hidden" id="report-section">
+            <div class="relative z-10">
+                <div class="flex items-start justify-between flex-wrap gap-4 mb-4">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h2 class="text-2xl font-semibold">📊 今日股市看盤重點</h2>
+                            <span class="tag mono">LIVE DAILY</span>
+                        </div>
+                        <p class="meta" id="report-date">載入中...</p>
                     </div>
-                    <p class="meta" id="report-date">載入中...</p>
+                    <a href="report/morning-brief.html" target="_blank" class="view-link mono">
+                        開啟完整早報 →
+                    </a>
                 </div>
-                <a href="report/morning-brief.html" target="_blank" class="view-link mono">
-                    開啟完整早報 →
+
+                <!-- 摘要文字 -->
+                <p class="text-sm mb-4" style="color:#c0c8d8; line-height:1.8;" id="report-summary">
+                    <span class="loading-pulse">正在載入今日早報摘要...</span>
+                </p>
+
+                <!-- 指數快覽 -->
+                <div class="index-row" id="report-indices">
+                    <!-- 由 JS 動態填入 -->
+                </div>
+
+                <p class="meta mt-4" style="font-size:11px;">
+                    ⏰ 每個交易日 08:10 自動更新　|　資料來源：Claude Cowork
+                </p>
+            </div>
+        </div>
+
+        <!-- 課程區 -->
+        <section id="courses" class="mb-16">
+            <div class="flex items-baseline gap-6 mb-8">
+                <h2 class="kicker mono whitespace-nowrap">精選課程 / FEATURED COURSES</h2>
+                <div class="h-px flex-1 bg-gray-200"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <a href="https://chadhsu226.github.io/Statistics1/" class="course-card fade-up" style="--accent-from:#3b82f6; --accent-to:#4f46e5; --glow:#dbeafe;">
+                    <span class="accent-bar"></span>
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="icon-badge">📈</div>
+                        <span class="mono text-xs text-gray-300">01</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">統計學（一）</h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">涵蓋敘述統計、機率、機率分配、抽樣分配與估計，搭配互動模擬工具與完整範例。</p>
+                    <span class="course-link">進入課程 <span class="arrow">→</span></span>
+                </a>
+
+                <a href="https://chadhsu226.github.io/Statistics2/" class="course-card fade-up" style="--accent-from:#0ea5e9; --accent-to:#2563eb; --glow:#e0f2fe;">
+                    <span class="accent-bar"></span>
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="icon-badge">📐</div>
+                        <span class="mono text-xs text-gray-300">02</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">統計學（二）</h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">涵蓋假設檢定、推論統計與迴歸分析，包含詳細數學推導與實務範例。</p>
+                    <span class="course-link">進入課程 <span class="arrow">→</span></span>
                 </a>
             </div>
 
-            <!-- 摘要文字 -->
-            <p class="text-sm mb-4" style="color:#c0c8d8; line-height:1.8;" id="report-summary">
-                <span class="loading-pulse">正在載入今日早報摘要...</span>
-            </p>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <a href="https://chadhsu226.github.io/financial-math/" class="course-card course-card-sm fade-up" style="--accent-from:#f59e0b; --accent-to:#ea580c; --glow:#fef3c7;">
+                    <span class="accent-bar"></span>
+                    <div class="icon-badge icon-badge-sm mb-4">💹</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">財務數學</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">互動式練習題庫，深化證券評價、資本預算與投資組合量化分析。</p>
+                    <span class="course-link text-sm">開始練習 <span class="arrow">→</span></span>
+                </a>
 
-            <!-- 指數快覽 -->
-            <div class="index-row" id="report-indices">
-                <!-- 由 JS 動態填入 -->
+                <a href="https://chadhsu226.github.io/behavioral-finance/" class="course-card course-card-sm fade-up" style="--accent-from:#a855f7; --accent-to:#c026d3; --glow:#f3e8ff;">
+                    <span class="accent-bar"></span>
+                    <div class="icon-badge icon-badge-sm mb-4">🧠</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">行為財務學</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">經典文獻導讀影片系列，深入理解市場非理性、噪音交易者與套利限制。</p>
+                    <span class="course-link text-sm">觀看影片 <span class="arrow">→</span></span>
+                </a>
+
+                <a href="https://chadhsu226.github.io/games/" class="course-card course-card-sm fade-up" style="--accent-from:#f43f5e; --accent-to:#e11d48; --glow:#ffe4e6;">
+                    <span class="accent-bar"></span>
+                    <div class="icon-badge icon-badge-sm mb-4">🎮</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Chad's Game Zone</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">教學之餘的益智遊戲園地，挑戰您的策略與反應力。</p>
+                    <span class="course-link text-sm">遊玩遊戲 <span class="arrow">→</span></span>
+                </a>
             </div>
+        </section>
 
-            <p class="meta mt-4" style="font-size:11px;">
-                ⏰ 每個交易日 08:10 自動更新　|　資料來源：Claude Cowork
-            </p>
-        </div>
-
-        <!-- 四欄課程卡片（2x2） -->
-        <div class="grid md:grid-cols-2 gap-8">
-
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up">
-                <h2 class="text-2xl font-semibold mb-4 text-blue-700">統計學（一）</h2>
-                <p class="text-gray-600 mb-6">涵蓋敘述統計、機率、機率分配、抽樣分配與估計，搭配互動模擬工具與完整範例。</p>
-                <a href="https://chadhsu226.github.io/Statistics1/" class="text-blue-600 font-medium hover:underline">進入課程 &rarr;</a>
+        <!-- 教學小工具 -->
+        <section id="tools">
+            <div class="flex items-baseline gap-6 mb-8">
+                <h2 class="kicker mono whitespace-nowrap">教學資源 / FOR TEACHERS</h2>
+                <div class="h-px flex-1 bg-gray-200"></div>
             </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up">
-                <h2 class="text-2xl font-semibold mb-4 text-blue-700">統計學（二）</h2>
-                <p class="text-gray-600 mb-6">涵蓋假設檢定、推論統計與迴歸分析，包含詳細數學推導與實務範例。</p>
-                <a href="https://chadhsu226.github.io/Statistics2/" class="text-blue-600 font-medium hover:underline">進入課程 &rarr;</a>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up">
-                <h2 class="text-2xl font-semibold mb-4 text-blue-700">財務數學</h2>
-                <p class="text-gray-600 mb-6">互動式練習題庫，深化證券評價、資本預算與投資組合量化分析。</p>
-                <a href="https://chadhsu226.github.io/financial-math/" class="text-blue-600 font-medium hover:underline">開始練習 &rarr;</a>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up">
-                <h2 class="text-2xl font-semibold mb-4 text-purple-700">行為財務學</h2>
-                <p class="text-gray-600 mb-6">經典文獻導讀影片系列，深入理解市場非理性、噪音交易者與套利限制。</p>
-                <a href="https://chadhsu226.github.io/behavioral-finance/" class="text-purple-600 font-medium hover:underline">觀看影片 &rarr;</a>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up">
-                <h2 class="text-2xl font-semibold mb-4 text-blue-700">Chad's Game Zone</h2>
-                <p class="text-gray-600 mb-6">教學之餘的益智遊戲園地，挑戰您的策略與反應力。</p>
-                <a href="https://chadhsu226.github.io/games/" class="text-blue-600 font-medium hover:underline">遊玩遊戲 &rarr;</a>
-            </div>
-
-        </div>
-
-        <!-- 教學小工具卡片（全寬） -->
-        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 card-hover fade-up mt-8">
-            <div class="flex items-start justify-between flex-wrap gap-4">
-                <div>
-                    <div class="flex items-center gap-3 mb-3">
-                        <h2 class="text-2xl font-semibold text-emerald-700">🧰 教學小工具</h2>
-                        <span class="tag-tool mono">FOR TEACHERS</span>
+            <a href="https://chadhsu226.github.io/teacher_tool/" class="tool-banner fade-up">
+                <div class="flex items-start justify-between flex-wrap gap-6">
+                    <div class="flex items-start gap-5">
+                        <div class="icon-badge" style="--accent-from:#10b981; --accent-to:#0d9488;">🧰</div>
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 class="text-2xl font-bold text-emerald-800">教學小工具</h3>
+                                <span class="tag-tool mono">FOR TEACHERS</span>
+                            </div>
+                            <p class="text-emerald-900/70 max-w-xl leading-relaxed">課堂與考試實用工具，目前包含<strong>隨機座位安排</strong>與<strong>考試計時器</strong>（可投放至投影螢幕讓同學看時間）。</p>
+                        </div>
                     </div>
-                    <p class="text-gray-600 max-w-xl">課堂與考試實用工具，目前包含<strong>隨機座位安排</strong>與<strong>考試計時器</strong>（可投放至投影螢幕讓同學看時間）。</p>
+                    <span class="tool-link mono whitespace-nowrap self-center">開啟工具 <span class="arrow">→</span></span>
                 </div>
-                <a href="https://chadhsu226.github.io/teacher_tool/" class="tool-link mono whitespace-nowrap">開啟工具 &rarr;</a>
-            </div>
-        </div>
+            </a>
+        </section>
+
     </main>
 
-    <footer class="py-10 text-center text-gray-400 text-sm">
-        &copy; 2026 Chih-Hsiang Hsu. Built with GitHub Pages.
+    <footer class="border-t border-gray-200 py-10">
+        <div class="container mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="text-gray-400 text-sm">&copy; 2026 Chih-Hsiang Hsu. Built with GitHub Pages.</p>
+            <div class="flex items-center gap-5 text-sm text-gray-400">
+                <a href="https://github.com/chadhsu226" target="_blank" class="hover:text-gray-700 transition-colors">GitHub</a>
+                <a href="#top" class="hover:text-gray-700 transition-colors">回到頂端 ↑</a>
+            </div>
+        </div>
     </footer>
 
     <script>
@@ -248,7 +408,7 @@
                 chip.className = 'index-chip';
                 chip.innerHTML = `
                     <div class="name">${label.textContent.trim()}</div>
-                    <div class="val">${value.textContent.trim()} 
+                    <div class="val">${value.textContent.trim()}
                         ${change ? `<span class="${isUp ? 'up' : isDown ? 'down' : ''}">${change.textContent.trim()}</span>` : ''}
                     </div>`;
                 indicesEl.appendChild(chip);
