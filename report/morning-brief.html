@@ -149,7 +149,7 @@
   <section>
     <div class="section-title">01 · 總覽摘要</div>
     <div class="card">
-      <p class="summary-text">今日排程執行時 Claude in Chrome 擴充功能無法連線（連續 <span class="tag-bearish">5</span> 次重試逾 <span class="tag-bearish">80</span> 秒後仍未成功），依規則不採用其他來源拼湊數據，因此本篇報告的即時股市數據暫缺。台指期夜盤、美股歐股、台灣 ADR、日韓早盤、恐慌指數與匯率等欄位均以「－」標示。建議確認電腦與 Chrome 瀏覽器在排程時間（08:10 CST）前已開啟並登入 Claude in Chrome，以利明日恢復正常擷取。</p>
+      <p class="summary-text">今日排程執行時 Claude in Chrome 擴充功能未能連線（已依規則重試 5 次、總計等候約 2 分鐘後仍失敗），因此<span class="tag-bearish">無法</span>取得台指期夜盤、TSM ADR 等即時數據。美股、歐股、日韓指數與總經指標同樣因資料來源無法存取而缺漏，本次報告不進行任何跨來源拼湊或估算。建議確認電腦與 Chrome 瀏覽器已於排程時間（08:10 CST）前開機並保持 Claude in Chrome 登入狀態，以利明日報告正常產出。</p>
     </div>
   </section>
 
@@ -161,7 +161,7 @@
         <div class="label">台指期近一 夜盤收盤</div>
         <div class="value neutral">－</div>
         <div class="change neutral">－</div>
-        <div style="font-size:0.68rem;color:var(--text-sub);margin-top:6px;">來源：tw.stock.yahoo.com/future</div>
+        <div style="font-size:0.68rem;color:var(--text-sub);margin-top:6px;">來源：tw.stock.yahoo.com/future（本次未能取得）</div>
       </div>
       <div class="futures-box">
         <div class="label">前日加權指數收盤</div>
@@ -176,7 +176,7 @@
 
   <!-- 03 美股收盤 -->
   <section>
-    <div class="section-title">03 · 美股收盤 · －</div>
+    <div class="section-title">03 · 美股收盤 · July 29, 2026</div>
     <div class="metrics-grid">
       <div class="metric-card">
         <div class="metric-label">DJIA 道瓊</div>
@@ -197,7 +197,7 @@
         <div class="metric-label">⭐ SOX 費半</div>
         <div class="metric-value" style="color:var(--gold)">－</div>
         <div class="metric-change" style="color:var(--gold)">－</div>
-        <div class="metric-note">資料未取得</div>
+        <div class="metric-note">－</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Russell 2000</div>
@@ -209,7 +209,7 @@
 
   <!-- 04 歐股收盤 -->
   <section>
-    <div class="section-title">04 · 歐股收盤 · －</div>
+    <div class="section-title">04 · 歐股收盤 · July 29, 2026</div>
     <div class="metrics-grid">
       <div class="metric-card">
         <div class="metric-label">英國 FTSE 100</div>
@@ -231,7 +231,7 @@
 
   <!-- 05 台灣 ADR -->
   <section>
-    <div class="section-title">05 · 台灣 ADR · －</div>
+    <div class="section-title">05 · 台灣 ADR · July 29, 2026</div>
     <div class="card">
       <table class="data-table">
         <thead>
@@ -240,7 +240,7 @@
         <tbody>
           <tr class="tsm-row">
             <td><span class="ticker">TSM ⭐</span></td><td>2330 台積電</td>
-            <td>－</td><td class="neutral">－</td><td>資料未取得</td>
+            <td>－</td><td class="neutral">－</td><td>－</td>
           </tr>
           <tr>
             <td><span class="ticker">UMC</span></td><td>2303 聯電</td>
@@ -287,17 +287,17 @@
       <div class="macro-card">
         <div class="macro-label">VIX 恐慌指數</div>
         <div class="macro-value neutral">－</div>
-        <div class="macro-sub">資料未取得</div>
+        <div class="macro-sub">－</div>
       </div>
       <div class="macro-card">
         <div class="macro-label">美國 10Y 殖利率</div>
         <div class="macro-value neutral">－%</div>
-        <div class="macro-sub">資料未取得</div>
+        <div class="macro-sub">－</div>
       </div>
       <div class="macro-card">
         <div class="macro-label">WTI 原油</div>
         <div class="macro-value neutral">$－</div>
-        <div class="macro-sub">資料未取得</div>
+        <div class="macro-sub">－</div>
       </div>
       <div class="macro-card macro-gold">
         <div class="macro-label">黃金 Gold</div>
@@ -331,9 +331,23 @@
     <div class="section-title">09 · 今日重點新聞</div>
     <div class="card">
       <div class="news-item">
-        <div class="news-num">－</div>
+        <div class="news-num">1</div>
         <div class="news-content">
-          <div class="news-headline">因 Claude in Chrome 未連線，今日無法擷取即時新聞，暫無重點新聞摘要。</div>
+          <div class="news-headline">Claude in Chrome 未能連線，無法取得今日美股新聞頁面資料。</div>
+          <span class="news-tag tag-neutral-tag">中性</span>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-num">2</div>
+        <div class="news-content">
+          <div class="news-headline">台積電相關新聞頁面同樣因瀏覽器連線問題無法讀取。</div>
+          <span class="news-tag tag-neutral-tag">中性</span>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-num">3</div>
+        <div class="news-content">
+          <div class="news-headline">建議確認電腦與 Chrome 於下次排程時間前已開啟並登入，以恢復新聞擷取。</div>
           <span class="news-tag tag-neutral-tag">中性</span>
         </div>
       </div>
@@ -347,11 +361,11 @@
       <div class="outlook-grid">
         <div class="gauge-wrapper">
           <div class="gauge-title">市場情緒 Sentiment</div>
-          <div class="gauge-value neutral">中性（無資料）</div>
+          <div class="gauge-value neutral">中性（資料缺漏）</div>
           <div class="sentiment-bar">
             <div class="sentiment-indicator" style="left:50%"></div>
           </div>
-          <div class="gauge-desc">因資料來源無法連線，今日無法提供市場情緒判讀</div>
+          <div class="gauge-desc">因 Chrome 連線失敗，本次無即時數據可供研判市場情緒，僅供參考。</div>
         </div>
         <div class="range-box">
           <div class="range-title">📊 加權指數開盤預估區間</div>
@@ -360,7 +374,7 @@
             <div style="font-size:1.2rem;color:var(--text-sub)">→</div>
             <div class="range-high">－</div>
           </div>
-          <div class="range-note">綜合台指期夜盤 + TSM ADR + 日韓早盤推估（今日資料缺漏，無法推估）</div>
+          <div class="range-note">綜合台指期夜盤 + TSM ADR + 日韓早盤推估（本次資料缺漏，無法推估）</div>
         </div>
       </div>
     </div>
