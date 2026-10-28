@@ -1,0 +1,961 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>財經暨管理群島</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a living archipelago drawn on canvas (students walk and cross bridges by time of day), a guide notebook panel beside it.
+   Single committed light look: the island art is daylight watercolor-ish, night is simulated inside the map. */
+:root{
+  --bg:#edf3f2; --paper:#ffffff; --ink:#1c2b33; --muted:#5b6b72; --line:#d5e1df; --soft:#f4f8f7;
+  --fin:#d4931f; --ib:#2f7fb0; --eco:#4f9a52; --acc:#c4573b; --minor:#8a72b0; --hi:#e2574c;
+  --f-display:"LXGW WenKai TC","Kaiti TC","STKaiti",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+.wrap{max-width:1480px;margin:0 auto;padding-block:18px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 24px;margin-bottom:12px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,4.2vw,46px);line-height:1.1;margin:0;letter-spacing:.03em}
+h1 small{display:block;font-family:var(--f-mono);font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.16em;margin-bottom:4px}
+.credit{display:grid;justify-items:end;text-align:right;gap:0;line-height:1.35;align-self:flex-start;padding-top:4px}
+.credit-k{font:500 12px var(--f-mono);letter-spacing:.14em;color:var(--muted)}
+.credit b{font:700 clamp(22px,2.4vw,30px)/1.2 var(--f-display);letter-spacing:.06em}
+.credit span:last-child{font-size:13.5px;color:var(--muted)}
+@media (max-width:640px){.credit{justify-items:start;text-align:left}}
+.lede{margin:4px 0 0;color:var(--muted);font-size:15px}
+button{font:inherit;color:inherit}
+.btn{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:4px;padding:6px 11px;font:500 13px var(--f-body);cursor:pointer}
+.btn:hover{border-color:var(--ink)}
+.btn[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+.seg{display:inline-flex}
+.seg .btn{border-radius:0;margin-left:-1px}
+.seg .btn:first-child{border-radius:4px 0 0 4px;margin-left:0}
+.seg .btn:last-child{border-radius:0 4px 4px 0}
+
+.grid{display:grid;grid-template-columns:minmax(0,1fr) clamp(400px,32vw,500px);gap:18px;align-items:start;transition:grid-template-columns .5s ease}
+/* 導覽到某一座島時：地圖縮窄（仍聚焦那座島），右側文字區加寬、字放大 */
+body.focus .grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+body.focus .phase,body.focus .bar .spacer{display:none}
+body.focus .bar{gap:6px 8px}
+body.focus .bar .btn{padding:6px 9px}
+body.focus .card h2{font-size:40px}
+body.focus .card .q{font-size:21px}
+body.focus .card .count{font-size:14px}
+body.focus .card .count b{font-size:24px}
+body.focus .card .sec h4{font-size:13.5px}
+body.focus .card p,body.focus .card li,body.focus .card .story,body.focus .card .myth,body.focus .qs div{font-size:18.5px;line-height:1.7}
+.jobsline{margin-top:6px!important;font-size:14px;color:var(--muted)}
+body.focus .card p.jobsline{font-size:16.5px}
+body.focus .card .chip{font-size:16px;padding:3px 10px}
+body.focus .calc label,body.focus .calc .out{font-size:16px}
+@media (prefers-reduced-motion:reduce){.grid{transition:none}}
+@media (max-width:1020px){.grid,body.focus .grid{grid-template-columns:1fr}}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:10px}
+.clock{font:500 28px/1 var(--f-mono);min-width:5ch;font-variant-numeric:tabular-nums}
+.phase{font-size:13px;color:var(--muted);min-width:13em}
+.spacer{flex:1}
+
+.stage{position:relative;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#8ecbd1;aspect-ratio:3600/2250}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;cursor:default}
+.ilabel{position:absolute;transform:translate(-50%,-50%);border:0;border-radius:999px;padding:4px 12px 4px 10px;cursor:pointer;
+  font:700 clamp(12px,1.35vw,18px)/1.3 var(--f-display);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);white-space:nowrap;z-index:3;display:flex;gap:6px;align-items:center}
+.ilabel small{font:500 clamp(9px,.85vw,11px) var(--f-mono);opacity:.9}
+.far .ilabel{font-size:clamp(10px,1vw,13px);padding:2px 9px 2px 8px}
+.far .ilabel small{display:none}
+.ilabel.minor{font-size:clamp(10px,1.05vw,14px)}
+.ilabel:hover,.ilabel.active{transform:translate(-50%,-50%) scale(1.08)}
+.ilabel.active{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--hi)}
+.pins[hidden]{display:none}
+.pin{position:absolute;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;border:2px solid #fff;padding:0;cursor:pointer;z-index:2;
+  box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.pin:hover,.pin.active{transform:translate(-50%,-50%) scale(1.35)}
+.zoom{position:absolute;right:max(10px,env(safe-area-inset-right,0px));top:10px;z-index:5;display:flex;flex-direction:column;gap:4px}
+.zoom button{min-width:40px;height:36px;border:1px solid var(--line);background:rgba(255,255,255,.95);border-radius:6px;cursor:pointer;font:700 15px var(--f-body);padding:0 8px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.zoom button:hover{border-color:var(--ink)}
+.stage canvas.grab{cursor:grab}.stage canvas.grabbing{cursor:grabbing}
+.tip{position:absolute;z-index:4;transform:translate(-50%,calc(-100% - 12px));background:#fff;color:var(--ink);border:1px solid var(--line);
+  border-radius:6px;padding:7px 10px;font-size:13px;line-height:1.45;box-shadow:0 4px 14px rgba(0,0,0,.2);pointer-events:none;max-width:240px;width:max-content}
+.tip b{display:block;font-size:12px}
+.contkey{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:8px;font-size:13.5px;color:var(--muted)}
+.contkey span{display:inline-flex;align-items:center;gap:6px}
+.contkey i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.contkey b{color:var(--ink)}
+.spectrum{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-top:8px;font-size:13px;color:var(--muted)}
+.spectrum b{color:var(--ink)}
+.spectrum .ax{height:2px;background:linear-gradient(90deg,var(--acc),var(--fin),var(--eco),var(--ib));position:relative}
+.stage-note{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:6px;min-width:0;position:sticky;top:12px}
+@media (max-width:1020px){.panel{position:static}}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;background:none;border:0;padding:12px 6px;font:500 14px var(--f-body);color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--hi)}
+.pane{padding:16px 22px 0;max-height:max(420px,calc(100vh - 210px));overflow-y:auto}
+#pane-now,#pane-list{padding-bottom:20px}
+@media (max-width:1020px){.pane{max-height:none}}
+.stepline{display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.dots{display:flex;gap:5px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--hi)}
+.flag{display:inline-block;font:500 11px var(--f-mono);letter-spacing:.14em;padding:2px 8px;border-radius:3px;color:#fff;margin-top:12px}
+.card h2{font-family:var(--f-display);font-size:30px;line-height:1.2;margin:6px 0 2px}
+.card .q{font-size:16.5px;font-weight:500;margin:0 0 8px}
+.count{display:flex;gap:14px;font:500 12px var(--f-mono);color:var(--muted)}
+.count b{font:700 20px var(--f-display);color:var(--ink)}
+.walking{font-size:13px;color:var(--hi);margin:8px 0 0}
+.story{background:#fff6e3;border:1px solid #f0d9a6;border-radius:6px;padding:10px 12px;margin-top:12px;font-size:14.5px}
+.story b{display:block;font-size:12px;color:#9a6a10;letter-spacing:.06em}
+.sec{border-top:1px dashed var(--line);padding-top:10px;margin-top:12px}
+.sec h4{margin:0 0 5px;font:500 12px var(--f-mono);letter-spacing:.12em;color:var(--muted)}
+.sec p{margin:0}
+.sec ul{margin:0;padding-left:1.2em}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{border:1px solid var(--line);background:var(--soft);border-radius:4px;padding:2px 8px;font-size:13.5px}
+.myth{background:var(--soft);border-left:4px solid var(--c,var(--fin));padding:8px 12px;margin-top:12px;font-size:14px}
+.calc{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.calc label{font-size:13.5px;display:block}
+.calc input{width:100%}
+.calc .out{font:500 13px var(--f-mono);margin-top:4px;font-variant-numeric:tabular-nums}
+.qs{display:grid;gap:10px;margin-top:10px}
+.qs div{background:var(--soft);border-radius:6px;padding:10px 12px}
+.qs b{font-family:var(--f-display);font-size:17px;display:block}
+.nav{display:flex;gap:8px;margin-top:16px;position:sticky;bottom:0;background:var(--paper);padding:12px 0 16px;border-top:1px solid var(--line);z-index:2}
+.nav button{flex:1;padding:10px;border-radius:4px;font:500 14px var(--f-body);cursor:pointer;border:1px solid var(--line);background:var(--paper)}
+.nav button.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.nav button:disabled{opacity:.4;cursor:default}
+.minibtn{margin-top:12px}
+
+.now-head{display:flex;justify-content:space-between;align-items:baseline;margin:2px 0 6px}
+.now-head b{font:500 24px var(--f-mono);color:var(--hi)}
+.occ{display:grid;gap:8px;margin:8px 0 6px}
+.occ .row{display:grid;grid-template-columns:70px 1fr 34px;gap:8px;align-items:center;font-size:13px}
+.occ .track{height:9px;background:var(--line);border-radius:4px;overflow:hidden}
+.occ .fill{display:block;height:100%;border-radius:4px;transition:width .4s;width:0}
+.occ .num{font:500 12px var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.bridges{font-size:13.5px;margin-top:8px}
+.bridges li{margin:2px 0}
+
+.list{list-style:none;margin:0;padding:0}
+.list .grp{font:500 12px var(--f-mono);letter-spacing:.12em;color:var(--muted);padding:12px 2px 4px}
+.list button{width:100%;display:grid;grid-template-columns:14px 1fr;gap:10px;align-items:center;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:8px 2px;cursor:pointer}
+.list button:hover{background:var(--soft)}
+.list i{width:10px;height:10px;border-radius:50%}
+.list small{display:block;color:var(--muted);font-size:12px}
+
+section.block{margin-top:36px}
+section.block h2{font-family:var(--f-display);font-size:clamp(24px,3vw,32px);margin:0 0 4px}
+section.block p.lead{margin:0 0 14px;color:var(--muted)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:15px}
+th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+thead th{font-family:var(--f-display);font-size:19px}
+tbody th{font:500 12px var(--f-mono);color:var(--muted);letter-spacing:.06em;white-space:nowrap}
+tr:last-child td,tr:last-child th{border-bottom:0}
+.d{font-family:var(--f-mono);letter-spacing:2px}
+.prep{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.prep div{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.prep h3{margin:0 0 4px;font-family:var(--f-display);font-size:19px}
+.prep p{margin:0;font-size:14.5px}
+footer{margin-top:30px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
+footer a{color:var(--ink)}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1><small>FINANCE · ECONOMICS · MANAGEMENT</small>財經暨管理群島</h1>
+      <p class="lede">財經學群和管理學群，像兩個隔著海峽的洲。島上的人正在過他們的一天，橋和航線就是學類之間共用的課。</p>
+    </div>
+    <div class="credit"><span class="credit-k">群島導覽員</span><b>許智翔</b><span>銘傳大學財務金融學系</span></div>
+  </header>
+
+  <div class="grid">
+    <div>
+      <div class="bar">
+        <span class="clock" id="clock">07:45</span>
+        <span class="phase" id="phase">早上・上岸</span>
+        <button class="btn" id="play" type="button" aria-pressed="false">暫停</button>
+        <span class="seg" role="group" aria-label="速度">
+          <button class="btn" type="button" data-speed="1" aria-pressed="true">1×</button>
+          <button class="btn" type="button" data-speed="4" aria-pressed="false">4×</button>
+        </span>
+        <span class="seg" role="group" aria-label="跳到時段">
+          <button class="btn" type="button" data-jump="470">早上</button>
+          <button class="btn" type="button" data-jump="712">中午</button>
+          <button class="btn" type="button" data-jump="1012">傍晚</button>
+          <button class="btn" type="button" data-jump="1240">晚上</button>
+        </span>
+        <span class="spacer"></span>
+        <button class="btn" id="tags" type="button" aria-pressed="false">名牌</button>
+        <button class="btn" id="pinsBtn" type="button" aria-pressed="true">地點</button>
+        <button class="btn" id="fsBtn" type="button">全螢幕</button>
+      </div>
+      <div class="stage" id="stage">
+        <canvas id="cv" aria-label="財經暨管理群島動態地圖：兩洲各系學生在島上走動、過橋與搭船修課"></canvas>
+        <div id="labels"></div>
+        <div class="pins" id="pins"></div>
+        <div class="tip" id="tip" hidden></div>
+        <div class="zoom" role="group" aria-label="縮放"><button type="button" id="zIn" aria-label="拉近">＋</button><button type="button" id="zOut" aria-label="拉遠">－</button><button type="button" id="zHome">全景</button></div>
+      </div>
+      <div class="contkey"><span><i style="background:#93c47f"></i><b>財經洲</b>（左上）：喜歡跟「錢」打交道</span><span><i style="background:#7fbfa8"></i><b>管理洲</b>（右下）：喜歡跟「人和組織」打交道</span></div>
+      <p class="stage-note">兩洲之間有渡輪往來，載著跨學群修課的學生。衣服顏色代表科系，點任何一個人，看他正要去哪裡。點島名會拉近；拉近後可以拖曳地圖，右上角可縮放或回到全景。</p>
+    </div>
+
+    <aside class="panel">
+      <div class="tabs" role="tablist">
+        <button role="tab" type="button" id="tab-tour" aria-selected="true" aria-controls="pane-tour">跟著許老師</button>
+        <button role="tab" type="button" id="tab-now" aria-selected="false" aria-controls="pane-now">此刻島上</button>
+        <button role="tab" type="button" id="tab-list" aria-selected="false" aria-controls="pane-list">全部地點</button>
+      </div>
+      <section class="pane" id="pane-tour" role="tabpanel">
+        <div class="stepline"><span id="stepNo"></span><span class="dots" id="dots"></span></div>
+        <div class="card" id="card"></div>
+        <div class="nav">
+          <button type="button" id="prev">上一站</button>
+          <button type="button" id="next" class="primary">下一站</button>
+        </div>
+      </section>
+      <section class="pane" id="pane-now" role="tabpanel" hidden>
+        <div class="now-head"><span>正在路上的人</span><b id="nowCount">0</b></div>
+        <div class="now-head"><span>正在過橋或搭船修課</span><b id="bridgeCount">0</b></div>
+        <div class="sec"><h4>各島目前人數</h4><div class="occ" id="occ"></div></div>
+        <div class="sec"><h4>剛剛有人跨島去修</h4><ul class="bridges" id="crossLog"><li style="color:var(--muted)">等一下，有人正要出發…</li></ul></div>
+        <div class="legend" id="legend"></div>
+      </section>
+      <section class="pane" id="pane-list" role="tabpanel" hidden>
+        <ul class="list" id="list"></ul>
+      </section>
+    </aside>
+  </div>
+
+  <section class="block">
+    <h2>財經洲：四座主島一張表</h2>
+    <p class="lead">同一片群島，每座島問的問題不一樣。</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th></th><th style="color:var(--acc)">會計</th><th style="color:var(--fin)">財務金融</th><th style="color:var(--eco)">經濟</th><th style="color:var(--ib)">國際企業</th></tr></thead>
+      <tbody>
+        <tr><th>核心問題</th><td>一家公司真實的經營狀況是什麼？</td><td>錢放在哪裡，報酬和風險怎麼取捨？</td><td>資源有限時，人和社會怎麼選擇？</td><td>一家公司怎麼把生意做到國外？</td></tr>
+        <tr><th>數學份量</th><td class="d">●●●○○</td><td class="d">●●●●○</td><td class="d">●●●●○</td><td class="d">●●○○○</td></tr>
+        <tr><th>語言溝通</th><td class="d">●●○○○</td><td class="d">●●●○○</td><td class="d">●●●○○</td><td class="d">●●●●●</td></tr>
+        <tr><th>代表課程</th><td>中級會計學、審計學</td><td>投資學、衍生性商品</td><td>個體經濟、總體經濟、計量</td><td>國際行銷、國貿實務</td></tr>
+        <tr><th>代表證照</th><td>會計師、記帳士</td><td>證券高業、CFA</td><td>高考經建行政（多走研究所）</td><td>國貿大會考、外語檢定</td></tr>
+        <tr><th>常見第一份工作</th><td>會計師事務所審計</td><td>銀行、證券、投信研究</td><td>經濟研究、數據分析</td><td>海外業務、行銷企劃</td></tr>
+      </tbody>
+    </table></div>
+    <p class="stage-note">●的多寡是相對比較，幫助理解用，實際課程依各校規劃而不同。</p>
+  </section>
+
+  <section class="block">
+    <h2>管理洲：四個方向一張表</h2>
+    <p class="lead">管理學群人數最多的是企管和資管，觀光餐旅休閒則是科技大學的大宗。</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th></th><th style="color:#13a89e">企業管理</th><th style="color:#c2479b">資訊管理</th><th style="color:#f26b38">行銷經營</th><th style="color:#5f9e2a">觀光・餐旅・休閒</th></tr></thead>
+      <tbody>
+        <tr><th>核心問題</th><td>一個組織怎麼把人、錢、事管好？</td><td>怎麼用資訊科技讓組織運作得更好？</td><td>怎麼讓對的人知道、喜歡、買單？</td><td>怎麼讓人玩得開心、住得滿意？</td></tr>
+        <tr><th>數學份量</th><td class="d">●●●○○</td><td class="d">●●●●○</td><td class="d">●●○○○</td><td class="d">●○○○○</td></tr>
+        <tr><th>寫程式</th><td class="d">●○○○○</td><td class="d">●●●●●</td><td class="d">●○○○○</td><td class="d">○○○○○</td></tr>
+        <tr><th>人際溝通</th><td class="d">●●●●●</td><td class="d">●●●○○</td><td class="d">●●●●●</td><td class="d">●●●●●</td></tr>
+        <tr><th>代表課程</th><td>管理學、組織行為、策略管理</td><td>程式設計、資料庫、系統分析</td><td>消費者行為、數位行銷</td><td>餐旅管理、休閒規劃、會展</td></tr>
+        <tr><th>常見第一份工作</th><td>企劃、人資、業務、產品經理</td><td>系統分析、軟體開發、資料分析</td><td>行銷企劃、社群經營、品牌</td><td>飯店、旅行社、航空、主題樂園</td></tr>
+        <tr><th>校系數（一般／科大）</th><td>58／52</td><td>48／52</td><td>13／39</td><td>66／134（三類合計）</td></tr>
+      </tbody>
+    </table></div>
+    <p class="stage-note">●的多寡是相對比較，幫助理解用，實際課程依各校規劃而不同。</p>
+  </section>
+
+  <section class="block">
+    <h2>上島之前，高中可以先準備</h2>
+    <p class="lead">不管最後登陸哪一座島，這幾樣都用得到。</p>
+    <div class="prep">
+      <div><h3>數學：指數、對數、機率</h3><p>複利就是指數函數，風險就是機率與期望值。高中數學在財經學群幾乎天天用。</p></div>
+      <div><h3>英文閱讀</h3><p>原文教科書、國際新聞、企業財報大多是英文，越早習慣越輕鬆。</p></div>
+      <div><h3>每週讀一則財經新聞</h3><p>問自己三件事：發生了什麼？誰受影響？跟哪一座島有關？</p></div>
+      <div><h3>學習歷程的小題目</h3><p>比較三家銀行的存放款利率、追蹤一檔 ETF 三個月、讀一家上市公司的年報、調查同學的零用錢花在哪。</p></div>
+      <div><h3>想去資管：先碰一點程式</h3><p>用 Python 或 Scratch 做一個小工具，例如班費記帳表、社團報名系統，就是很好的學習歷程。</p></div>
+      <div><h3>想去企管：累積帶人做事的經驗</h3><p>社團幹部、活動企劃、校慶擺攤，寫下你怎麼分工、怎麼解決問題。</p></div>
+    </div>
+    <p class="stage-note">各校系採計的學測科目與倍率每年可能調整，請以當年度簡章為準。</p>
+  </section>
+
+  <footer>
+    <span>學類與校系數：大學問 unews <a href="https://www.unews.com.tw/School/Group/164" target="_blank" rel="noopener">財經學群</a>、<a href="https://www.unews.com.tw/School/Group/148" target="_blank" rel="noopener">管理學群</a>（一般大學＋科技大學）。勞工關係學類目前沒有校系，未畫入地圖。</span>
+    <span>島上人物、建築與行程皆為示意。</span>
+  </footer>
+</div>
+
+<script>
+/* ════════ 島嶼資料：要改文字只需改這裡 ════════ */
+const W=3600,H=2250,Z0=W/2000,OX=800;
+const ISL={
+  acc:{name:'會計島',short:'會計',en:'ACCOUNTING',hex:'#c4573b',roof:'#c4573b',cx:430,cy:560,rx:215,ry:170,seed:11,uni:27,tech:9,
+    q:'一家公司真實的經營狀況是什麼？',
+    what:'會計是「商業的語言」。學怎麼把公司每天的交易記錄下來、整理成財務報表，再由審計確認報表沒有說謊。投資人、銀行、政府都靠這些數字做決定。',
+    courses:['初級會計學','中級會計學','高等會計學','成本與管理會計','審計學','稅務法規','會計資訊系統','財報分析'],
+    who:['細心、有條理，喜歡把東西整理清楚','喜歡規則明確、有標準答案的題目','看到數字對不起來，會想追到底'],
+    jobs:['會計師事務所：審計、稅務、顧問','企業財會部、內部稽核','國稅局、審計部、金管會（高考會計）','上市公司財務長','鑑識會計（查舞弊）'],
+    certs:['會計師（CPA）','記帳士','國際內部稽核師（CIA）','美國會計師（US CPA）'],
+    myth:'常見誤解：AI 會取代會計。記帳會自動化，但判斷交易怎麼認列、查核舞弊、規劃稅務，反而更需要專業的人。',
+    story:'阿傑在台中開了一家手搖飲店，三年後想開到東京。第一步先把帳算清楚：一年賣幾杯、成本多少、到底有沒有賺錢？財務報表會告訴他答案。'},
+  fin:{name:'財務金融島',short:'財金',en:'FINANCE',hex:'#d4931f',roof:'#d99a22',cx:880,cy:380,rx:245,ry:172,seed:7,uni:48,tech:25,
+    q:'錢放在哪裡，報酬和風險怎麼取捨？',
+    what:'研究「錢在時間與風險之間怎麼流動」。今天的 100 元和明年的 100 元價值不同，有風險和沒風險的 100 元也不同，財金就是在學怎麼替這些差異定價。',
+    courses:['投資學','公司理財','金融市場與機構','貨幣銀行學','衍生性商品','風險管理','財務數學','金融科技','永續金融','程式交易（Python／R）'],
+    who:['看到股市、利率、匯率新聞會想點進去','數學不排斥，尤其是機率和函數','能接受「沒有標準答案、只有機率」的世界'],
+    jobs:['銀行：理財、授信、外匯交易','證券／投信／投顧：研究員、交易員、基金經理','壽險公司投資部、金控風控','企業財務部','金融科技、AI 量化分析、ESG 永續分析'],
+    certs:['證券商高級業務員','投信投顧業務員','CFA 特許財務分析師','FRM 金融風險管理師'],
+    myth:'常見誤解：財金系教你報明牌。其實它教的是「為什麼沒有穩賺的明牌」，以及怎麼在不確定中做合理決策。',
+    story:'去東京開店要 3,000 萬。該跟銀行借、找投資人，還是賣一部分股份？每一種方法的成本和風險都不同，這就是財金在算的事。',calc:true},
+  eco:{name:'經濟島',short:'經濟',en:'ECONOMICS',hex:'#4f9a52',roof:'#4f9a52',cx:1250,cy:820,rx:285,ry:200,seed:3,uni:28,tech:0,
+    q:'資源有限時，人和社會怎麼選擇？',
+    what:'群島裡最大的一座，也是其他島的地基。個體經濟看家庭和廠商怎麼做決定，總體經濟看景氣、通膨、失業和央行政策，計量經濟則用數據驗證這些想法。',
+    courses:['經濟學原理','個體經濟學','總體經濟學','計量經濟學','賽局理論','國際經濟學','公共經濟學','行為經濟學'],
+    who:['常問「為什麼」：為什麼房價這麼高？為什麼雞蛋會缺貨？','喜歡邏輯推理，也願意用數學和圖形說明','關心政策和社會議題'],
+    jobs:['中央銀行、政府經建部門（高考經建行政）','智庫與研究機構','銀行與證券的經濟研究部','數據分析、市場研究','繼續讀研究所'],
+    certs:['高普考經建行政','數據分析相關證照','（經濟系更常靠研究所與研究能力）'],
+    myth:'常見誤解：經濟系會教你預測股價。經濟學更在意「機制」：一個政策改變後，誰得利、誰受損、為什麼。',
+    story:'日圓最近是升還是貶？日本景氣好嗎？東京的工資和房租漲了多少？這些大環境的變化，決定阿傑的生意划不划算。'},
+  ib:{name:'國際企業島',short:'國企',en:"INT'L BUSINESS",hex:'#2f7fb0',roof:'#2f7fb0',cx:1640,cy:420,rx:222,ry:170,seed:21,uni:35,tech:21,
+    q:'一家公司怎麼把生意做到國外？',
+    what:'把管理、行銷、國際貿易和國際金融放在一起學，目標是讓企業能跨國家、跨文化經營。要懂的不只是外語，還有當地法規、通路、供應鏈和匯率。',
+    courses:['管理學','國際企業管理','國際行銷','國際貿易理論與實務','國際財務管理','跨文化管理','全球供應鏈','商用英文'],
+    who:['喜歡語言，對不同國家的文化好奇','擅長溝通、簡報、協調分組','想像自己常出國出差、跟外國客戶開會'],
+    jobs:['海外業務、國際採購','品牌與行銷企劃','貿易、物流與供應鏈管理','外商公司、管理顧問','新創公司海外拓展'],
+    certs:['國貿大會考','多益等外語檢定','報關人員','專案管理（PMP）'],
+    myth:'常見誤解：國企系就是英文系。語言只是工具，核心是「做生意」：市場分析、談判、財務和管理都要會。',
+    story:'日本客人喜歡什麼口味？去哪裡找茶葉和珍珠的供應商？台灣主管怎麼帶日本員工？跨國經營的每一步，都是國企在學的事。'},
+  sta:{name:'統計小島',short:'統計',en:'STATISTICS',hex:'#8a72b0',roof:'#8a72b0',cx:230,cy:1030,rx:98,ry:74,seed:31,uni:8,tech:1,minor:true,
+    q:'從資料裡能讀出什麼可信的結論？',courses:['機率論','數理統計','迴歸分析','資料探勘'],
+    what:'島上的燈塔替每一艘船照路。統計是其他島的共同工具，每座島的學生都要來修〈統計學〉，近年和資料科學高度重疊。',
+    jobs:['資料分析師、資料科學家','市場調查、民調','政府統計部門']},
+  tax:{name:'財稅小島',short:'財稅',en:'PUBLIC FINANCE',hex:'#8a72b0',roof:'#8a72b0',cx:730,cy:1010,rx:92,ry:68,seed:41,uni:3,tech:4,minor:true,
+    q:'政府的錢從哪裡來、花到哪裡去？',courses:['財政學','租稅法規','稅務會計','政府預算'],
+    what:'夾在會計島和經濟島之間，結合會計、經濟與法律，研究租稅制度和政府財政。',
+    jobs:['國稅局、財政部','會計師事務所稅務部','企業稅務規劃']},
+  ins:{name:'保險小島',short:'保險',en:'INSURANCE',hex:'#8a72b0',roof:'#8a72b0',cx:1290,cy:170,rx:96,ry:68,seed:51,uni:6,tech:4,minor:true,
+    q:'未來的意外，今天要怎麼定價？',courses:['風險管理','保險學','精算數學','保險法'],
+    what:'緊鄰財金島，研究風險管理與保險經營，數學最重的分支是精算。',
+    jobs:['壽險／產險公司','精算師','核保、理賠、風險管理']},
+  /* ===== 管理洲 ===== */
+  mgt:{cont:'mgt',name:'企業管理島',short:'企管',en:'BUSINESS ADMINISTRATION',hex:'#13a89e',roof:'#13a89e',cx:1400,cy:1720,rx:290,ry:200,seed:101,uni:58,tech:52,
+    q:'一個組織怎麼把人、錢、事管好？',
+    what:'管理洲最大的一座島。學企業經營的「五管」：生產、行銷、人事、研發、財務，再加上策略、組織行為和創業。出路很廣，所以常被叫做「萬用科系」。',
+    courses:['管理學','經濟學','會計學','統計學','組織行為','行銷管理','人力資源管理','生產與作業管理','策略管理','創新與創業'],
+    who:['喜歡帶活動、當幹部、規劃事情','對品牌故事、商業新聞有興趣','想過自己創業'],
+    jobs:['行銷企劃、品牌經理','人力資源','業務與產品經理','管理顧問','自己創業'],
+    certs:['專案管理（PMP）','人力資源相關證照','數位行銷相關證照','多益等外語檢定'],
+    myth:'常見誤解：企管什麼都學、什麼都不精。企管的專長是「整合」，把行銷、人資、財務、營運串成一個會運轉的組織；大學時選一個主修方向會更有競爭力。',
+    story:'東京店開幕後，阿傑一口氣有了五家店。誰來排班？店長的目標怎麼訂？要不要開放加盟？把一群人和一堆事管好，就是企管在學的事。'},
+  im:{cont:'mgt',name:'資訊管理島',short:'資管',en:'INFORMATION MANAGEMENT',hex:'#c2479b',roof:'#c2479b',cx:2200,cy:1680,rx:270,ry:195,seed:111,uni:48,tech:52,
+    q:'怎麼用資訊科技讓組織運作得更好？',
+    what:'介於資訊工程和管理之間。不只寫程式，更要懂企業流程，設計讓公司運作更有效率的系統；也是資料分析、AI 應用的主力。',
+    courses:['程式設計','資料庫管理','系統分析與設計','管理資訊系統','資料探勘','電子商務','資訊安全','ERP 企業資源規劃','AI 應用'],
+    who:['喜歡電腦，願意學寫程式','喜歡解決問題，想讓事情更有效率','對 AI、數據分析有興趣'],
+    jobs:['系統分析師、軟體工程師','資料分析師','專案經理（PM）','資訊安全','ERP 顧問、數位轉型'],
+    certs:['程式設計相關證照','雲端（AWS／Google／Microsoft）證照','資料分析證照','專案管理（PMP）'],
+    myth:'常見誤解：資管是資工的簡單版。資工偏底層技術，資管偏「技術＋商業」，強項是把技術變成解決企業問題的工具。',
+    story:'五家店要有手機點餐 APP、會員集點，還要知道哪一款飲料在哪一家店最好賣。把這些系統做出來、把資料變成決策，就是資管在學的事。'},
+  mkt:{cont:'mgt',name:'行銷經營島',short:'行銷',en:'MARKETING',hex:'#f26b38',roof:'#f26b38',cx:780,cy:1560,rx:200,ry:150,seed:121,uni:13,tech:39,
+    q:'怎麼讓對的人知道、喜歡、買單？',what:'研究消費者行為、品牌、通路、廣告與數位行銷。科技大學的校系特別多，實作比重高。',
+    courses:['行銷管理','消費者行為','品牌管理','數位行銷','廣告學','市場調查'],jobs:['行銷企劃','品牌經理','社群經營','市場研究','業務']},
+  ec:{cont:'mgt',minor:true,name:'電子商務小島',short:'電商',en:'E-COMMERCE',hex:'#e88d63',roof:'#e88d63',cx:1800,cy:1420,rx:72,ry:52,seed:131,uni:2,tech:2,
+    q:'怎麼在網路上把東西賣出去？',what:'網路商店、直播、平台經營，結合資訊與行銷。校系數少，內容也常出現在資管和行銷系。',
+    courses:['電子商務','網路行銷','網站經營'],jobs:['電商營運','數位行銷','平台經營']},
+  tou:{cont:'mgt',name:'觀光島',short:'觀光',en:'TOURISM',hex:'#5f9e2a',roof:'#7cc242',cx:330,cy:1700,rx:140,ry:100,seed:141,uni:22,tech:25,
+    q:'怎麼讓旅人玩得盡興？',what:'旅遊規劃、導覽、觀光行銷與政策。',courses:['觀光學概論','旅行業管理','導覽解說','觀光行銷'],jobs:['旅行社、領隊導遊','航空公司','觀光局與地方政府']},
+  hos:{cont:'mgt',name:'餐旅島',short:'餐旅',en:'HOSPITALITY',hex:'#5f9e2a',roof:'#7cc242',cx:520,cy:1990,rx:150,ry:100,seed:151,uni:21,tech:51,
+    q:'怎麼讓客人住得滿意、吃得開心？',what:'飯店與餐飲的經營管理，實習比重高。科技大學校系是一般大學的兩倍多。',courses:['餐旅管理','房務與櫃檯實務','餐飲管理','餐旅行銷'],jobs:['飯店管理','餐飲品牌','會展與活動']},
+  lei:{cont:'mgt',name:'休閒島',short:'休閒',en:'LEISURE',hex:'#5f9e2a',roof:'#7cc242',cx:880,cy:2040,rx:150,ry:100,seed:161,uni:23,tech:58,
+    q:'怎麼設計讓人放鬆的體驗？',what:'休閒產業、遊憩規劃、主題樂園與活動經營。管理學群裡科技大學校系最多的學類。',courses:['休閒遊憩規劃','活動企劃','主題樂園管理','休閒產業分析'],jobs:['主題樂園、度假村','活動企劃','休閒農場與遊憩區']},
+  spo:{cont:'mgt',minor:true,name:'運動管理小島',short:'運動',en:'SPORT MANAGEMENT',hex:'#7a9e9f',roof:'#7a9e9f',cx:1170,cy:2140,rx:105,ry:70,seed:171,uni:14,tech:17,
+    q:'運動產業怎麼經營？',what:'賽事、場館、球隊和運動行銷的經營管理。',courses:['運動行銷','賽事管理','場館經營'],jobs:['職業球團','運動品牌','賽事與健身產業']},
+  ie:{cont:'mgt',name:'工業工程島',short:'工工',en:'INDUSTRIAL ENGINEERING',hex:'#8d6e63',roof:'#8d6e63',cx:2900,cy:1500,rx:170,ry:125,seed:181,uni:15,tech:20,
+    q:'怎麼讓流程更快、更省、更穩定？',what:'用數學與統計做最佳化、品質管理、生產排程，偏理工的管理。',courses:['作業研究','品質管理','生產規劃與管制','人因工程','供應鏈管理'],jobs:['製程與生管工程師','品管','供應鏈管理']},
+  log:{cont:'mgt',name:'運輸物流島',short:'物流',en:'LOGISTICS',hex:'#8d6e63',roof:'#8d6e63',cx:3150,cy:1850,rx:160,ry:115,seed:191,uni:13,tech:11,
+    q:'貨物和人怎麼最有效率地移動？',what:'物流規劃、航運、航空貨運與運輸管理。',courses:['物流管理','運輸經濟','航運管理','倉儲管理'],jobs:['物流公司','航運與航空貨運','電商物流']},
+  adm:{cont:'mgt',minor:true,name:'行政管理小島',short:'行管',en:'PUBLIC ADMINISTRATION',hex:'#7a9e9f',roof:'#7a9e9f',cx:1900,cy:2080,rx:82,ry:60,seed:201,uni:16,tech:0,
+    q:'政府和公共組織怎麼管理？',what:'公共行政與政策，常走公職考試。只有一般大學開設。',courses:['行政學','公共政策','政府預算'],jobs:['公務人員','非營利組織','政策研究']},
+  med:{cont:'mgt',minor:true,name:'醫務管理小島',short:'醫管',en:'HEALTHCARE MANAGEMENT',hex:'#7a9e9f',roof:'#7a9e9f',cx:2550,cy:2080,rx:82,ry:60,seed:211,uni:9,tech:4,
+    q:'醫院要怎麼經營？',what:'醫院與健康照護機構的經營管理、健康保險與醫療資訊。',courses:['醫務管理','健康保險','醫療資訊'],jobs:['醫院行政管理','健保相關單位','長照機構']},
+  cul:{cont:'mgt',minor:true,name:'文化與產業小島',short:'文創',en:'CULTURAL INDUSTRIES',hex:'#7a9e9f',roof:'#7a9e9f',cx:1050,cy:1380,rx:82,ry:58,seed:221,uni:10,tech:6,
+    q:'文化怎麼變成好生意？',what:'文化創意產業、展演與品牌的經營。',courses:['文化創意產業','展演管理','品牌與設計管理'],jobs:['文創品牌','展演與藝術行政','地方創生']},
+  land:{cont:'mgt',minor:true,name:'地政小島',short:'地政',en:'LAND ECONOMICS',hex:'#7a9e9f',roof:'#7a9e9f',cx:3300,cy:1350,rx:82,ry:58,seed:231,uni:6,tech:5,
+    q:'土地和房子怎麼管理、怎麼估價？',what:'土地與不動產的管理、估價、地籍與法規。',courses:['土地法規','不動產估價','地籍測量'],jobs:['地政士','不動產估價師','地政機關']}
+};
+const BRIDGES=[['acc','fin','財報分析'],['fin','eco','利率・貨幣政策'],['eco','ib','國際貿易'],['fin','ib','匯率・國際金融'],
+  ['fin','ins','風險管理'],['acc','tax','稅務會計'],['tax','eco','租稅政策'],['sta','acc','統計・數據'],
+  ['mgt','mkt','行銷管理'],['mgt','im','管理資訊系統'],['im','ec','網路平台'],['mkt','tou','服務行銷'],['tou','hos','餐旅服務'],['hos','lei','休閒產業'],
+  ['lei','spo','運動休閒'],['mgt','cul','文創經營'],['mgt','adm','組織管理'],['im','med','醫療資訊'],['im','ie','資料分析・最佳化'],['ie','log','供應鏈'],['ie','land','空間規劃']];
+/* 跨洲航線：兩個學群共通的知識（導覽到「跨洲航線」時才畫出） */
+const LANES=[['ib','mgt','管理學・行銷'],['ib','log','全球供應鏈'],['fin','im','金融科技'],['acc','im','會計資訊系統'],['sta','im','資料分析'],['eco','adm','公共政策'],['ins','med','健康保險']];
+const BLD=[ // id, island, name, x, y, kind
+  ['acc_ledger','acc','帳務大樓',345,525,'house'],['acc_audit','acc','審計所',520,600,'house'],['acc_firm','acc','會計師事務所',390,668,'tall'],
+  ['fin_trade','fin','交易室',790,350,'tall'],['fin_inv','fin','投資學院',975,330,'house'],['fin_bank','fin','銀行街',905,478,'bank'],
+  ['eco_lib','eco','圖書館',1130,770,'lib'],['eco_forum','eco','政策論壇',1345,735,'house'],['eco_lab','eco','計量研究室',1440,860,'house'],['eco_food','eco','學生餐廳',1195,905,'food'],
+  ['ib_trade','ib','貿易中心',1575,385,'tall'],['ib_lang','ib','語言中心',1715,345,'house'],['ib_port','ib','國際港',1770,500,'port'],
+  ['sta_light','sta','資料燈塔',232,1030,'lighthouse'],['tax_house','tax','稅務所',732,1012,'house'],['ins_tower','ins','精算塔',1292,168,'tower'],
+  ['mgt_hall','mgt','管理學院館',1320,1690,'lib'],['mgt_start','mgt','創業基地',1530,1650,'tall'],['mgt_food','mgt','管理洲餐廳',1460,1830,'food'],
+  ['im_center','im','資訊中心',2130,1650,'tall'],['im_lab','im','程式實驗室',2310,1730,'house'],
+  ['mkt_studio','mkt','行銷工作室',780,1560,'house'],['ec_live','ec','直播電商站',1800,1430,'house'],
+  ['tou_center','tou','遊客中心',330,1700,'house'],['hos_hotel','hos','實習旅館',520,1990,'tall'],['lei_park','lei','休閒園區',880,2040,'food'],
+  ['spo_arena','spo','運動場館',1170,2140,'house'],['ie_fac','ie','智慧工廠',2900,1500,'house'],['log_center','log','物流中心',3150,1850,'port'],
+  ['adm_house','adm','公共事務所',1900,2085,'house'],['med_house','med','醫院管理室',2550,2085,'house'],['cul_house','cul','文創工坊',1050,1385,'house'],['land_house','land','地政事務所',3300,1355,'house']
+].map(([id,isl,name,x,y,kind])=>({id,isl,name,x,y,kind}));
+/* 財經洲整體往右移 OX，給左下角的管理洲留位置 */
+for(const k in ISL){if(!ISL[k].cont){ISL[k].cont='fin';ISL[k].cx+=OX}}
+BLD.forEach(b=>{if(ISL[b.isl].cont==='fin')b.x+=OX});
+const B={}; BLD.forEach(b=>B[b.id]=b);
+const BLD_TEXT={
+  acc_ledger:'會計島的主教室。〈初級會計〉〈中級會計〉都在這裡上，別島的學生也會過橋來修〈會計學〉。',
+  acc_audit:'練習查帳的地方：抽樣、對帳、找出報表裡不合理的數字。',
+  acc_firm:'會計師事務所，高年級學生在這裡實習，體驗年底盤點和查核。',
+  fin_trade:'牆上滿是報價螢幕的交易室。上課模擬下單，晚上九點半會有人留下來等美股開盤。',
+  fin_inv:'〈投資學〉〈公司理財〉〈財務數學〉的教室，也是別島學生最常來修課的地方。',
+  fin_bank:'銀行、證券、投信排成一條街，是財金島的出口港：實習和第一份工作多半從這裡開始。',
+  eco_lib:'群島最大的圖書館，期末前每座島的人都會來。也可以查各種經濟與金融資料庫。',
+  eco_forum:'經濟系的辯論場。央行該不該升息？最低工資該漲多少？在這裡吵到下課。',
+  eco_lab:'用電腦跑迴歸、驗證理論的地方，〈計量經濟學〉在這裡上。',
+  eco_food:'中午所有島的人都會擠到這裡吃飯，是最熱鬧的地方。',
+  ib_trade:'模擬跨國談判、〈國際貿易實務〉的教室，牆上掛著各國時鐘。',
+  ib_lang:'練習商用英文簡報和第二外語的地方。',
+  ib_port:'貨櫃船從這裡出發，國企島的學生會來看貨物怎麼報關、怎麼出口。',
+  sta_light:'替整座群島照路的燈塔。每座島的學生都要來修〈統計學〉。',
+  tax_house:'研究租稅的小屋。每年報稅季，學生會去協助民眾報稅。',
+  ins_tower:'精算師算機率的高塔，〈精算數學〉〈風險管理〉在這裡上。',
+  mgt_hall:'企管島的主教室。〈管理學〉在這裡上，管理洲各島的學生都會來修。',
+  mgt_start:'創業基地：學生組隊提案、參加創業競賽的地方。',
+  mgt_food:'管理洲的學生餐廳，中午一樣擠滿人。',
+  im_center:'資訊中心，晚上燈也常亮著，資管學生在這裡趕專題。',
+  im_lab:'寫程式、做系統的實驗室。財金、會計的學生也會搭船來修〈程式設計〉〈會計資訊系統〉。',
+  mkt_studio:'做市場調查、提行銷企劃的工作室。',ec_live:'網路商店和直播賣貨的練習場。',
+  tou_center:'規劃旅遊行程、練習導覽解說的地方。',hos_hotel:'模擬旅館：櫃檯、房務、餐廳都可以實習。',lei_park:'休閒園區，練習設計活動和遊憩體驗。',
+  spo_arena:'運動場館，學習賽事和場館怎麼經營。',ie_fac:'智慧工廠，研究生產線怎麼排最有效率。',log_center:'物流中心，貨櫃從這裡分送出去。',
+  adm_house:'研究政府怎麼運作、政策怎麼制定。',med_house:'學習醫院怎麼經營、健保怎麼運作。',cul_house:'文化創意產業的實作工坊。',land_house:'學習土地估價與地籍管理。'
+};
+const ROLES={
+  fin:{label:'財金系',shirt:'#e0a12a',w:4},ib:{label:'國企系',shirt:'#3a8fc4',w:3},eco:{label:'經濟系',shirt:'#5aab5c',w:3},acc:{label:'會計系',shirt:'#d0603f',w:3},
+  sta:{label:'統計系',shirt:'#9a82c0',w:.6},tax:{label:'財稅系',shirt:'#9a82c0',w:.5},ins:{label:'保險系',shirt:'#9a82c0',w:.6},prof:{label:'老師',shirt:'#2d3a55',w:1.5},
+  mgt:{label:'企管系',shirt:'#13a89e',w:3.6,cont:'mgt'},im:{label:'資管系',shirt:'#c2479b',w:3,cont:'mgt'},mkt:{label:'行銷系',shirt:'#f26b38',w:1.4,cont:'mgt'},
+  tour:{label:'觀光餐旅休閒',shirt:'#7cc242',w:2,cont:'mgt'},ie:{label:'工工／物流',shirt:'#8d6e63',w:1,cont:'mgt'},mmin:{label:'其他管理學類',shirt:'#7a9e9f',w:1,cont:'mgt'}
+};
+for(const k in ROLES)if(!ROLES[k].cont&&k!=='prof')ROLES[k].cont='fin';
+const HOME={fin:['fin_trade','fin_inv','fin_bank'],ib:['ib_trade','ib_lang','ib_port'],eco:['eco_forum','eco_lab','eco_lib'],acc:['acc_ledger','acc_audit','acc_firm'],
+  sta:['sta_light'],tax:['tax_house'],ins:['ins_tower'],
+  mgt:['mgt_hall','mgt_start'],im:['im_center','im_lab'],mkt:['mkt_studio','ec_live'],tour:['tou_center','hos_hotel','lei_park'],ie:['ie_fac','log_center'],
+  mmin:['spo_arena','adm_house','med_house','cul_house','land_house']};
+const COURSES={fin:['投資學','公司理財','衍生性商品','財務數學','金融市場','程式交易'],ib:['國際行銷','國際貿易實務','跨文化管理','國際企業管理','全球供應鏈'],
+  eco:['個體經濟學','總體經濟學','計量經濟學','賽局理論','行為經濟學'],acc:['中級會計學','成本與管理會計','審計學','會計資訊系統'],
+  sta:['數理統計','迴歸分析'],tax:['財政學','租稅法規'],ins:['精算數學','保險學'],
+  mgt:['管理學','組織行為','行銷管理','人力資源管理','策略管理','創新與創業'],im:['程式設計','資料庫管理','系統分析與設計','資料探勘','資訊安全','AI 應用'],
+  mkt:['消費者行為','品牌管理','數位行銷','廣告學'],tour:['觀光學概論','餐旅管理','休閒遊憩規劃','會展管理'],ie:['作業研究','品質管理','生產規劃','供應鏈管理'],
+  mmin:['運動行銷','行政學','醫務管理','文化創意產業','不動產估價']};
+const CROSS={fin:[['eco_forum','貨幣銀行學'],['acc_ledger','會計學'],['sta_light','統計學'],['ins_tower','風險管理'],['ib_trade','國際財務管理']],
+  acc:[['fin_inv','財務管理'],['tax_house','稅務法規'],['sta_light','統計學'],['eco_forum','經濟學原理']],
+  eco:[['fin_inv','投資學'],['sta_light','統計學'],['ib_trade','國際貿易'],['tax_house','財政學']],
+  ib:[['eco_forum','國際經濟學'],['fin_inv','國際財務管理'],['acc_ledger','會計學']],
+  sta:[['eco_lab','計量經濟學'],['fin_inv','財務數學']],tax:[['acc_ledger','中級會計學'],['eco_forum','公共經濟學']],ins:[['fin_inv','投資學'],['sta_light','機率論']],
+  mgt:[['im_lab','管理資訊系統'],['mkt_studio','行銷管理'],['fin_inv','財務管理'],['acc_ledger','會計學'],['ib_trade','國際行銷'],['sta_light','統計學']],
+  im:[['mgt_hall','管理學'],['fin_inv','金融科技'],['sta_light','統計學'],['ie_fac','作業研究'],['acc_ledger','會計資訊系統']],
+  mkt:[['mgt_hall','管理學'],['ec_live','數位行銷']],tour:[['mkt_studio','服務行銷'],['mgt_hall','管理學']],
+  ie:[['im_lab','資料分析'],['log_center','供應鏈管理'],['sta_light','統計學']],mmin:[['mgt_hall','管理學']]};
+/* 財經洲學生跨洲去修的課 */
+CROSS.fin.push(['im_lab','程式設計']);CROSS.ib.push(['mgt_hall','管理學'],['log_center','全球運籌']);CROSS.acc.push(['im_lab','會計資訊系統']);
+CROSS.eco.push(['adm_house','公共政策']);CROSS.sta.push(['im_lab','資料探勘']);CROSS.ins.push(['med_house','健康保險']);
+const TOUR=[
+  {id:'dock',node:'dock',title:'入學碼頭',en:'START HERE',kind:'intro'},
+  {id:'acc',node:'acc_c'},{id:'fin',node:'fin_c'},{id:'eco',node:'eco_c'},{id:'ib',node:'ib_c'},
+  {id:'minor',node:'tax_c',title:'財經洲的三座小島',en:'STATISTICS · PUBLIC FINANCE · INSURANCE',kind:'minor'},
+  {id:'cross',node:'mport',title:'跨洲航線',en:'CROSSING THE STRAIT',kind:'cross'},
+  {id:'mgt',node:'mgt_c'},{id:'im',node:'im_c'},
+  {id:'g_mkt',node:'mkt_c',kind:'group',keys:['mkt','ec'],title:'行銷與電商',en:'MARKETING · E-COMMERCE',lead:'讓對的人知道、喜歡、買單。',
+    story:'日本人不認識阿傑的品牌。要找網紅、經營社群、開快閃店？這是行銷在想的事；在網路上開店、直播賣貨，就是電子商務。'},
+  {id:'g_leis',node:'hos_c',kind:'group',keys:['tou','hos','lei'],title:'觀光休閒群島',en:'TOURISM · HOSPITALITY · LEISURE',lead:'三座靠在一起的島，科技大學的校系特別多。',
+    story:'東京店變成台灣觀光客的打卡點，旅行社想把它排進行程，飯店也想合作推出聯名飲料。'},
+  {id:'g_ie',node:'ie_c',kind:'group',keys:['ie','log'],title:'工工與物流',en:'INDUSTRIAL ENGINEERING · LOGISTICS',lead:'讓流程更快、讓東西準時送到。',
+    story:'珍珠和茶葉從台灣怎麼最便宜、最快送到東京？店裡的工作怎麼排，才能十秒出一杯？'},
+  {id:'g_mmin',node:'adm_c',kind:'group',keys:['spo','adm','med','cul','land'],title:'管理洲的小島們',en:'MORE MANAGEMENT ISLANDS',lead:'人比較少，但各有專精的出路。'},
+  {id:'end',node:'dock',title:'回到碼頭',en:'BACK TO THE DOCK',kind:'end'}
+];
+
+/* ════════ 工具 ════════ */
+function rng(s){return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646}}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const wpick=o=>{let s=0;for(const k in o)s+=o[k];let r=Math.random()*s;for(const k in o){r-=o[k];if(r<=0)return k}return Object.keys(o)[0]};
+// island outline: polar radius modulation
+for(const k in ISL){const I=ISL[k],r=rng(I.seed*131+7);I.h=[2,3,4,5].map(n=>({n,a:(.035+r()*.05)*(n<4?1:.7),p:r()*6.28}));}
+const Rmod=(I,t)=>1+I.h.reduce((s,h)=>s+h.a*Math.sin(h.n*t+h.p),0);
+const ipt=(I,t,s=1)=>[I.cx+I.rx*Rmod(I,t)*Math.cos(t)*s, I.cy+I.ry*Rmod(I,t)*Math.sin(t)*s];
+function edgeToward(I,ang,s=.93){let best=0,bd=9;for(let i=0;i<360;i++){const t=i/360*6.283,p=ipt(I,t),a=Math.atan2(p[1]-I.cy,p[0]-I.cx);
+  let d=Math.abs(a-ang);d=Math.min(d,6.283-d);if(d<bd){bd=d;best=t}}return ipt(I,best,s)}
+
+/* ════════ 步道網絡 ════════ */
+const N={},ADJ={};
+const addE=(a,b,t='w')=>{(ADJ[a]=ADJ[a]||[]);(ADJ[b]=ADJ[b]||[]);const d=Math.hypot(N[a][0]-N[b][0],N[a][1]-N[b][1])*(t==='f'?.7:1);ADJ[a].push({to:b,cost:d,t});ADJ[b].push({to:a,cost:d,t})};
+for(const k in ISL){const I=ISL[k];N[k+'_c']=[I.cx+(I.minor?0:10),I.cy+(I.minor?30:35)];}
+N.sta_c=[230+OX,1060];N.tax_c=[735+OX,1045];N.ins_c=[1292+OX,200];
+BLD.forEach(b=>{N[b.id]=[b.x,b.y+8];addE(b.isl+'_c',b.id)});
+const BR=[];
+BRIDGES.forEach(([a,b,label])=>{const A=ISL[a],Bi=ISL[b];
+  const pa=edgeToward(A,Math.atan2(Bi.cy-A.cy,Bi.cx-A.cx)),pb=edgeToward(Bi,Math.atan2(A.cy-Bi.cy,A.cx-Bi.cx));
+  N[a+'>'+b]=pa;N[b+'>'+a]=pb;addE(a+'_c',a+'>'+b);addE(a+'>'+b,b+'>'+a,'b');addE(b+'>'+a,b+'_c');BR.push({a,b,label,pa,pb});});
+N.dock=edgeToward(ISL.eco,Math.PI/2,.9);addE('eco_c','dock');
+const DOCK_END=[N.dock[0]+10,N.dock[1]+95];
+/* 渡輪：財經洲碼頭 ⇄ 資管島渡輪碼頭；管理洲自己的上岸碼頭在企管島南邊 */
+N.mport=edgeToward(ISL.im,-2.2,.9);addE('im_c','mport');const MPORT_END=[N.mport[0]-40,N.mport[1]-90];
+N.dockEnd=DOCK_END;N.mportEnd=MPORT_END;addE('dock','dockEnd','p');addE('dockEnd','mportEnd','f');addE('mportEnd','mport','p');
+N.mdock=edgeToward(ISL.mgt,Math.PI/2,.9);addE('mgt_c','mdock');const MDOCK_END=[N.mdock[0]+10,N.mdock[1]+95];
+function route(a,b){const dist={},prev={},Q=new Set(Object.keys(N));Object.keys(N).forEach(k=>dist[k]=Infinity);dist[a]=0;
+  while(Q.size){let u=null;Q.forEach(k=>{if(u===null||dist[k]<dist[u])u=k});Q.delete(u);if(u===b)break;
+    (ADJ[u]||[]).forEach(e=>{const nd=dist[u]+e.cost;if(nd<dist[e.to]){dist[e.to]=nd;prev[e.to]=u}})}
+  const p=[b];while(p[0]!==a)p.unshift(prev[p[0]]);return p}
+const edgeType=(a,b)=>((ADJ[a]||[]).find(e=>e.to===b)||{}).t||'w';
+const islOfNode=n=>({dock:'eco',dockEnd:'eco',mport:'im',mportEnd:'im',mdock:'mgt'})[n]||n.split(/[_>]/)[0];
+
+/* ════════ 靜態底圖 ════════ */
+const BRES=.8;
+const base=document.createElement('canvas');base.width=W*BRES;base.height=H*BRES;
+const objL=document.createElement('canvas');objL.width=W*BRES;objL.height=H*BRES;
+const WIN=[]; // window rects for night glow
+const TREES=[];
+function drawBase(gb,go,T){gb=gb||base.getContext('2d');go=go||objL.getContext('2d');T=T||[BRES,0,0,BRES,0,0];
+  let g=gb;g.setTransform(...T);WIN.length=0;
+  const sea=g.createLinearGradient(0,0,0,H);sea.addColorStop(0,'#a9dade');sea.addColorStop(1,'#7fc0c8');g.fillStyle=sea;g.fillRect(0,0,W,H);
+  // soft sea texture
+  const tr=rng(99);g.strokeStyle='rgba(255,255,255,.28)';g.lineWidth=2;
+  for(let i=0;i<320;i++){const x=tr()*W,y=tr()*H;g.beginPath();g.arc(x,y,14,Math.PI*1.15,Math.PI*1.85);g.stroke()}
+  const path=(I,s)=>{g.beginPath();for(let i=0;i<=120;i++){const p=ipt(I,i/120*6.283,s);i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1])}g.closePath()};
+  for(const k in ISL){const I=ISL[k];
+    path(I,1.16);g.fillStyle='rgba(210,240,236,.55)';g.fill();
+    path(I,1.07);g.fillStyle='rgba(225,246,240,.8)';g.fill();
+    const M=I.cont==='mgt';path(I,1.02);g.fillStyle=M?'#e6dcbc':'#ecd9a6';g.fill();
+    path(I,.96);const gr=g.createRadialGradient(I.cx,I.cy-I.ry*.3,10,I.cx,I.cy,I.rx*1.1);gr.addColorStop(0,M?'#b3e0cd':'#bcd98e');gr.addColorStop(1,M?'#7fbfa8':'#93c47f');g.fillStyle=gr;g.fill();
+    path(I,.62);g.strokeStyle='rgba(70,110,50,.18)';g.lineWidth=2;g.stroke();
+    path(I,.35);g.stroke();
+  }
+  // bridges
+  BR.forEach(({pa,pb})=>{const dx=pb[0]-pa[0],dy=pb[1]-pa[1],L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L;
+    g.lineCap='butt';g.strokeStyle='rgba(40,60,70,.18)';g.lineWidth=26;g.beginPath();g.moveTo(pa[0]+3,pa[1]+6);g.lineTo(pb[0]+3,pb[1]+6);g.stroke();
+    g.strokeStyle='#a07a4c';g.lineWidth=22;g.beginPath();g.moveTo(pa[0],pa[1]);g.lineTo(pb[0],pb[1]);g.stroke();
+    g.strokeStyle='#7d5a33';g.lineWidth=2;for(let s=6;s<L-4;s+=9){const x=pa[0]+dx*s/L,y=pa[1]+dy*s/L;g.beginPath();g.moveTo(x+nx*11,y+ny*11);g.lineTo(x-nx*11,y-ny*11);g.stroke()}
+    g.strokeStyle='#5e4224';g.lineWidth=3;[11,-11].forEach(o=>{g.beginPath();g.moveTo(pa[0]+nx*o,pa[1]+ny*o);g.lineTo(pb[0]+nx*o,pb[1]+ny*o);g.stroke()});
+  });
+  // ferry lane across the strait
+  g.save();g.setLineDash([18,14]);g.strokeStyle='rgba(255,255,255,.75)';g.lineWidth=5;g.beginPath();g.moveTo(DOCK_END[0],DOCK_END[1]);
+  g.quadraticCurveTo((DOCK_END[0]+MPORT_END[0])/2+70,(DOCK_END[1]+MPORT_END[1])/2,MPORT_END[0],MPORT_END[1]);g.stroke();g.restore();
+  // piers
+  const pier=(a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L;g.lineCap='butt';g.strokeStyle='#8a6640';g.lineWidth=18;g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke();
+    g.strokeStyle='#6b4c2a';g.lineWidth=2;for(let s=0;s<L;s+=8){const x=a[0]+dx*s/L,y=a[1]+dy*s/L;g.beginPath();g.moveTo(x+nx*9,y+ny*9);g.lineTo(x-nx*9,y-ny*9);g.stroke()}};
+  pier([N.dock[0],N.dock[1]-10],DOCK_END);pier(N.mport,MPORT_END);pier([N.mdock[0],N.mdock[1]-10],MDOCK_END);
+  // paths
+  g.lineCap='round';g.lineJoin='round';
+  for(const a in ADJ)ADJ[a].forEach(e=>{if(e.t!=='w'||a>e.to)return;const p=N[a],q=N[e.to];
+    g.strokeStyle='#d8c493';g.lineWidth=13;g.beginPath();g.moveTo(p[0],p[1]);g.lineTo(q[0],q[1]);g.stroke();
+    g.strokeStyle='#efe2bb';g.lineWidth=8;g.beginPath();g.moveTo(p[0],p[1]);g.lineTo(q[0],q[1]);g.stroke()});
+  for(const k in ISL){const c=N[k+'_c'];g.fillStyle='#efe2bb';g.strokeStyle='#d8c493';g.lineWidth=3;g.beginPath();g.ellipse(c[0],c[1],ISL[k].minor?14:24,ISL[k].minor?9:14,0,0,7);g.fill();g.stroke()}
+  // trees
+  if(!TREES.length){const r=rng(2024);for(const k in ISL){const I=ISL[k],n=I.minor?7:Math.round(I.rx*I.ry/2200);let tries=0;
+    while(n>TREES.filter(t=>t.k===k).length&&tries++<900){const t=r()*6.283,s=.35+Math.sqrt(r())*.55,p=ipt(I,t,s);
+      if(BLD.some(b=>Math.hypot(b.x-p[0],b.y-12-p[1])<78))continue;
+      let near=false;for(const a in ADJ){for(const e of ADJ[a]){const A=N[a],Bq=N[e.to];const vx=Bq[0]-A[0],vy=Bq[1]-A[1],l2=vx*vx+vy*vy||1;
+        let u=((p[0]-A[0])*vx+(p[1]-A[1])*vy)/l2;u=Math.max(0,Math.min(1,u));if(Math.hypot(A[0]+vx*u-p[0],A[1]+vy*u-p[1])<20){near=true;break}}if(near)break}
+      if(near)continue;TREES.push({k,x:p[0],y:p[1],s:.8+r()*.5})}}
+    TREES.sort((a,b)=>a.y-b.y)}
+  // objects layer (drawn above the moving shadows)
+  g=go;g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,g.canvas.width,g.canvas.height);g.setTransform(...T);
+  const items=[...TREES.map(t=>({y:t.y,t})),...BLD.map(b=>({y:b.y,b}))].sort((a,b)=>a.y-b.y);
+  items.forEach(it=>it.t?tree(g,it.t):building(g,it.b));
+  // building labels
+  g.textAlign='center';g.textBaseline='top';g.font='700 24px "Noto Sans TC",sans-serif';
+  BLD.forEach(b=>{g.lineWidth=5;g.strokeStyle='rgba(255,255,255,.9)';g.strokeText(b.name,b.x,b.y+12);g.fillStyle='#2a3a40';g.fillText(b.name,b.x,b.y+12)});
+  // bridge signs
+  g.font='700 25px "Noto Sans TC",sans-serif';g.textBaseline='middle';
+  BR.forEach(({pa,pb,label})=>{const x=(pa[0]+pb[0])/2,y=(pa[1]+pb[1])/2-24,w=g.measureText(label).width+22;
+    g.fillStyle='#5e4224';g.fillRect(x-2,y,4,22);g.fillStyle='#fffaf0';g.strokeStyle='#7d5a33';g.lineWidth=2;g.beginPath();g.roundRect(x-w/2,y-18,w,36,7);g.fill();g.stroke();
+    g.fillStyle='#4a3218';g.fillText(label,x,y)});
+  g.textAlign='left';g.font='700 22px "Noto Sans TC",sans-serif';g.fillStyle='rgba(28,43,51,.7)';g.fillText('財經洲碼頭',DOCK_END[0]+16,DOCK_END[1]-6);
+  g.fillText('渡輪碼頭',MPORT_END[0]-110,MPORT_END[1]-8);g.fillText('管理洲碼頭',MDOCK_END[0]+16,MDOCK_END[1]-6);
+  // continent titles
+  g.fillStyle='rgba(28,43,51,.78)';g.font='700 120px "LXGW WenKai TC",serif';g.textAlign='left';g.textBaseline='alphabetic';g.fillText('財經洲',90,200);
+  g.font='500 30px "IBM Plex Mono",monospace';g.fillStyle='rgba(28,43,51,.55)';g.fillText('FINANCE & ECONOMICS · 7 學類',96,250);
+  g.textAlign='right';g.fillStyle='rgba(28,43,51,.78)';g.font='700 120px "LXGW WenKai TC",serif';g.fillText('管理洲',3510,1110);
+  g.font='500 30px "IBM Plex Mono",monospace';g.fillStyle='rgba(28,43,51,.55)';g.fillText('MANAGEMENT · 14 學類',3504,1160);
+}
+function tree(g,t){const s=t.s;
+  g.fillStyle='#6b4a2b';g.fillRect(t.x-2*s,t.y-12*s,4*s,12*s);
+  g.fillStyle='#4f8a48';g.beginPath();g.arc(t.x,t.y-20*s,12*s,0,7);g.fill();g.fillStyle='#66a35a';g.beginPath();g.arc(t.x-4*s,t.y-24*s,8*s,0,7);g.fill()}
+function building(g,b){const roof=ISL[b.isl].roof,x=b.x,y=b.y;
+  const box=(w,h,sideW)=>{ // front + side
+    g.fillStyle='#e6dccb';g.beginPath();g.moveTo(x+w/2,y);g.lineTo(x+w/2+sideW,y-sideW*.6);g.lineTo(x+w/2+sideW,y-h-sideW*.6);g.lineTo(x+w/2,y-h);g.fill();
+    g.fillStyle='#fbf7ee';g.fillRect(x-w/2,y-h,w,h);g.strokeStyle='rgba(60,50,40,.35)';g.lineWidth=1.5;g.strokeRect(x-w/2,y-h,w,h)};
+  const wins=(w,h,cols,rows,top)=>{for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const wx=x-w/2+8+c*((w-16)/cols)+((w-16)/cols-8)/2,wy=y-h+top+r*16;
+    g.fillStyle='#8fb3c7';g.fillRect(wx,wy,8,10);WIN.push([wx,wy,8,10])}};
+  if(b.kind==='lighthouse'){g.fillStyle='#fbf7ee';g.beginPath();g.moveTo(x-14,y);g.lineTo(x-9,y-78);g.lineTo(x+9,y-78);g.lineTo(x+14,y);g.fill();
+    g.fillStyle=roof;[12,40].forEach(o=>{g.fillRect(x-12+o*.06,y-o-12,24-o*.12,12)});g.fillStyle='#ffe9a6';g.fillRect(x-10,y-94,20,16);WIN.push([x-10,y-94,20,16]);
+    g.fillStyle=roof;g.beginPath();g.moveTo(x-14,y-94);g.lineTo(x,y-110);g.lineTo(x+14,y-94);g.fill();return}
+  if(b.kind==='tower'){box(34,90,14);wins(34,90,1,5,10);g.fillStyle=roof;g.beginPath();g.moveTo(x-22,y-90);g.lineTo(x,y-122);g.lineTo(x+22,y-90);g.fill();return}
+  if(b.kind==='port'){ // crane + warehouse
+    box(70,34,16);g.fillStyle=roof;g.fillRect(x-38,y-40,76,8);
+    g.strokeStyle='#e07a3a';g.lineWidth=4;g.beginPath();g.moveTo(x+44,y);g.lineTo(x+44,y-80);g.lineTo(x-10,y-80);g.moveTo(x+44,y-80);g.lineTo(x+60,y-70);g.stroke();
+    g.lineWidth=1.5;g.beginPath();g.moveTo(x,y-80);g.lineTo(x,y-58);g.stroke();
+    [['#d0603f',-30],['#3a8fc4',-6],['#e0a12a',18]].forEach(([c,o])=>{g.fillStyle=c;g.fillRect(x+o,y-14,22,12)});return}
+  const w=b.kind==='tall'?62:b.kind==='lib'?96:b.kind==='food'?84:b.kind==='bank'?88:72;
+  const h=b.kind==='tall'?70:b.kind==='lib'?46:b.kind==='bank'?44:40;
+  box(w,h,16);wins(w,h,b.kind==='lib'?5:b.kind==='tall'?3:4,b.kind==='tall'?3:2,10);
+  g.fillStyle='#8a6a4a';g.fillRect(x-6,y-14,12,14);
+  if(b.kind==='lib'||b.kind==='bank'){g.fillStyle=roof;g.beginPath();g.moveTo(x-w/2-8,y-h);g.lineTo(x,y-h-26);g.lineTo(x+w/2+8,y-h);g.fill();
+    g.fillStyle='#fbf7ee';for(let c=-2;c<=2;c++)g.fillRect(x+c*16-3,y-h+4,6,h-18)}
+  else if(b.kind==='tall'){g.fillStyle=roof;g.fillRect(x-w/2-4,y-h-10,w+8+16,10)}
+  else{g.fillStyle=roof;g.beginPath();g.moveTo(x-w/2-8,y-h+2);g.lineTo(x-w/2+12,y-h-24);g.lineTo(x+w/2+20,y-h-24);g.lineTo(x+w/2+24,y-h-8);g.lineTo(x+w/2+8,y-h+2);g.fill()}
+  if(b.kind==='food'){g.fillStyle='#e2574c';for(let i=0;i<6;i++){g.fillStyle=i%2?'#fff':'#e2574c';g.fillRect(x-w/2+i*w/6,y-h-2,w/6,8)}}
+}
+
+/* ════════ 人物與時間 ════════ */
+let simMin=465,speed=1,playing=true;
+const occ={};BLD.forEach(b=>occ[b.id]=0);occ.eco_lib=6;occ.im_center=4;
+const walkers=[];const crossLog=[];
+const SKIN=['#f3d2b5','#e8bf9a','#d9a77f','#f6dcc4'],HAIR=['#2b2420','#3b2b22','#1a1a1a','#5a3d2b','#6b6b6b'];
+function phaseOf(m){if(m<450)return'清晨';if(m<510)return'早上・上岸';if(m<720)return'上午・上課中';if(m<790)return'中午・吃飯';
+  if(m<1010)return'下午・上課中';if(m<1090)return'傍晚・下課';if(m<1290)return'晚上・自習';return'深夜'}
+function rate(m){const h=m%60;let r=.25;if(m>=455&&m<=505)r=3;else if(m>=430&&m<455)r=1;if(m>510&&m<1010&&h<10)r=Math.max(r,1.7);
+  if(m>=712&&m<=740)r=2.6;if(m>=775&&m<=790)r=2;if(m>=1010&&m<=1060)r=2.8;if(m>1090&&m<1290)r=.8;if(m>=1290&&m<1320)r=1.3;if(m>=1320)r=.15;return r}
+const ROLE_W={};for(const k in ROLES)ROLE_W[k]=ROLES[k].w;
+const CONT={fin:{dock:'dock',food:'eco_food',lib:'eco_lib'},mgt:{dock:'mdock',food:'mgt_food',lib:'im_center'}};
+const contOfB=id=>id==='dock'?'fin':id==='mdock'?'mgt':ISL[B[id].isl].cont;
+function fromBuilding(c){const L=BLD.filter(b=>occ[b.id]>0&&ISL[b.isl].cont===c);return L.length?pick(L).id:CONT[c].dock}
+function classTrip(role,c){if(role==='prof'){const b=pick(BLD.filter(b=>ISL[b.isl].cont===c&&!['eco_food','eco_lib','ib_port','mgt_food','log_center'].includes(b.id)));return{to:b.id}}
+  if(Math.random()<.32&&CROSS[role]){const [to,course]=pick(CROSS[role]);return{to,course}}return{to:pick(HOME[role])}}
+function planTrip(m){const role=wpick(ROLE_W);const c=role==='prof'?pick(['fin','mgt']):ROLES[role].cont,C=CONT[c];let from,to,course=null;
+  if(m<510){from=C.dock;const r=Math.random();if(r<.12)to=C.lib;else if(r<.22)to=C.food;else({to,course}=classTrip(role,c))}
+  else if(m>=712&&m<=745){from=fromBuilding(c);to=Math.random()<.8?C.food:C.lib}
+  else if(m>=770&&m<=790){from=C.food;({to,course}=classTrip(role,c))}
+  else if(m>=1010&&m<1090){from=fromBuilding(c);to=wpick({dock:6,lib:2,club:1.2});
+    to=to==='dock'?C.dock:to==='lib'?C.lib:({fin:'fin_trade',ib:'ib_lang',mgt:'mgt_start',im:'im_lab',mkt:'mkt_studio'}[role]||C.lib)}
+  else if(m>=1090&&m<1290){from=wpick({[C.dock]:1.5,[C.food]:1,[C.lib]:.5});to=role==='fin'&&m>1230?'fin_trade':wpick({[C.lib]:3,[C.dock]:1})}
+  else if(m>=1290){from=wpick({[C.lib]:3,[c==='fin'?'fin_trade':'im_lab']:1});to=C.dock}
+  else{from=fromBuilding(c);({to,course}=classTrip(role,c))}
+  if(from===to)to=from===C.dock?C.lib:C.dock;
+  if(occ[from]>0)occ[from]--;
+  return{role,from,to,course,why:reason(role,to,m,course,c)}}
+function reason(role,to,m,course,c){
+  if(course){const isl=B[to].isl,I=ISL[isl];return I.cont!==c?`搭渡輪到${I.cont==='mgt'?'管理洲':'財經洲'}的${I.name}修〈${course}〉`:`過橋到${I.name}修〈${course}〉`}
+  if(to==='dock'||to==='mdock')return m>1000?'下課了，搭船回家':'去碼頭';
+  if(to==='eco_food'||to==='mgt_food')return'去學生餐廳吃飯';
+  if(to==='eco_lib')return m>1080?'去圖書館自習到很晚':pick(['去圖書館找資料','去圖書館讀書']);
+  if(to==='im_center')return m>1080?'在資訊中心趕專題':'去資訊中心查資料';
+  if(to==='fin_trade'&&m>1230)return'留在交易室，等美股開盤';
+  if(m>=1010&&m<1090){const club={fin_trade:'投資研究社社課',ib_lang:'英語辯論社練習',mgt_start:'創業社提案練習',im_lab:'程式社團寫專案',mkt_studio:'行銷企劃社開會'}[to];if(club)return club}
+  if(role==='prof')return`去${B[to].name}上課`;
+  const cs=COURSES[role]?pick(COURSES[role]):'';
+  const map={fin_trade:'去交易室做模擬交易',fin_bank:'去銀行街聽業師講課',ib_port:'去港口看貨櫃怎麼出口',ib_lang:'練習商用英文簡報',
+    acc_audit:'去審計所練習查帳',acc_firm:'去事務所實習',eco_forum:'去政策論壇辯論央行該不該升息',eco_lab:'去研究室跑迴歸',tax_house:'上〈稅務法規〉',ins_tower:'上〈精算數學〉',sta_light:'上〈數理統計〉',
+    mgt_start:'去創業基地跟組員討論提案',im_lab:'去實驗室寫程式',hos_hotel:'去實習旅館練習櫃檯接待',lei_park:'去休閒園區辦活動',tou_center:'練習導覽解說',ec_live:'去直播間練習開箱',
+    ie_fac:'去智慧工廠量測產線',log_center:'去物流中心看貨怎麼分',mkt_studio:'去做市場調查'};
+  return Math.random()<.5&&map[to]?map[to]:`去${B[to].name}上〈${cs}〉`}
+function makeWalker(o){const nodes=route(o.from,o.to),pts=nodes.map(k=>N[k].slice());
+  const off=(Math.random()-.5)*14;pts.forEach((p,i)=>{if(i>0&&i<pts.length-1){p[0]+=off;p[1]+=off*.5}});
+  const types=nodes.slice(1).map((k,i)=>edgeType(nodes[i],k));
+  return{nodes,pts,types,seg:0,t:0,role:o.role,to:o.to,why:o.why,course:o.course,shirt:ROLES[o.role].shirt,skin:pick(SKIN),hair:pick(HAIR),
+    spd:(o.role==='prof'?40:50)*(.85+Math.random()*.3),phase:Math.random()*6,x:pts[0][0],y:pts[0][1],dir:1,fade:0,done:false,year:'一二三四'[Math.floor(Math.random()*4)],logged:false}}
+function spawn(){const w=makeWalker(planTrip(simMin));walkers.push(w)}
+function seed(n){for(let i=0;i<n;i++){const w=makeWalker(planTrip(simMin)),L=w.pts.slice(1).map((p,i)=>Math.hypot(p[0]-w.pts[i][0],p[1]-w.pts[i][1]));
+  let target=L.reduce((a,b)=>a+b,0)*Math.random()*.9;while(w.seg<L.length&&target>L[w.seg]){target-=L[w.seg];w.seg++}
+  w.t=w.seg<L.length?target/L[w.seg]:1;w.fade=1;walkers.push(w)}}
+seed(70);
+
+/* guide 許智翔 */
+const guide=makeWalker({role:'fin',from:'dock',to:'dock',why:''});guide.guide=true;guide.pts=[N.dock.slice()];guide.nodes=['dock'];guide.types=[];guide.fade=1;guide.shirt='#e2574c';
+let guideIdle=true;
+function guideTo(node){const cur=guide.nodes[guide.nodes.length-1];if(cur===node){guideIdle=true;return}
+  const nodes=route(cur,node);guide.nodes=nodes;guide.pts=nodes.map(k=>N[k].slice());guide.types=nodes.slice(1).map((k,i)=>edgeType(nodes[i],k));guide.seg=0;guide.t=0;guideIdle=false}
+
+/* boats */
+const boats=[{kind:'cargo',x:1900+OX,y:540,vx:22,vy:4,c:'#3a8fc4'},{kind:'cargo',x:3250,y:1950,vx:20,vy:6,c:'#8d6e63',home:[3250,1950]},{kind:'ferry',t:0},{kind:'sail',cx:560+OX,cy:180,r:120,a:0,s:.06},{kind:'sail',cx:420,cy:700,r:200,a:2,s:.04},{kind:'sail',cx:3100,cy:700,r:220,a:4,s:.035},{kind:'sail',cx:2900,cy:2150,r:140,a:1,s:.05},{kind:'sail',cx:120+OX,cy:420,r:70,a:4,s:.08}];
+
+/* ════════ 繪圖 ════════ */
+const stage=document.getElementById('stage'),cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let scale=1,dpr=1;
+function resize(){dpr=Math.min(2,window.devicePixelRatio||1);const r=stage.getBoundingClientRect();cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);scale=r.width/W}
+new ResizeObserver(()=>{resize();camDirty=true}).observe(stage);resize();
+/* camera: world point (x,y) at view center, zoom z (1 = whole archipelago) */
+const cam={x:W/2,y:H/2,z:1},camT={x:W/2,y:H/2,z:1};let camDirty=true;
+const ZMAX=3.2*Z0;
+function clampCam(c){c.z=Math.max(1,Math.min(ZMAX,c.z));const hw=W/(2*c.z),hh=H/(2*c.z);c.x=Math.max(hw,Math.min(W-hw,c.x));c.y=Math.max(hh,Math.min(H-hh,c.y));return c}
+const sx=x=>((x-cam.x)*cam.z+W/2)*scale, sy=y=>((y-cam.y)*cam.z+H/2)*scale;
+const wx=px=>(px/scale-W/2)/cam.z+cam.x, wy=py=>(py/scale-H/2)/cam.z+cam.y;
+function focusIsland(k){const I=ISL[k];camT.z=Math.min(2.7*Z0,W/(2*I.rx*1.32),H/(2*I.ry*1.5));camT.x=I.cx;camT.y=I.cy-I.ry*.08;clampCam(camT)}
+function focusGroup(keys){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;keys.forEach(k=>{const I=ISL[k];x0=Math.min(x0,I.cx-I.rx*1.15);x1=Math.max(x1,I.cx+I.rx*1.15);y0=Math.min(y0,I.cy-I.ry*1.3);y1=Math.max(y1,I.cy+I.ry*1.15)});
+  camT.z=Math.min(2.7*Z0,W/((x1-x0)*1.15),H/((y1-y0)*1.25));camT.x=(x0+x1)/2;camT.y=(y0+y1)/2;clampCam(camT)}
+const contKeys=c=>Object.keys(ISL).filter(k=>ISL[k].cont===c);
+function focusPoint(x,y,z){camT.x=x;camT.y=y;camT.z=z;clampCam(camT)}
+function overview(){camT.x=W/2;camT.y=H/2;camT.z=1}
+let showTags=false;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function drawBoatUnder(w){ctx.save();ctx.translate(w.x,w.y);ctx.fillStyle='#fff';ctx.strokeStyle='#5b6b72';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-24,-4);ctx.lineTo(24,-4);ctx.lineTo(16,8);ctx.lineTo(-16,8);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#e2574c';ctx.fillRect(-16,-1,32,3);ctx.restore()}
+function drawPerson(w,night){const S=1.75,moving=w.seg<w.pts.length-1;if(moving&&w.types[w.seg]==='f')drawBoatUnder(w);const sw=moving&&!reduce?Math.sin(w.phase):0,bob=moving&&!reduce?Math.abs(Math.cos(w.phase))*1.6:0;
+  ctx.save();ctx.translate(w.x,w.y);ctx.globalAlpha=w.fade;ctx.scale(S*w.dir,S);
+  ctx.fillStyle='rgba(30,30,50,.18)';ctx.beginPath();ctx.ellipse(0,0,5,2,0,0,7);ctx.fill();ctx.translate(0,-bob);
+  ctx.strokeStyle='#2b2f3a';ctx.lineWidth=3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-2,-11);ctx.lineTo(-2+sw*4,-1);ctx.moveTo(2,-11);ctx.lineTo(2-sw*4,-1);ctx.stroke();
+  if(w.role!=='prof'){ctx.fillStyle='#3c4458';ctx.fillRect(-7,-22,4,9)}
+  ctx.fillStyle=w.shirt;ctx.beginPath();ctx.roundRect(-5,-24,10,14,3);ctx.fill();
+  ctx.strokeStyle=w.shirt;ctx.lineWidth=2.6;ctx.beginPath();ctx.moveTo(-4,-21);ctx.lineTo(-5-sw*3,-13);ctx.moveTo(4,-21);ctx.lineTo(5+sw*3,-13);ctx.stroke();
+  if(w.role==='prof'){ctx.fillStyle='#6b4a2b';ctx.fillRect(4+sw*3,-14,5,4)}
+  ctx.fillStyle=w.skin;ctx.beginPath();ctx.arc(0,-29,5,0,7);ctx.fill();
+  ctx.fillStyle=w.hair;ctx.beginPath();ctx.arc(0,-30,5.2,Math.PI*1.02,Math.PI*1.98);ctx.fill();
+  if(w.guide){ctx.fillStyle='#f2c94c';ctx.beginPath();ctx.moveTo(-7,-33);ctx.lineTo(0,-39);ctx.lineTo(7,-33);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect(-7,-40,14,31,5);ctx.stroke()}
+  ctx.restore();
+  if(night&&moving){ctx.save();ctx.globalAlpha=.55*w.fade;ctx.fillStyle='#fff6c8';ctx.beginPath();ctx.arc(w.x+4*w.dir,w.y-18,2.4,0,7);ctx.fill();ctx.restore()}}
+/* 導覽員許智翔：一般身高，花襯衫，手拿導覽旗 */
+function drawGuide(w,now){if(w.seg<w.pts.length-1&&w.types[w.seg]==='f')drawBoatUnder(w);const S=1.95,moving=w.seg<w.pts.length-1,sw=moving&&!reduce?Math.sin(w.phase):0,bob=moving&&!reduce?Math.abs(Math.cos(w.phase))*1.6:0;
+  ctx.save();ctx.translate(w.x,w.y);
+  ctx.strokeStyle='rgba(31,158,147,.55)';ctx.lineWidth=2.5;ctx.beginPath();ctx.ellipse(0,0,20,7,0,0,7);ctx.stroke();
+  ctx.scale(S*w.dir,S);ctx.translate(0,-bob);
+  ctx.strokeStyle='#e9dcc0';ctx.lineWidth=3.2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-2,-11);ctx.lineTo(-2+sw*4,-1);ctx.moveTo(2,-11);ctx.lineTo(2-sw*4,-1);ctx.stroke();
+  ctx.strokeStyle='#2b2f3a';ctx.lineWidth=3.2;ctx.beginPath();ctx.moveTo(-2,-3);ctx.lineTo(-2+sw*4,-1);ctx.moveTo(2,-3);ctx.lineTo(2-sw*4,-1);ctx.stroke();
+  // Hawaiian shirt: teal with hibiscus dots, clipped to the torso
+  ctx.save();ctx.beginPath();ctx.roundRect(-5.5,-24.5,11,14.5,3);ctx.fillStyle='#1f9e93';ctx.fill();ctx.clip();
+  [[-3,-21,'#ffd166'],[2.5,-18,'#ff7aa2'],[-2,-14,'#ffffff'],[3,-23,'#ffffff'],[-4.5,-17.5,'#ff7aa2'],[1,-12.5,'#ffd166']].forEach(([x,y,c])=>{
+    ctx.fillStyle=c;for(let k=0;k<5;k++){const t=k/5*6.283;ctx.beginPath();ctx.arc(x+Math.cos(t)*1.1,y+Math.sin(t)*1.1,.85,0,7);ctx.fill()}ctx.fillStyle='#c0392b';ctx.beginPath();ctx.arc(x,y,.5,0,7);ctx.fill()});
+  ctx.fillStyle='rgba(16,90,84,.9)';ctx.beginPath();ctx.moveTo(-2.4,-24.5);ctx.lineTo(0,-20.5);ctx.lineTo(2.4,-24.5);ctx.fill();ctx.restore();
+  // arms: one swings, one holds the flag pole
+  ctx.strokeStyle='#1f9e93';ctx.lineWidth=2.6;ctx.beginPath();ctx.moveTo(-4,-21);ctx.lineTo(-5-sw*3,-13);ctx.moveTo(4,-21);ctx.lineTo(8,-17);ctx.stroke();
+  ctx.strokeStyle='#5e4224';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(8.5,-9);ctx.lineTo(8.5,-50);ctx.stroke();
+  const wave=reduce?0:Math.sin(now/240)*1.6;ctx.fillStyle='#e2574c';ctx.beginPath();ctx.moveTo(8.5,-50);ctx.quadraticCurveTo(15,-48+wave,22,-46);ctx.lineTo(8.5,-40);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(12,-47);ctx.lineTo(12,-42.5);ctx.lineTo(16,-44);ctx.fill();
+  // head
+  ctx.fillStyle='#ecc39e';ctx.beginPath();ctx.arc(0,-29,5,0,7);ctx.fill();
+  ctx.fillStyle='#22201e';ctx.beginPath();ctx.arc(0,-30,5.3,Math.PI*1.0,Math.PI*2.0);ctx.fill();
+  ctx.strokeStyle='#22201e';ctx.lineWidth=.8;ctx.strokeRect(.5,-30.4,2.6,1.8);ctx.beginPath();ctx.moveTo(3.1,-29.5);ctx.lineTo(4.4,-29.5);ctx.stroke();
+  ctx.restore()}
+/* 太陽：06:00 從東邊升起（影子朝西），中午在南方（影子短、朝北），18:00 在西邊（影子朝東） */
+const BDIM={lighthouse:[28,110],tower:[34,122],port:[76,80],tall:[62,80],lib:[96,72],food:[84,50],bank:[88,70],house:[72,62]};
+function sunAt(m){const t=Math.max(0,Math.min(1,(m-360)/720)),ph=Math.PI*t;
+  const L=.3+1.35*Math.pow(1-Math.sin(ph),1.3);const a=m<400||m>1110?0:Math.min(1,Math.min(m-400,1110-m)/40);
+  return{dx:-Math.cos(ph),dy:-Math.sin(ph)*.55,L,a,t}}
+function shadowWord(m){const s=sunAt(m);if(s.a<.2)return'';if(s.t<.42)return'影子朝西';if(s.t<.58)return'影子短、朝北';return'影子朝東'}
+function drawShadows(sun){if(sun.a<=0)return;const al=.24*sun.a;ctx.save();ctx.fillStyle=`rgba(28,52,44,${al})`;
+  BLD.forEach(b=>{const[w,h]=BDIM[b.kind]||BDIM.house,vx=sun.dx*h*sun.L,vy=sun.dy*h*sun.L,x0=b.x-w/2,x1=b.x+w/2+14;
+    ctx.beginPath();ctx.moveTo(x0,b.y);ctx.lineTo(x1,b.y);ctx.lineTo(x1+vx,b.y+vy);ctx.lineTo(x0+vx,b.y+vy);ctx.closePath();ctx.fill()});
+  ctx.strokeStyle=`rgba(28,52,44,${al})`;ctx.lineCap='round';
+  TREES.forEach(t=>{const h=30*t.s*sun.L;ctx.lineWidth=15*t.s;ctx.beginPath();ctx.moveTo(t.x,t.y);ctx.lineTo(t.x+sun.dx*h,t.y+sun.dy*h);ctx.stroke()});
+  ctx.lineWidth=7;[...walkers,guide].forEach(w=>{if(w.fade<.3)return;const h=34*sun.L;ctx.globalAlpha=w.fade;ctx.beginPath();ctx.moveTo(w.x,w.y);ctx.lineTo(w.x+sun.dx*h,w.y+sun.dy*h);ctx.stroke()});
+  ctx.restore()}
+const hi={b:document.createElement('canvas'),o:document.createElement('canvas'),key:''};let fontsReady=0;
+function drawLanes(now){ctx.save();const dash=reduce?0:-(now/40)%40;ctx.setLineDash([22,16]);ctx.lineDashOffset=dash;ctx.lineCap='round';
+  LANES.forEach(([a,b,label],i)=>{const A=ISL[a],Bi=ISL[b],mx=(A.cx+Bi.cx)/2+(i%2?120:-120),my=(A.cy+Bi.cy)/2;
+    ctx.strokeStyle='rgba(255,255,255,.95)';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(A.cx,A.cy);ctx.quadraticCurveTo(mx,my,Bi.cx,Bi.cy);ctx.stroke();
+    ctx.strokeStyle='#1f55a8';ctx.lineWidth=4;ctx.stroke();
+    const t=[.5,.35,.62,.42,.58,.38,.66][i],lx=(1-t)*(1-t)*A.cx+2*(1-t)*t*mx+t*t*Bi.cx,ly=(1-t)*(1-t)*A.cy+2*(1-t)*t*my+t*t*Bi.cy;ctx.setLineDash([]);ctx.font='700 30px "Noto Sans TC",sans-serif';const tw=ctx.measureText(label).width+28;
+    ctx.fillStyle='#1f55a8';ctx.beginPath();ctx.roundRect(lx-tw/2,ly-22,tw,44,22);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,lx,ly+1);ctx.setLineDash([22,16])});
+  ctx.restore()}
+function drawTag(text,x,y,strong,color){ctx.save();ctx.font=`${strong?700:600} ${strong?24:16}px "Noto Sans TC",sans-serif`;
+  const tw=ctx.measureText(text).width+18,th=strong?34:24;ctx.fillStyle='rgba(255,255,255,.95)';ctx.strokeStyle=color||'#e2574c';ctx.lineWidth=strong?2.5:1.5;
+  ctx.beginPath();ctx.roundRect(x-tw/2,y-th,tw,th,th/2);ctx.fill();ctx.stroke();ctx.fillStyle=strong?(color||'#b23a35'):'#1c2b33';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,x,y-th/2+.5);ctx.restore()}
+function drawBoat(b,dt){
+  if(b.kind==='cargo'){if(playing){b.x+=b.vx*dt*speed;b.y+=b.vy*dt*speed}if(b.x>W+80){if(b.home){b.x=b.home[0];b.y=b.home[1]}else{b.x=1820+OX;b.y=520}}
+    ctx.save();ctx.translate(b.x,b.y);ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillRect(-70,6,40,3);
+    ctx.fillStyle='#34495e';ctx.beginPath();ctx.moveTo(-34,0);ctx.lineTo(34,0);ctx.lineTo(26,12);ctx.lineTo(-30,12);ctx.fill();
+    ['#d0603f','#3a8fc4','#e0a12a','#5aab5c'].forEach((c,i)=>{ctx.fillStyle=c;ctx.fillRect(-26+i*12,-10,11,10)});ctx.fillStyle='#fff';ctx.fillRect(18,-16,10,16);ctx.restore();return}
+  if(b.kind==='ferry'){if(playing)b.t=(b.t+dt*speed*.02)%1;const u=b.t<.5?b.t*2:2-b.t*2,mx=(DOCK_END[0]+MPORT_END[0])/2+70,my=(DOCK_END[1]+MPORT_END[1])/2;const x=(1-u)*(1-u)*DOCK_END[0]+2*(1-u)*u*mx+u*u*MPORT_END[0]+30,y=(1-u)*(1-u)*DOCK_END[1]+2*(1-u)*u*my+u*u*MPORT_END[1];
+    ctx.save();ctx.translate(x,y);ctx.fillStyle='#fff';ctx.beginPath();ctx.roundRect(-24,-8,48,16,6);ctx.fill();ctx.fillStyle='#e2574c';ctx.fillRect(-18,-14,36,7);ctx.restore();return}
+  if(playing)b.a+=b.s*dt*speed;const x=b.cx+Math.cos(b.a)*b.r,y=b.cy+Math.sin(b.a)*b.r*.5,d=Math.cos(b.a+Math.PI/2)>0?1:-1;
+  ctx.save();ctx.translate(x,y);ctx.scale(d,1);ctx.fillStyle='#8a5a33';ctx.beginPath();ctx.moveTo(-14,0);ctx.lineTo(14,0);ctx.lineTo(9,6);ctx.lineTo(-10,6);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(0,-26);ctx.lineTo(0,-2);ctx.lineTo(13,-2);ctx.fill();ctx.restore()}
+let selected=null;
+function frame(now){const dt=Math.min(.05,(now-(frame.last||now))/1000);frame.last=now;
+  if(playing){simMin+=dt*speed;if(simMin>=1335)simMin=420;frame.acc=(frame.acc||0)+rate(simMin)*dt*speed*1.8;while(frame.acc>=1){frame.acc--;if(walkers.length<170)spawn()}}
+  const all=[...walkers,guide];
+  for(const w of all){if(!playing&&!w.guide)continue;const moving=w.seg<w.pts.length-1;
+    if(moving){const a=w.pts[w.seg],b=w.pts[w.seg+1],L=Math.hypot(b[0]-a[0],b[1]-a[1])||1;
+      const v=w.spd*(w.guide?2.6:speed)*(w.types[w.seg]==='f'?1.8:1);w.t+=v*dt/L;w.phase+=dt*(w.guide?11:9)*(w.guide?1:Math.min(speed,2));
+      if(Math.abs(b[0]-a[0])>2)w.dir=b[0]>a[0]?1:-1;
+      if(!w.guide&&w.course&&!w.logged&&(w.types[w.seg]==='b'||w.types[w.seg]==='f')){w.logged=true;crossLog.unshift({role:w.role,text:w.why});crossLog.length=Math.min(crossLog.length,6)}
+      if(w.t>=1){w.t=0;w.seg++}
+      const p=w.pts[Math.min(w.seg,w.pts.length-1)],q=w.pts[Math.min(w.seg+1,w.pts.length-1)];w.x=p[0]+(q[0]-p[0])*w.t;w.y=p[1]+(q[1]-p[1])*w.t;
+      if(!w.guide)w.fade=Math.min(1,w.fade+dt*2)}
+    else if(w.guide){if(!guideIdle){guideIdle=true;onGuideArrive()}}
+    else{w.fade-=dt*1.5*speed;if(w.fade<=0&&!w.done){w.done=true;if(occ[w.to]!==undefined)occ[w.to]++}}}
+  for(let i=walkers.length-1;i>=0;i--)if(walkers[i].done){if(selected===walkers[i])selected=null;walkers.splice(i,1)}
+  const m=simMin,night=m<440?.5-(m-420)/40*.5:m>1080?Math.min(.58,(m-1080)/120*.58):0;
+  {const k=1-Math.exp(-dt*(reduce?30:3.2));const before=cam.x+cam.y+cam.z;
+    cam.z+=(camT.z-cam.z)*k;cam.x+=(camT.x-cam.x)*k;cam.y+=(camT.y-cam.y)*k;
+    if(!drag&&Math.abs(camT.x-cam.x)<.3&&Math.abs(camT.y-cam.y)<.3&&Math.abs(camT.z-cam.z)<1e-3){cam.x=camT.x;cam.y=camT.y;cam.z=camT.z}
+    clampCam(cam);if(Math.abs(cam.x+cam.y+cam.z-before)>1e-6){camDirty=true;frame.moved=now}}
+  const a=dpr*scale*cam.z,T=[a,0,0,a,dpr*scale*(W/2-cam.x*cam.z),dpr*scale*(H/2-cam.y*cam.z)];
+  const key=[cam.x,cam.y,cam.z,cv.width,cv.height,fontsReady].join();
+  if(hi.key!==key&&now-(frame.moved||0)>140&&!drag){if(hi.b.width!==cv.width||hi.b.height!==cv.height){hi.b.width=hi.o.width=cv.width;hi.b.height=hi.o.height=cv.height}
+    drawBase(hi.b.getContext('2d'),hi.o.getContext('2d'),T);hi.key=key}
+  const useHi=hi.key===key,sun=sunAt(simMin);
+  if(useHi){ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(hi.b,0,0);ctx.setTransform(...T);drawShadows(sun);ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(hi.o,0,0);ctx.setTransform(...T)}
+  else{ctx.setTransform(...T);ctx.drawImage(base,0,0,W,H);drawShadows(sun);ctx.drawImage(objL,0,0,W,H)}
+  if(TOUR[step]&&TOUR[step].kind==='cross'&&!offRoute)drawLanes(now);
+  {const m0=simMin,warm=m0<500?Math.max(0,(500-m0)/80)*.16:m0>960&&m0<1120?Math.min(1,(m0-960)/90)*.2*(m0>1080?(1120-m0)/40:1):0;
+   if(warm>0){ctx.save();ctx.globalCompositeOperation='multiply';ctx.fillStyle=`rgba(255,190,120,${warm})`;ctx.fillRect(0,0,W,H);ctx.restore()}}
+  if(camDirty){camDirty=false;placeOverlays()}
+  // moving wave glints
+  if(!reduce){ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=2;const o=(now/90)%40;
+    for(let i=0;i<70;i++){const x=((i*373)%W+o)%W,y=(i*211)%H;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+10,y-5,x+20,y);ctx.stroke()}}
+  boats.forEach(b=>drawBoat(b,dt));
+  if(night>0){ctx.save();ctx.globalCompositeOperation='multiply';ctx.fillStyle=`rgba(40,55,125,${night})`;ctx.fillRect(0,0,W,H);ctx.restore();
+    if(night>.15){ctx.fillStyle=`rgba(255,220,120,${Math.min(1,night*1.7)})`;WIN.forEach(([x,y,w,h])=>ctx.fillRect(x,y,w,h));
+      BLD.forEach(b=>{const g=ctx.createRadialGradient(b.x,b.y-20,0,b.x,b.y-20,80);g.addColorStop(0,`rgba(255,214,120,${night*.55})`);g.addColorStop(1,'rgba(255,214,120,0)');ctx.fillStyle=g;ctx.fillRect(b.x-80,b.y-100,160,160)});
+      // lighthouse beam
+      const L=B.sta_light,ang=now/1400;ctx.save();ctx.translate(L.x,L.y-86);ctx.rotate(ang);const bg=ctx.createLinearGradient(0,0,520,0);
+      bg.addColorStop(0,`rgba(255,240,170,${night*.9})`);bg.addColorStop(1,'rgba(255,240,170,0)');ctx.fillStyle=bg;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(520,-60);ctx.lineTo(520,60);ctx.fill();ctx.restore()}}
+  all.sort((a,b)=>a.y-b.y).forEach(w=>w.guide?drawGuide(w,now):drawPerson(w,night>.2));
+  if(showTags)for(const w of walkers)if(w.fade>.6&&w.role!=='prof')drawTag(`${ROLES[w.role].label.replace('系','').slice(0,4)}${w.year}`,w.x,w.y-66,false,w.shirt);
+  if(selected){ctx.save();ctx.strokeStyle='#e2574c';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(selected.x,selected.y,20,8,0,0,7);ctx.stroke();ctx.restore()}
+  drawTag('許智翔',guide.x,guide.y-112,true,'#1f9e93');
+  updateTip();requestAnimationFrame(frame)}
+
+/* ════════ 點人 ════════ */
+const tip=document.getElementById('tip');
+function hit(ev){const r=stage.getBoundingClientRect(),x=wx(ev.clientX-r.left),y=wy(ev.clientY-r.top);let best=null,bd=36/Math.sqrt(cam.z);
+  for(const w of [...walkers,guide]){const d=Math.hypot(w.x-x,(w.y-22)-y);if(d<bd){bd=d;best=w}}return best}
+let drag=null;
+cv.addEventListener('pointerdown',ev=>{drag={x:ev.clientX,y:ev.clientY,cx:cam.x,cy:cam.y,moved:false};cv.setPointerCapture(ev.pointerId)});
+cv.addEventListener('pointermove',ev=>{
+  if(drag){const dx=ev.clientX-drag.x,dy=ev.clientY-drag.y;if(!drag.moved&&Math.hypot(dx,dy)>5&&cam.z>1.01){drag.moved=true;cv.classList.add('grabbing')}
+    if(drag.moved){cam.x=drag.cx-dx/(scale*cam.z);cam.y=drag.cy-dy/(scale*cam.z);clampCam(cam);camT.x=cam.x;camT.y=cam.y;camT.z=cam.z;camDirty=true}return}
+  const h=hit(ev);cv.style.cursor=h?'pointer':(cam.z>1.01?'grab':'default')});
+cv.addEventListener('pointerup',ev=>{const d=drag;drag=null;cv.classList.remove('grabbing');if(d&&!d.moved){const w=hit(ev);selected=w;if(w&&w.guide)selectTab('tour')}});
+cv.addEventListener('pointercancel',()=>{drag=null;cv.classList.remove('grabbing')});
+cv.addEventListener('wheel',ev=>{if(!ev.ctrlKey&&cam.z<=1.01&&ev.deltaY>0)return;ev.preventDefault();const r=stage.getBoundingClientRect(),px=ev.clientX-r.left,py=ev.clientY-r.top;
+  const bx=wx(px),by=wy(py);const z=Math.max(1,Math.min(ZMAX,cam.z*Math.exp(-ev.deltaY*.0015)));cam.z=z;cam.x=bx-(px/scale-W/2)/z;cam.y=by-(py/scale-H/2)/z;clampCam(cam);Object.assign(camT,cam);camDirty=true},{passive:false});
+function zoomBy(f){focusPoint(camT.x,camT.y,camT.z*f)}
+document.getElementById('zIn').onclick=()=>zoomBy(1.4);document.getElementById('zOut').onclick=()=>zoomBy(1/1.4);document.getElementById('zHome').onclick=overview;
+function updateTip(){if(!selected||selected.fade<=0){tip.hidden=true;return}const w=selected;tip.hidden=false;
+  tip.style.left=sx(w.x)+'px';tip.style.top=sy(w.y-(w.guide?78:62))+'px';
+  const who=w.guide?'導覽員 許智翔老師':w.role==='prof'?'老師':w.role==='mmin'?`管理學群大${w.year}學生`:w.role==='tour'?`觀光餐旅休閒大${w.year}學生`:w.role==='ie'?`工工／物流大${w.year}學生`:`${ROLES[w.role].label}大${w.year}學生`;
+  const html=`<b style="color:${w.guide?'#1f9e93':w.shirt}">${who}</b>${w.guide?'帶大家逛財經暨管理群島':w.why}`;if(tip.innerHTML!==html)tip.innerHTML=html}
+
+/* ════════ 標籤、地點與面板 ════════ */
+const labels=document.getElementById('labels'),pinsBox=document.getElementById('pins'),card=document.getElementById('card');
+const lab={},pins={};
+const LABEL_POS={acc:[430+OX,395],fin:[880+OX,212],eco:[1250+OX,628],ib:[1640+OX,262],sta:[232+OX,915],tax:[732+OX,925],ins:[1395+OX,110]};
+for(const k in ISL)if(!LABEL_POS[k]){const I=ISL[k];LABEL_POS[k]=[I.cx,I.cy-I.ry*(I.minor?1.05:1)-(I.minor?18:28)]}
+for(const k in ISL){const I=ISL[k],b=document.createElement('button');b.type='button';b.className='ilabel'+(I.minor?' minor':'');b.style.background=I.hex;
+  b._w=LABEL_POS[k];b._minor=!!I.minor;
+  b.innerHTML=`${I.name}<small>${I.uni+I.tech} 校系</small>`;b.setAttribute('aria-label',`${I.name}，${I.q}`);
+  b.onclick=()=>{go(stopOf(k));selectTab('tour')};labels.appendChild(b);lab[k]=b}
+function stopOf(k){let i=TOUR.findIndex(s=>s.id===k);if(i<0)i=TOUR.findIndex(s=>s.keys&&s.keys.includes(k));if(i<0)i=TOUR.findIndex(s=>s.kind==='minor');return i}
+BLD.forEach(bd=>{const b=document.createElement('button');b.type='button';b.className='pin';b._pin=true;b.style.background=ISL[bd.isl].hex;
+  b._w=[bd.x,bd.y-({lighthouse:128,tower:138,tall:100,port:96,lib:92,bank:88}[bd.kind]||84)];b.setAttribute('aria-label',bd.name);b.title=bd.name;
+  b.onclick=()=>{showBuilding(bd.id);selectTab('tour')};pinsBox.appendChild(b);pins[bd.id]=b});
+function placeOverlays(){const vw=W*scale,vh=H*scale;labels.classList.toggle('far',cam.z<1.3);
+  [...Object.values(lab),...Object.values(pins)].forEach(el=>{const x=sx(el._w[0]),y=sy(el._w[1]);el.style.left=x+'px';el.style.top=y+'px';
+    const tooSmall=(el._minor&&cam.z<1.45)||(el._pin&&cam.z<1.9);
+    el.style.visibility=(tooSmall||x<-80||y<-40||x>vw+80||y>vh+40)?'hidden':'visible'})}
+const dots=document.getElementById('dots');TOUR.forEach(()=>dots.appendChild(document.createElement('i')));
+let step=0,pending=null,offRoute=false;
+const counts=I=>`<div class="count"><span>一般大學 <b>${I.uni}</b></span><span>科技大學 <b>${I.tech}</b></span></div>`;
+const chips=a=>`<div class="chips">${a.map(c=>`<span class="chip">${c}</span>`).join('')}</div>`;
+const ul=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+function islandCard(k,n){const I=ISL[k];return`
+  <span class="flag" style="background:${I.hex}">${I.en}</span><h2>${I.name}</h2><p class="q">${I.q}</p>${counts(I)}
+  <div class="walking" id="walking"></div>
+  <div class="story"><b>阿傑的手搖飲出海記・第 ${n} 站</b>${I.story}</div>
+  <div class="sec"><h4>島上在學什麼</h4><p>${I.what}</p></div>
+  <div class="sec"><h4>必修的課</h4>${chips(I.courses)}</div>
+  ${I.calc?`<div class="sec"><h4>試試看：複利就是高中的指數函數</h4><div class="calc">
+    <label for="cr">一次投入 10 萬元，年報酬率 <b id="crv">6</b>%</label><input id="cr" type="range" min="1" max="12" value="6">
+    <label for="cy">放 <b id="cyv">20</b> 年</label><input id="cy" type="range" min="1" max="40" value="20"><div class="out" id="cout"></div></div></div>`:''}
+  <div class="sec"><h4>適合登陸的人</h4>${ul(I.who)}</div>
+  <div class="sec"><h4>未來的出口港</h4>${ul(I.jobs)}</div>
+  <div class="sec"><h4>常見證照與考試</h4>${chips(I.certs)}</div>
+  <div class="sec"><h4>有橋相通</h4><p>${BRIDGES.filter(b=>b[0]===k||b[1]===k).map(b=>`${ISL[b[0]===k?b[1]:b[0]].short}（${b[2]}）`).join('、')}</p></div>
+  ${LANES.some(l=>l[0]===k||l[1]===k)?`<div class="sec"><h4>跨洲航線</h4><p>${LANES.filter(l=>l[0]===k||l[1]===k).map(l=>`${ISL[l[0]===k?l[1]:l[0]].name}（${l[2]}）`).join('、')}</p></div>`:''}
+  <div class="myth" style="--c:${I.hex}">${I.myth}</div>`}
+function render(i,walking){const s=TOUR[i];let html='';
+  if(s.kind==='intro')html=`<span class="flag" style="background:#1c2b33">${s.en}</span><h2>${s.title}</h2>
+    <p class="q">出航之前，先想三個問題。</p><div class="walking" id="walking"></div>
+    <div class="qs"><div><b>什麼是「好科系」？</b>師資、設備、同學、風氣、地點都重要。但最重要的是：這個系每天在學的東西，你有沒有興趣？</div>
+    <div><b>為什麼要認識財經和管理？</b>經濟越發達的國家，商業和服務業占國民所得的比重越高，社會對財經與管理人才的需求也越大。</div>
+    <div><b>你喜歡跟「錢」打交道，還是跟「人和組織」？</b>偏前者看左上的財經洲，偏後者看右下的管理洲。每一洲裡面也有專才型（會計、財金、資管、工工）和通才型（國企、企管、觀光）。</div></div>
+    <div class="story"><b>接下來的故事</b>阿傑在台中開了一家手搖飲店，想把店開到東京。跟著許智翔老師走過兩個洲，看每座島能幫他什麼忙。</div>`;
+  else if(s.kind==='minor')html=`<span class="flag" style="background:#8a72b0">${s.en}</span><h2>${s.title}</h2><p class="q">主島旁邊的三座小島，人少但都很專精。</p><div class="walking" id="walking"></div>
+    ${['sta','tax','ins'].map(k=>{const I=ISL[k];return`<div class="sec"><h4>${I.name}・一般 ${I.uni}／科大 ${I.tech}</h4><p><b>${I.q}</b> ${I.what}</p>
+    <div style="margin-top:6px">${chips(I.courses)}</div><p class="jobsline">出路：${I.jobs.join('、')}</p></div>`}).join('')}`;
+  else if(s.kind==='end')html=`<span class="flag" style="background:#1c2b33">${s.en}</span><h2>${s.title}</h2><div class="walking" id="walking"></div>
+    <div class="story"><b>阿傑的手搖飲出海記・終點</b>同一個夢想，兩個洲各負責一半。財經洲幫他算清楚、找到錢、看懂大環境、走到國外；管理洲幫他管好人、做出系統、打響品牌、把貨送到。</div>
+    <div class="qs"><div><b>你最想做哪一件事？</b>算錢、找錢、解釋社會現象、做國際生意？還是帶團隊、寫系統、做行銷、辦活動？答案會指向你的島。</div>
+    <div><b>選了島，也能過橋、搭船</b>大學可以修輔系、雙主修或跨領域學程。選系不是一輩子只待在一座島，甚至一個洲。</div>
+    <div><b>現在就能準備</b>數學（指數、對數、機率）、英文閱讀、每週讀一則財經新聞。頁面下方有更多建議。</div></div>`;
+  else if(s.kind==='cross')html=`<span class="flag" style="background:#1f55a8">${s.en}</span><h2>${s.title}</h2><p class="q">兩洲之間不是只有海，還有很多航線。</p><div class="walking" id="walking"></div>
+    <div class="story"><b>阿傑的手搖飲出海記・換洲</b>店越開越多，光會算錢已經不夠：還要管人、建系統、打品牌、送貨。接下來搭渡輪到管理洲。</div>
+    <div class="sec"><h4>地圖上的藍色航線：兩個學群共通的知識</h4><ul>${LANES.map(([a,b,l])=>`<li><b>${ISL[a].short} ⇄ ${ISL[b].short}</b>：${l}</li>`).join('')}</ul></div>
+    <div class="sec"><h4>怎麼分</h4><p><b>財經洲</b>處理「錢」：記錄、投資、定價、總體經濟。<br><b>管理洲</b>處理「人和組織」：領導、系統、行銷、服務、流程。</p></div>
+    <div class="sec"><p>很多學生會跨洲修課：財金系去資管修〈程式設計〉、企管系來財金修〈財務管理〉。渡輪上那些人就是。</p></div>`;
+  else if(s.kind==='group')html=`<span class="flag" style="background:${ISL[s.keys[0]].hex}">${s.en}</span><h2>${s.title}</h2><p class="q">${s.lead}</p><div class="walking" id="walking"></div>
+    ${s.story?`<div class="story"><b>阿傑的手搖飲出海記・第 ${i} 站</b>${s.story}</div>`:''}
+    ${s.keys.map(k=>{const I=ISL[k];return`<div class="sec"><h4>${I.name}・一般 ${I.uni}／科大 ${I.tech}</h4><p><b>${I.q}</b> ${I.what}</p>
+    <div style="margin-top:6px">${chips(I.courses)}</div><p class="jobsline">出路：${I.jobs.join('、')}</p></div>`}).join('')}`;
+  else html=islandCard(s.id,i);
+  card.innerHTML=html;setWalking(walking);document.getElementById('pane-tour').scrollTop=0;
+  document.body.classList.toggle('focus',s.kind!=='intro'&&s.kind!=='end');
+  if(ISL[s.id]&&ISL[s.id].calc)bindCalc();
+  document.getElementById('stepNo').textContent=`第 ${i+1} 站 / 共 ${TOUR.length} 站`;
+  [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));
+  for(const k in lab)lab[k].classList.toggle('active',k===s.id||(s.kind==='minor'&&['sta','tax','ins'].includes(k))||(s.keys||[]).includes(k));
+  Object.values(pins).forEach(p=>p.classList.remove('active'));
+  document.getElementById('prev').disabled=i<=0;document.getElementById('next').textContent=i===TOUR.length-1?'重新開始':'下一站'}
+function setWalking(on){const el=document.getElementById('walking');if(el)el.textContent=on?'許老師正走過去…':''}
+function bindCalc(){const r=document.getElementById('cr'),y=document.getElementById('cy'),f=()=>{const R=+r.value,Y=+y.value,v=100000*Math.pow(1+R/100,Y);
+  document.getElementById('crv').textContent=R;document.getElementById('cyv').textContent=Y;
+  document.getElementById('cout').innerHTML=`100,000 × (1+${(R/100).toFixed(2)})<sup>${Y}</sup> ≈ <b>${Math.round(v).toLocaleString()}</b> 元<br>72 法則：約 ${(72/R).toFixed(1)} 年翻倍`};r.oninput=f;y.oninput=f;f()}
+function showBuilding(id){const b=B[id],I=ISL[b.isl];offRoute=true;document.body.classList.add('focus');guideTo(id);pending=null;focusPoint(b.x,b.y-40,Math.min(2.8*Z0,Math.max(camT.z,2.3*Z0)));
+  card.innerHTML=`<span class="flag" style="background:${I.hex}">${I.name}</span><h2>${b.name}</h2><div class="walking" id="walking"></div><p style="margin-top:8px">${BLD_TEXT[id]}</p>
+    <button class="btn minibtn" type="button" id="seeIsl">看整座${I.name}</button>`;setWalking(!guideIdle);
+  document.getElementById('seeIsl').onclick=()=>go(stopOf(b.isl));
+  document.getElementById('stepNo').textContent='路線外的地點';Object.entries(pins).forEach(([k,p])=>p.classList.toggle('active',k===id));
+  document.getElementById('next').textContent='回到路線'}
+function go(i){step=i;offRoute=false;guideTo(TOUR[i].node);render(i,!guideIdle);pending=i;const s=TOUR[i],id=s.id;
+  if(ISL[id])focusIsland(id);else if(s.kind==='group')focusGroup(s.keys);else if(s.kind==='minor')focusGroup(contKeys('fin'));else if(s.kind==='cross')focusPoint(2050,1250,1.55);else overview()}
+function onGuideArrive(){setWalking(false);pending=null}
+document.getElementById('prev').onclick=()=>{if(step>0)go(step-1)};
+document.getElementById('next').onclick=()=>{if(offRoute)return go(step);go(step===TOUR.length-1?0:step+1)};
+// list
+const list=document.getElementById('list');
+['acc','fin','eco','ib','sta','tax','ins','mgt','im','mkt','ec','tou','hos','lei','ie','log','spo','adm','med','cul','land'].forEach(k=>{const I=ISL[k],g=document.createElement('li');g.className='grp';g.textContent=(k==='acc'?'【財經洲】':k==='mgt'?'【管理洲】':'')+I.name;list.appendChild(g);
+  const li=document.createElement('li'),b=document.createElement('button');b.type='button';b.innerHTML=`<i style="background:${I.hex}"></i><span>整座島介紹<small>${I.q}</small></span>`;
+  b.onclick=lab[k].onclick;li.appendChild(b);list.appendChild(li);
+  BLD.filter(x=>x.isl===k).forEach(bd=>{const li=document.createElement('li'),b=document.createElement('button');b.type='button';
+    b.innerHTML=`<i style="background:${I.hex};opacity:.55"></i><span>${bd.name}<small>${BLD_TEXT[bd.id].slice(0,24)}…</small></span>`;b.onclick=()=>{showBuilding(bd.id);selectTab('tour')};li.appendChild(b);list.appendChild(li)})});
+function selectTab(w){['tour','now','list'].forEach(x=>{document.getElementById('tab-'+x).setAttribute('aria-selected',x===w);document.getElementById('pane-'+x).hidden=x!==w})}
+['tour','now','list'].forEach(x=>document.getElementById('tab-'+x).onclick=()=>selectTab(x));
+// now pane
+const occBox=document.getElementById('occ'),ORDER=['acc','fin','eco','ib','sta','tax','ins','mgt','im','mkt','ec','tou','hos','lei','ie','log','spo','adm','med','cul','land'];
+const OGROUP=[['會計',['acc']],['財金',['fin']],['經濟',['eco']],['國企',['ib']],['統計／財稅／保險',['sta','tax','ins']],['企管',['mgt']],['資管',['im']],['行銷／電商',['mkt','ec']],['觀光休閒',['tou','hos','lei']],['工工／物流',['ie','log']],['其他管理',['spo','adm','med','cul','land']]];
+OGROUP.forEach(([l,ks],i)=>{const r=document.createElement('div');r.className='row';r.innerHTML=`<span>${l}</span><span class="track"><span class="fill" id="f-${i}" style="background:${ISL[ks[0]].hex}"></span></span><span class="num" id="n-${i}">0</span>`;occBox.appendChild(r);
+  if(i===4){const h=document.createElement('div');h.style.cssText='border-top:1px dashed var(--line);margin:2px 0';occBox.appendChild(h)}});
+document.getElementById('legend').innerHTML=['fin','ib','eco','acc','sta','mgt','im','mkt','tour','ie','mmin','prof'].map(k=>`<span><i style="background:${ROLES[k].shirt}"></i>${k==='sta'?'統計／財稅／保險':ROLES[k].label}</span>`).join('')+'<span><i style="background:#1f9e93"></i>導覽員 許智翔（花襯衫、拿旗子）</span>';
+let lastLog='';
+setInterval(()=>{const tot={};ORDER.forEach(k=>tot[k]=0);for(const id in occ)tot[B[id].isl]+=occ[id];
+  walkers.forEach(w=>{if(w.seg<w.pts.length-1&&w.types[w.seg]==='w'){const k=islOfNode(w.nodes[Math.min(w.seg+1,w.nodes.length-1)]);if(tot[k]!==undefined)tot[k]++}});
+  const gv=OGROUP.map(([l,ks])=>ks.reduce((s,k)=>s+tot[k],0)),mx=Math.max(20,...gv);gv.forEach((v,i)=>{document.getElementById('f-'+i).style.width=(v/mx*100)+'%';document.getElementById('n-'+i).textContent=v});
+  document.getElementById('nowCount').textContent=walkers.filter(w=>w.seg<w.pts.length-1).length;
+  document.getElementById('bridgeCount').textContent=walkers.filter(w=>w.seg<w.pts.length-1&&(w.types[w.seg]==='b'||w.types[w.seg]==='f')).length;
+  const lg=crossLog.map(c=>`<li><span style="color:${ROLES[c.role].shirt};font-weight:700">${ROLES[c.role].label}</span> ${c.text}</li>`).join('');
+  if(lg&&lg!==lastLog){document.getElementById('crossLog').innerHTML=lg;lastLog=lg}
+  const m=Math.floor(simMin);document.getElementById('clock').textContent=`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+  {const sw=shadowWord(simMin);document.getElementById('phase').textContent=phaseOf(simMin)+(sw?'・'+sw:'')}},250);
+// controls
+const playBtn=document.getElementById('play');playBtn.onclick=()=>{playing=!playing;playBtn.textContent=playing?'暫停':'播放';playBtn.setAttribute('aria-pressed',!playing)};
+document.querySelectorAll('[data-speed]').forEach(b=>b.onclick=()=>{speed=+b.dataset.speed;document.querySelectorAll('[data-speed]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>{simMin=+b.dataset.jump;walkers.length=0;frame.acc=0;seed(48)});
+const tagsBtn=document.getElementById('tags');tagsBtn.onclick=()=>{showTags=!showTags;tagsBtn.setAttribute('aria-pressed',showTags)};
+const pinsBtn=document.getElementById('pinsBtn');pinsBtn.onclick=()=>{pinsBox.hidden=!pinsBox.hidden;pinsBtn.setAttribute('aria-pressed',!pinsBox.hidden)};
+document.getElementById('fsBtn').onclick=()=>{try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{})}catch(_){}};
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')document.getElementById('next').click();if(e.key==='ArrowLeft')document.getElementById('prev').click();if(e.key===' '&&e.target===document.body){e.preventDefault();playBtn.click()}});
+
+drawBase();(document.fonts&&document.fonts.ready||Promise.resolve()).then(()=>{drawBase();fontsReady=1});
+render(0,false);requestAnimationFrame(frame);
+</script>
+</html>

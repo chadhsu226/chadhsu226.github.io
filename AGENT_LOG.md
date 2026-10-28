@@ -10,6 +10,12 @@
 
 ---
 
+## 2026-10-28 — Claude — 首頁新增「學群介紹」卡片與三個財經學群互動頁
+- 做了什麼：新增 clusters/finance-management-islands.html（財經暨管理群島_動態地圖）、clusters/finance-islands.html（財經群島_動態地圖）、clusters/mcu-campus-tour.html（銘傳管理學院_校園導覽）；首頁「精選課程」加入第 7 張卡片（div 卡片內含三個連結）
+- 為什麼：Sean 的高中學群介紹素材（來源：本機「財經學群介紹」資料夾），檔名改為英文避免 URL 編碼
+- 動到的檔案：index.html、AGENT_LOG.md、clusters/*.html
+- Commit：（見本次 commit）
+
 ## 2026-10-21 — Claude — 新增「Math exercises for my son」（AMC 10 講義站）與首頁卡片
 - 做了什麼：建立 amc10 repo（index、chapters/chapter_01–18.html、videos/ 第 1–8 章 32 支 MP4 與 VTT 字幕、robots.txt、.nojekyll），啟用 GitHub Pages；首頁「精選課程」加入第 6 張卡片
 - 為什麼：Sean 為兒子準備 AMC 10。所有 HTML 以 StatiCrypt（AES，記住 30 天）加密，密碼不寫入 repo；影片暫放 repo（未加密），YouTube 不公開版傳完後改為嵌入並移除 MP4；歷屆真題 PDF 不上傳（版權）
