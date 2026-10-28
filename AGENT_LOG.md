@@ -10,6 +10,12 @@
 
 ---
 
+## 2026-10-28 — Claude — 更新兩張群島動態地圖
+- 做了什麼：以本機「財經學群介紹」資料夾最新版覆蓋 clusters/finance-management-islands.html、clusters/finance-islands.html（校園導覽無變動）
+- 為什麼：Sean 更新了檔案內容
+- 動到的檔案：上述兩檔、AGENT_LOG.md
+- Commit：（見本次 commit）
+
 ## 2026-10-28 — Claude — 學群介紹改為獨立區塊（三張小卡）
 - 做了什麼：把「精選課程」裡的學群介紹卡片移除，改在「放鬆心情」下方新增 section#clusters「學群介紹 / ACADEMIC CLUSTERS」，內含三張 course-card 小卡分別連到 clusters/ 三個頁面
 - 為什麼：Sean 要的是與精選課程、教學資源、放鬆心情並列的大區塊

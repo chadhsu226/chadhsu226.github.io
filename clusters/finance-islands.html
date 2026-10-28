@@ -110,6 +110,12 @@ body.focus .calc label,body.focus .calc .out{font-size:16px}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
 .chip{border:1px solid var(--line);background:var(--soft);border-radius:4px;padding:2px 8px;font-size:13.5px}
 .myth{background:var(--soft);border-left:4px solid var(--c,var(--fin));padding:8px 12px;margin-top:12px;font-size:14px}
+.cforow{border-left:4px solid var(--c);background:var(--soft);border-radius:0 6px 6px 0;padding:10px 12px;margin-top:10px}
+.cforow b.t{display:block;font-family:var(--f-display);font-size:19px}
+.cforow .ask{font-weight:700;margin:2px 0 4px}
+.cforow .ajie{font-size:13.5px;color:#9a6a10;margin-top:4px}
+body.focus .cforow b.t{font-size:23px}
+body.focus .cforow .ajie{font-size:16px}
 .calc{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
 .calc label{font-size:13.5px;display:block}
 .calc input{width:100%}
@@ -273,7 +279,7 @@ const ISL={
     what:'會計是「商業的語言」。學怎麼把公司每天的交易記錄下來、整理成財務報表，再由審計確認報表沒有說謊。投資人、銀行、政府都靠這些數字做決定。',
     courses:['初級會計學','中級會計學','高等會計學','成本與管理會計','審計學','稅務法規','會計資訊系統','財報分析'],
     who:['細心、有條理，喜歡把東西整理清楚','喜歡規則明確、有標準答案的題目','看到數字對不起來，會想追到底'],
-    jobs:['會計師事務所：審計、稅務、顧問','企業財會部、內部稽核','國稅局、審計部、金管會（高考會計）','上市公司財務長','鑑識會計（查舞弊）'],
+    jobs:['會計師事務所：審計、稅務、顧問','一般公司的企業財務部：會計、內部稽核','國稅局、審計部、金管會（高考會計）','上市公司財務長','鑑識會計（查舞弊）'],
     certs:['會計師（CPA）','記帳士','國際內部稽核師（CIA）','美國會計師（US CPA）'],
     myth:'常見誤解：AI 會取代會計。記帳會自動化，但判斷交易怎麼認列、查核舞弊、規劃稅務，反而更需要專業的人。',
     story:'阿傑在台中開了一家手搖飲店，三年後想開到東京。第一步先把帳算清楚：一年賣幾杯、成本多少、到底有沒有賺錢？財務報表會告訴他答案。'},
@@ -282,7 +288,7 @@ const ISL={
     what:'研究「錢在時間與風險之間怎麼流動」。今天的 100 元和明年的 100 元價值不同，有風險和沒風險的 100 元也不同，財金就是在學怎麼替這些差異定價。',
     courses:['投資學','公司理財','金融市場與機構','貨幣銀行學','衍生性商品','風險管理','財務數學','金融科技','永續金融','程式交易（Python／R）'],
     who:['看到股市、利率、匯率新聞會想點進去','數學不排斥，尤其是機率和函數','能接受「沒有標準答案、只有機率」的世界'],
-    jobs:['銀行：理財、授信、外匯交易','證券／投信／投顧：研究員、交易員、基金經理','壽險公司投資部、金控風控','企業財務部','金融科技、AI 量化分析、ESG 永續分析'],
+    jobs:['銀行：理財、授信、外匯交易','證券／投信／投顧：研究員、交易員、基金經理','壽險公司投資部、金控風控','大型企業的財務部：財務規劃與分析（FP&A）、資金管理','金融科技、AI 量化分析、ESG 永續分析'],
     certs:['證券商高級業務員','投信投顧業務員','CFA 特許財務分析師','FRM 金融風險管理師'],
     myth:'常見誤解：財金系教你報明牌。其實它教的是「為什麼沒有穩賺的明牌」，以及怎麼在不確定中做合理決策。',
     story:'去東京開店要 3,000 萬。該跟銀行借、找投資人，還是賣一部分股份？每一種方法的成本和風險都不同，這就是財金在算的事。',calc:true},
@@ -320,7 +326,7 @@ const ISL={
 const BRIDGES=[['acc','fin','財報分析'],['fin','eco','利率・貨幣政策'],['eco','ib','國際貿易'],['fin','ib','匯率・國際金融'],
   ['fin','ins','風險管理'],['acc','tax','稅務會計'],['tax','eco','租稅政策'],['sta','acc','統計・數據']];
 const BLD=[ // id, island, name, x, y, kind
-  ['acc_ledger','acc','帳務大樓',345,525,'house'],['acc_audit','acc','審計所',520,600,'house'],['acc_firm','acc','會計師事務所',390,668,'tall'],
+  ['acc_ledger','acc','帳務大樓',345,525,'house'],['acc_audit','acc','審計所',520,600,'house'],['acc_firm','acc','會計師事務所',390,668,'tall'],['cfo','fin','企業財務部',752,522,'cfo'],
   ['fin_trade','fin','交易室',790,350,'tall'],['fin_inv','fin','投資學院',975,330,'house'],['fin_bank','fin','銀行街',905,478,'bank'],
   ['eco_lib','eco','圖書館',1130,770,'lib'],['eco_forum','eco','政策論壇',1345,735,'house'],['eco_lab','eco','計量研究室',1440,860,'house'],['eco_food','eco','學生餐廳',1195,905,'food'],
   ['ib_trade','ib','貿易中心',1575,385,'tall'],['ib_lang','ib','語言中心',1715,345,'house'],['ib_port','ib','國際港',1770,500,'port'],
@@ -331,6 +337,7 @@ const BLD_TEXT={
   acc_ledger:'會計島的主教室。〈初級會計〉〈中級會計〉都在這裡上，別島的學生也會過橋來修〈會計學〉。',
   acc_audit:'練習查帳的地方：抽樣、對帳、找出報表裡不合理的數字。',
   acc_firm:'會計師事務所，高年級學生在這裡實習，體驗年底盤點和查核。',
+  cfo:'一般公司的財務部，分成會計、財務規劃與分析（FP&A）、財務（資金管理）三個部門。',
   fin_trade:'牆上滿是報價螢幕的交易室。上課模擬下單，晚上九點半會有人留下來等美股開盤。',
   fin_inv:'〈投資學〉〈公司理財〉〈財務數學〉的教室，也是別島學生最常來修課的地方。',
   fin_bank:'銀行、證券、投信排成一條街，是財金島的出口港：實習和第一份工作多半從這裡開始。',
@@ -349,7 +356,7 @@ const ROLES={
   fin:{label:'財金系',shirt:'#e0a12a',w:4},ib:{label:'國企系',shirt:'#3a8fc4',w:3},eco:{label:'經濟系',shirt:'#5aab5c',w:3},acc:{label:'會計系',shirt:'#d0603f',w:3},
   sta:{label:'統計系',shirt:'#9a82c0',w:.6},tax:{label:'財稅系',shirt:'#9a82c0',w:.5},ins:{label:'保險系',shirt:'#9a82c0',w:.6},prof:{label:'老師',shirt:'#2d3a55',w:1.1}
 };
-const HOME={fin:['fin_trade','fin_inv','fin_bank'],ib:['ib_trade','ib_lang','ib_port'],eco:['eco_forum','eco_lab','eco_lib'],acc:['acc_ledger','acc_audit','acc_firm'],
+const HOME={fin:['fin_trade','fin_inv','fin_bank','cfo'],ib:['ib_trade','ib_lang','ib_port'],eco:['eco_forum','eco_lab','eco_lib'],acc:['acc_ledger','acc_audit','acc_firm','cfo'],
   sta:['sta_light'],tax:['tax_house'],ins:['ins_tower']};
 const COURSES={fin:['投資學','公司理財','衍生性商品','財務數學','金融市場','程式交易'],ib:['國際行銷','國際貿易實務','跨文化管理','國際企業管理','全球供應鏈'],
   eco:['個體經濟學','總體經濟學','計量經濟學','賽局理論','行為經濟學'],acc:['中級會計學','成本與管理會計','審計學','會計資訊系統'],
@@ -467,6 +474,10 @@ function building(g,b){const roof=ISL[b.isl].roof,x=b.x,y=b.y;
   if(b.kind==='lighthouse'){g.fillStyle='#fbf7ee';g.beginPath();g.moveTo(x-14,y);g.lineTo(x-9,y-78);g.lineTo(x+9,y-78);g.lineTo(x+14,y);g.fill();
     g.fillStyle=roof;[12,40].forEach(o=>{g.fillRect(x-12+o*.06,y-o-12,24-o*.12,12)});g.fillStyle='#ffe9a6';g.fillRect(x-10,y-94,20,16);WIN.push([x-10,y-94,20,16]);
     g.fillStyle=roof;g.beginPath();g.moveTo(x-14,y-94);g.lineTo(x,y-110);g.lineTo(x+14,y-94);g.fill();return}
+  if(b.kind==='cfo'){box(120,58,16);wins(120,58,6,2,10);g.fillStyle='#8a6a4a';g.fillRect(x-6,y-14,12,14);
+    [['#c4573b','會計'],['#6c7a89','FP&A'],['#d99a22','財務']].forEach(([c,t],i)=>{g.fillStyle=c;g.fillRect(x-62+i*41.3,y-74,41.3,17);
+      g.fillStyle='#fff';g.font='700 12px "Noto Sans TC",sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(t,x-62+i*41.3+20.6,y-65.5)});
+    g.fillStyle='#4a4f57';g.fillRect(x-64,y-77,128+16,3);return}
   if(b.kind==='tower'){box(34,90,14);wins(34,90,1,5,10);g.fillStyle=roof;g.beginPath();g.moveTo(x-22,y-90);g.lineTo(x,y-122);g.lineTo(x+22,y-90);g.fill();return}
   if(b.kind==='port'){ // crane + warehouse
     box(70,34,16);g.fillStyle=roof;g.fillRect(x-38,y-40,76,8);
@@ -519,7 +530,7 @@ function reason(role,to,m,course,from){
   if(role==='prof')return`去${B[to].name}上課`;
   const c=COURSES[role]?pick(COURSES[role]):'';
   const map={fin_trade:'去交易室做模擬交易',fin_bank:'去銀行街聽業師講課',ib_port:'去港口看貨櫃怎麼出口',ib_lang:'練習商用英文簡報',
-    acc_audit:'去審計所練習查帳',acc_firm:'去事務所實習',eco_forum:'去政策論壇辯論央行該不該升息',eco_lab:'去研究室跑迴歸',tax_house:'上〈稅務法規〉',ins_tower:'上〈精算數學〉',sta_light:'上〈數理統計〉'};
+    acc_audit:'去審計所練習查帳',acc_firm:'去事務所實習',cfo:pick(['去企業財務部實習，幫忙月結','去企業財務部實習，幫忙編明年預算','去企業財務部看資金調度']),eco_forum:'去政策論壇辯論央行該不該升息',eco_lab:'去研究室跑迴歸',tax_house:'上〈稅務法規〉',ins_tower:'上〈精算數學〉',sta_light:'上〈數理統計〉'};
   return Math.random()<.5&&map[to]?map[to]:`去${B[to].name}上〈${c}〉`}
 function makeWalker(o){const nodes=route(o.from,o.to),pts=nodes.map(k=>N[k].slice());
   const off=(Math.random()-.5)*14;pts.forEach((p,i)=>{if(i>0&&i<pts.length-1){p[0]+=off;p[1]+=off*.5}});
@@ -593,7 +604,7 @@ function drawGuide(w,now){const S=1.95,moving=w.seg<w.pts.length-1,sw=moving&&!r
   ctx.strokeStyle='#22201e';ctx.lineWidth=.8;ctx.strokeRect(.5,-30.4,2.6,1.8);ctx.beginPath();ctx.moveTo(3.1,-29.5);ctx.lineTo(4.4,-29.5);ctx.stroke();
   ctx.restore()}
 /* 太陽：06:00 從東邊升起（影子朝西），中午在南方（影子短、朝北），18:00 在西邊（影子朝東） */
-const BDIM={lighthouse:[28,110],tower:[34,122],port:[76,80],tall:[62,80],lib:[96,72],food:[84,50],bank:[88,70],house:[72,62]};
+const BDIM={cfo:[136,74],lighthouse:[28,110],tower:[34,122],port:[76,80],tall:[62,80],lib:[96,72],food:[84,50],bank:[88,70],house:[72,62]};
 function sunAt(m){const t=Math.max(0,Math.min(1,(m-360)/720)),ph=Math.PI*t;
   const L=.3+1.35*Math.pow(1-Math.sin(ph),1.3);const a=m<400||m>1110?0:Math.min(1,Math.min(m-400,1110-m)/40);
   return{dx:-Math.cos(ph),dy:-Math.sin(ph)*.55,L,a,t}}
@@ -709,6 +720,7 @@ function islandCard(k,n){const I=ISL[k];return`
   <div class="sec"><h4>適合登陸的人</h4>${ul(I.who)}</div>
   <div class="sec"><h4>未來的出口港</h4>${ul(I.jobs)}</div>
   <div class="sec"><h4>常見證照與考試</h4>${chips(I.certs)}</div>
+  ${(k==='acc'||k==='fin')?`<div class="sec"><h4>一般公司的財務部</h4><p>${k==='acc'?'會計島的人很多會走到一般公司的財務部。即使先進會計師事務所，除非一路考上會計師、成為合夥人，多數人之後也會轉往企業財務部發展。':'財金島的人多數進銀行、證券、投信等金融業；也有一部分進一般公司的財務部，在規模較大的企業負責財務規劃與分析（FP&A）或資金管理。'}</p><button class="btn minibtn" type="button" onclick="showBuilding('cfo')">看企業財務部</button></div>`:''}
   <div class="sec"><h4>有橋相通</h4><p>${BRIDGES.filter(b=>b[0]===k||b[1]===k).map(b=>`${ISL[b[0]===k?b[1]:b[0]].short}（${b[2]}）`).join('、')}</p></div>
   <div class="myth" style="--c:${I.hex}">${I.myth}</div>`}
 function render(i,walking){const s=TOUR[i];let html='';
@@ -739,8 +751,13 @@ function setWalking(on){const el=document.getElementById('walking');if(el)el.tex
 function bindCalc(){const r=document.getElementById('cr'),y=document.getElementById('cy'),f=()=>{const R=+r.value,Y=+y.value,v=100000*Math.pow(1+R/100,Y);
   document.getElementById('crv').textContent=R;document.getElementById('cyv').textContent=Y;
   document.getElementById('cout').innerHTML=`100,000 × (1+${(R/100).toFixed(2)})<sup>${Y}</sup> ≈ <b>${Math.round(v).toLocaleString()}</b> 元<br>72 法則：約 ${(72/R).toFixed(1)} 年翻倍`};r.oninput=f;y.oninput=f;f()}
+const CFO_HTML=`<p class="q" style="margin-top:8px">一般公司的財務部，是會計人最常見的長期舞台，也是部分財金人的去處。</p>
+  <div class="sec"><p>大型企業的財務部通常分成三個部門，都向財務長（CFO）報告。多數公司的人力需求仍以會計、帳務為主；只有規模較大的企業，才會有專門的財務規劃與分析（FP&A）和資金管理團隊。</p></div>
+  <div class="cforow" style="--c:#c4573b"><b class="t">會計（Accounting）</b><p class="ask">回答：上個月賺了多少？</p><p>記帳、月結和年結、編財務報表、稅務、內部控制，確保數字正確、符合規範。最靠近會計島。</p><p class="ajie">阿傑問：東京店上個月到底有沒有賺錢？</p></div>
+  <div class="cforow" style="--c:#6c7a89"><b class="t">財務規劃與分析（FP&A）</b><p class="ask">回答：接下來該怎麼做？</p><p>編預算、做預測、分析實際和預算差在哪裡，評估新店、新產品划不划算，把數字提供給各部門主管做決策。用會計的數字回答財金的問題，又天天跟業務、營運主管開會，站在會計、財金和管理的交界。</p><p class="ajie">阿傑問：明年東京店的預算要多少？三年能不能回本？</p></div>
+  <div class="cforow" style="--c:#d99a22"><b class="t">財務（Treasury）</b><p class="ask">回答：錢從哪裡來、怎麼管？</p><p>管現金、跟銀行借錢、處理匯率風險、調度資金；上市公司還要負責投資人關係。最靠近財金島。</p><p class="ajie">阿傑問：3,000 萬要跟哪家銀行借？日圓要不要避險？</p></div>`;
 function showBuilding(id){const b=B[id],I=ISL[b.isl];offRoute=true;document.body.classList.add('focus');guideTo(id);pending=null;focusPoint(b.x,b.y-40,Math.min(2.8,Math.max(camT.z,2.3)));
-  card.innerHTML=`<span class="flag" style="background:${I.hex}">${I.name}</span><h2>${b.name}</h2><div class="walking" id="walking"></div><p style="margin-top:8px">${BLD_TEXT[id]}</p>
+  card.innerHTML=`<span class="flag" style="background:${I.hex}">${I.name}</span><h2>${b.name}</h2><div class="walking" id="walking"></div>${id==='cfo'?CFO_HTML:`<p style="margin-top:8px">${BLD_TEXT[id]}</p>`}
     <button class="btn minibtn" type="button" id="seeIsl">看整座${I.name}</button>`;setWalking(!guideIdle);
   document.getElementById('seeIsl').onclick=()=>{const i=TOUR.findIndex(s=>s.id===b.isl);go(i>=0?i:5)};
   document.getElementById('stepNo').textContent='路線外的地點';Object.entries(pins).forEach(([k,p])=>p.classList.toggle('active',k===id));
