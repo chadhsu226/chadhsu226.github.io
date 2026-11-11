@@ -10,6 +10,12 @@
 
 ---
 
+## 2026-11-11 — Claude — 校園導覽加入路易莎 logo、縮小全家 logo
+- 做了什麼：clusters/mcu-campus-tour.html 在全家右下方、4 號電梯正上方加上路易莎咖啡 logo（SVG 內嵌）；全家 logo（地圖與圖例）縮小到與路易莎同尺寸；E 棟系所旗稍往右上移，避免擋住 logo
+- 為什麼：Sean 要求（來源：本機 財經學群介紹/銘傳管理學院_校園導覽.html）
+- 動到的檔案：clusters/mcu-campus-tour.html、AGENT_LOG.md
+- Commit：（見本次 commit）
+
 ## 2026-11-10 — Claude — 學群介紹新增第 4 張小卡「財金系辦公室」
 - 做了什麼：新增 clusters/finance-dept-office.html（來源：本機 財經學群介紹/財金系辦公室_E503_3D_室內視角.html）；首頁 section#clusters 加第 4 張卡，格線改 lg:grid-cols-4
 - 為什麼：Sean 要求
