@@ -10,6 +10,13 @@
 
 ---
 
+## 2026-11-13 — Claude — 新增「企業實習」資訊站與首頁卡片
+- 做了什麼：建立 internship repo（index.html 以 JS 陣列 INTERNSHIPS 管理實習卡片，過截止日自動標「已截止」、14 天內標「剩 N 天」；files/<id>/ 放廠商海報與 PDF；.nojekyll），啟用 GitHub Pages；首頁「精選課程」加入第 8 張卡片
+- 為什麼：Sean 負責財金系企業實習課程，要把廠商或李修全主任轉寄的實習信件整理公開。規則：不放學生資料、不放廠商承辦人 email/分機（聯絡寫「請洽系辦」），發布前先經 Sean 確認。首則：中租 2027 企金業務實習（11/12 來信，截止 2026/12/31）
+- 新增實習：在 internship/index.html 的 INTERNSHIPS 陣列加一筆物件（id、company、title、deadline=YYYY-MM-DD 等），附件放 files/<id>/
+- 動到的檔案：index.html、AGENT_LOG.md；新 repo chadhsu226/internship
+- Commit：（見本次 commit）
+
 ## 2026-11-11 — Claude — 校園導覽加入路易莎 logo、縮小全家 logo
 - 做了什麼：clusters/mcu-campus-tour.html 在全家右下方、4 號電梯正上方加上路易莎咖啡 logo（SVG 內嵌）；全家 logo（地圖與圖例）縮小到與路易莎同尺寸；E 棟系所旗稍往右上移，避免擋住 logo
 - 為什麼：Sean 要求（來源：本機 財經學群介紹/銘傳管理學院_校園導覽.html）
