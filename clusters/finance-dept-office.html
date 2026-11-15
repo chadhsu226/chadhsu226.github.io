@@ -928,6 +928,49 @@ function liveFrame(dt){
   STEAM.forEach((s,i)=>{const u=(T*.32+s.o)%1,sc=.35+u*.65;s.sp.position.set(s.x+Math.sin(T*1.3+i)*.14*u,DESKH+.75+u*1.7,s.z);s.sp.scale.set(sc,sc,1);s.sp.material.opacity=Math.sin(u*Math.PI)*.34});
   if(SUNK>.02){const a=moteGeo.attributes.position;for(let i=0;i<MOTE_N;i++)a.setXYZ(i,moteBase[i*3]+Math.sin(T*.25+i)*.5,moteBase[i*3+1]+Math.sin(T*.18+i*2)*.6,moteBase[i*3+2]+Math.cos(T*.21+i*1.3)*.5);a.needsUpdate=true}}
 
+/* ════════ 合照：飲水機上方的牆面，掛一幅五位同仁的卡通合照 ════════ */
+const GPHOTO={};
+if(renderer)try{
+  const ORDER=['tsai','gao','hou','chen','zhou'],PW=1160,PH=580,CW=1280,CH=800;
+  /* 1) 照片：背景＋彩旗＋五個 3D 角色 */
+  const photo=document.createElement('canvas');photo.width=PW;photo.height=PH;const pg=photo.getContext('2d');
+  {const w=pg.createRadialGradient(PW/2,PH*.2,40,PW/2,PH*.5,PW*.62);w.addColorStop(0,'#fffaf0');w.addColorStop(1,'#cfe8da');pg.fillStyle=w;pg.fillRect(0,0,PW,PH);
+   const fl=pg.createLinearGradient(0,PH*.72,0,PH);fl.addColorStop(0,'#ecd3a6');fl.addColorStop(1,'#d9b57e');pg.fillStyle=fl;pg.fillRect(0,PH*.72,PW,PH*.28);
+   pg.fillStyle='rgba(120,90,50,.22)';pg.fillRect(0,PH*.72-3,PW,3);
+   pg.strokeStyle='#7b6a55';pg.lineWidth=3;pg.beginPath();pg.moveTo(30,24);pg.quadraticCurveTo(PW/2,52,PW-30,24);pg.stroke();
+   const cols=['#e2574c','#f2c165','#1f55a8','#4fb3a6','#ff8fab','#f39c4a'];
+   for(let i=0;i<17;i++){const t=(i+.5)/17,x=30+(PW-60)*t,y=(1-t)*(1-t)*24+2*(1-t)*t*38+t*t*24+1;
+     pg.fillStyle=cols[i%cols.length];pg.beginPath();pg.moveTo(x-16,y);pg.lineTo(x+16,y);pg.lineTo(x,y+34);pg.closePath();pg.fill()}}
+  const r2=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r2.setSize(PW,PH,false);r2.outputEncoding=THREE.sRGBEncoding;
+  const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight('#fffaf0','#d9c3a5',1));
+  const dl=new THREE.DirectionalLight('#fff3dd',.6);dl.position.set(-5,9,12);sc.add(dl);
+  const blob=new THREE.MeshBasicMaterial({map:softTex,color:'#4a3a28',transparent:true,opacity:.4,depthWrite:false});
+  ORDER.forEach((id,i)=>{const d=STAFF.find(s=>s.id===id),m=makeChar(d.look),x=(i-2)*3.05,z=[.9,.35,-.5,.35,.9][i];
+    m.root.position.set(x,0,z);m.root.rotation.y=(2-i)*.09;m.head.rotation.z=-(2-i)*.05;
+    if(i===0){m.arms[0].rotation.z=-2.7;m.face.material=m.fHappy}
+    if(i===4){m.arms[1].rotation.z=2.7;m.face.material=m.fHappy}
+    sc.add(m.root);const b=new THREE.Mesh(new THREE.PlaneGeometry(1,1),blob);b.rotation.x=-Math.PI/2;b.scale.set(4.2,2.6,1);b.position.set(x,.03,z+.15);sc.add(b)});
+  const cam=new THREE.PerspectiveCamera(30,PW/PH,.1,100);cam.position.set(0,3.7,17);cam.lookAt(0,3.5,0);
+  r2.render(sc,cam);pg.drawImage(r2.domElement,0,0);r2.dispose();try{r2.forceContextLoss()}catch(_){}
+  /* 2) 相紙：白邊＋照片＋說明文字 */
+  const C=document.createElement('canvas');C.width=CW;C.height=CH;
+  const tex=new THREE.CanvasTexture(C);tex.encoding=THREE.sRGBEncoding;tex.anisotropy=8;
+  const paint=()=>{const g=C.getContext('2d');g.fillStyle='#fffdf8';g.fillRect(0,0,CW,CH);g.drawImage(photo,60,60);
+    g.strokeStyle='rgba(120,95,60,.4)';g.lineWidth=3;g.strokeRect(60,60,PW,PH);
+    g.save();g.beginPath();g.rect(60,60,PW,PH);g.clip();const gl=g.createLinearGradient(60,60,60+PW*.55,60+PH);gl.addColorStop(0,'rgba(255,255,255,.2)');gl.addColorStop(.45,'rgba(255,255,255,0)');g.fillStyle=gl;g.fillRect(60,60,PW,PH);g.restore();
+    g.textAlign='center';g.textBaseline='middle';
+    g.fillStyle='#4a3a28';g.font='700 54px "LXGW WenKai TC","Noto Sans TC",serif';g.fillText('財金系辦公室・同仁合照',CW/2,707);
+    g.fillStyle='#8a7a62';g.font='500 26px "IBM Plex Mono",monospace';g.fillText('DEPARTMENT OF FINANCE · E503',CW/2,757);tex.needsUpdate=true};
+  paint();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(paint);
+  /* 3) 相框：掛在右牆、飲水機正上方 */
+  const FW=7.6,FH=5.0,PRW=7.0,PRH=PRW*CH/CW,g=new THREE.Group();
+  const sh=new THREE.Mesh(new THREE.PlaneGeometry(FW+1.4,FH+1.4),new THREE.MeshBasicMaterial({map:softTex,color:'#3a2a1a',transparent:true,opacity:.3,depthWrite:false}));sh.position.set(.05,FH/2-.15,.005);g.add(sh);
+  rbox(FW,FH,.45,'#c48b52',0,0,.225,.12,g);
+  const pm=new THREE.Mesh(new THREE.PlaneGeometry(PRW,PRH),new THREE.MeshStandardMaterial({map:tex,roughness:.5}));pm.position.set(0,FH/2,.462);g.add(pm);
+  g.position.set(RW-.02,8.9,26.6);g.rotation.y=-Math.PI/2;g.traverse(o=>{if(o.isMesh)o.castShadow=false});
+  scene.add(g);inn(g);Object.assign(GPHOTO,{canvas:C,photo,group:g,tex});
+}catch(e){console.warn('合照製作失敗',e)}
+
 /* ── loop ── */
 let last=0;
 function loop(now){const dt=Math.min(.05,(now-(last||now))/1000);last=now;update(dt);meTick(dt);crTick(dt);
