@@ -10,6 +10,12 @@
 
 ---
 
+## 2026-11-16 — Claude — 新增「AI 投資決策中樞」入口（ai-hub repo）
+- 做了什麼：首頁在「教學資源」與「放鬆心情」之間新增 AI LAB 區塊，放一張連到 https://chadhsu226.github.io/ai-hub/ 的 banner（標示 BETA）
+- 為什麼：Sean 新專案「AI 投資決策中樞」以獨立 repo chadhsu226/ai-hub 部署。GitHub Actions 盤中約每 10 分鐘自動 commit data/，所以不放進本站，避免主站一直重建。程式由開發端 agent 撰寫，GitHub agent 依 AI hub 資料夾的 DEPLOY.md / CHANGELOG.md 同步上線
+- 動到的檔案：index.html、AGENT_LOG.md；新 repo chadhsu226/ai-hub
+- Commit：（見本次 commit）
+
 ## 2026-11-15 — Claude — 財金系辦公室生動版再更新
 - 做了什麼：以本機最新 財金系辦公室_E503_3D_生動版.html 覆蓋 clusters/finance-dept-office.html
 - 為什麼：Sean 改版
