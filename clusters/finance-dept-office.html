@@ -110,6 +110,20 @@ footer a{color:var(--ink)}
 .cr-go{flex:1;min-width:120px;border:0;background:var(--mcu);color:#fff;border-radius:999px;padding:10px 16px;font:700 15px var(--f-body);cursor:pointer}
 .cr-sec{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;font-size:14px;cursor:pointer}
 @media (max-width:640px){#creator{grid-template-columns:1fr;grid-template-rows:38% 62%}.cr-panel{border-left:0;border-top:1px solid var(--line)}}
+/* 詢問面板 */
+.ask{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:4;width:min(380px,calc(100% - 24px));background:#fff;border:2px solid var(--mcu);border-radius:14px;padding:10px 34px 11px 12px;box-shadow:0 8px 22px rgba(31,85,168,.22)}
+.ask label{display:block;font:700 14px var(--f-body);margin:0 0 6px}
+.ask select{width:100%;font:500 15px var(--f-body);padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.ask select:focus{outline:2px solid var(--mcu);outline-offset:1px}
+.ask .ans{margin-top:8px;padding:7px 10px;background:#eef4fc;border-left:3px solid var(--mcu);border-radius:0 8px 8px 0;font:500 14px/1.5 var(--f-body);white-space:pre-line}
+.ask .ans.ok{background:#e9f7ef;border-left-color:#2f9e6a}
+.ask .go{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ask .go:empty{display:none}
+.ask .go button{border:1px solid var(--mcu);color:var(--mcu);background:#fff;border-radius:999px;padding:4px 12px;font:500 13px var(--f-body);cursor:pointer}
+.ask .go button:hover{background:var(--mcu);color:#fff}
+.ask .x{position:absolute;top:4px;right:6px;border:0;background:none;font-size:22px;line-height:1;color:var(--muted);cursor:pointer;padding:4px 6px}
+@media (min-width:861px){.ask{left:12px;top:10px;transform:none;width:330px}}
+@media (max-width:640px){.ask{top:auto;bottom:10px}}
 /* 生動版：對話泡泡與搖桿 */
 .bub{position:absolute;left:0;top:0;z-index:2;transform:translate(-50%,-100%);width:max-content;max-width:210px;background:#fff;color:var(--ink);border-radius:14px;padding:6px 12px;font:500 13.5px/1.4 var(--f-body);box-shadow:0 4px 14px rgba(29,43,54,.24);pointer-events:none;text-align:center;transition:opacity .25s}
 .bub::after{content:"";position:absolute;left:50%;bottom:-5px;width:11px;height:11px;background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:2px}
@@ -147,6 +161,7 @@ footer a{color:var(--ink)}
     <div class="exbar" id="exbar" hidden><button id="waveBtn" type="button">揮手</button><button id="restyleBtn" type="button">換造型</button><button id="leaveBtn" type="button">離開辦公室</button></div>
     <button class="talk" id="talkBtn" type="button" hidden></button>
     <div class="joy" id="joy" hidden aria-hidden="true"><i></i></div>
+    <div class="ask" id="ask" hidden role="region" aria-label="詢問同仁"><button class="x" id="askX" type="button" aria-label="關閉">×</button><label for="askSel" id="askLab">有什麼需要幫忙的嗎？</label><select id="askSel"></select><div class="ans" id="askAns" aria-live="polite" hidden></div><div class="go" id="askGo"></div></div>
     <div id="creator" hidden role="dialog" aria-label="建立你的角色"><div class="cr-prev" id="crPrev"><div class="tag3 me" id="crTag">同學</div><span class="cr-tip">拖曳可轉動角色</span></div><div class="cr-panel" id="crPanel"></div></div>
     <div class="hint" id="hint">點人物或名片，跟著地上的路線找到他；拖曳可左右張望、滾輪可前後移動</div>
   </div>
@@ -688,7 +703,7 @@ function select(p){openP=p;document.getElementById('hint').hidden=true;goHome(p)
     try{navigator.clipboard.writeText(d.mail).then(()=>{cp.textContent='已複製'},sel)}catch(_){sel()}};
   document.querySelectorAll('.pc').forEach(b=>b.classList.toggle('on',b.dataset.id===p.id));placeOverlays();
   if(!ME.on)later(reduce?.3:2.7,()=>{if(openP===p&&!ME.on)say(p,choice(HELLO),3.2)})}
-function closeCard(){if(ME.d0){camT.dist=ME.d0;ME.d0=0}if(openP)BUBS.forEach(b=>{if(b.o===openP)b.t=Math.min(b.t,0)});openP=null;card.hidden=true;P.forEach(q=>q.m.root.visible=true);ROUTE.pts=null;routeGroup.clear();if(!ME.on)overview();document.querySelectorAll('.pc').forEach(b=>b.classList.remove('on'))}
+function closeCard(){askClose();if(ME.d0){camT.dist=ME.d0;ME.d0=0}if(openP)BUBS.forEach(b=>{if(b.o===openP)b.t=Math.min(b.t,0)});openP=null;card.hidden=true;P.forEach(q=>q.m.root.visible=true);ROUTE.pts=null;routeGroup.clear();if(!ME.on)overview();document.querySelectorAll('.pc').forEach(b=>b.classList.remove('on'))}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCard()});
 const cards=document.getElementById('cards');
 STAFF.forEach((d,i)=>{const b=document.createElement('button');b.type='button';b.className='pc';b.dataset.id=d.id;b.setAttribute('aria-label',`${d.role} ${d.name}，顯示座位路線與聯絡資訊`);
@@ -758,7 +773,7 @@ function leaveOffice(){ME.on=false;if(ME.m)scene.remove(ME.m.root);ME.m=null;ME.
   enterBtn.hidden=false;exbar.hidden=true;joy.hidden=true;hintEl.textContent='點人物或名片，跟著地上的路線找到他；拖曳可左右張望、滾輪可前後移動';closeCard();overview()}
 function talkTo(p){ME.talkTo=null;ME.path=null;const o=ME.o;o.tr=Math.atan2(p.x-o.x,p.y-o.y);p.wave=2.6;o.wave=1.2;select(p);
   if(!ME.d0)ME.d0=camT.dist;camT.dist=Math.min(camT.dist,17);{const a=Math.atan2(p.x-o.x,p.y-o.y),wr=d=>((d+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI,sc=c=>Math.abs(wr(c))+.05*Math.abs(wr(c-camT.az)),c1=a+Math.PI/2,c2=a-Math.PI/2;camT.az+=wr((sc(c1)<sc(c2)?c1:c2)-camT.az);o.tr=Math.atan2(Math.sin(a)+Math.sin(camT.az)*.85,Math.cos(a)+Math.cos(camT.az)*.85)}const g=greetWord();say(o,g+'！',1.6,'me');sfx('pop');
-  later(.9,()=>{if(openP===p&&ME.on){say(p,`${g}，${meName()}！${choice(GREETS)}`,4.4);sfx('pop')}})}
+  later(.9,()=>{if(openP===p&&ME.on){say(p,`${g}，${meName()}！有什麼需要幫忙的嗎？`,5.5);sfx('pop');askOpen(p)}})}
 function meGo(x,y,p){if(!ME.o)return;const pts=findPath(ME.o.x,ME.o.y,x,y);if(!pts)return;ME.path=pts;ME.seg=0;ME.talkTo=p||null;
   const e=pts[pts.length-1],[wx,wz]=W(e);mark.position.x=wx;mark.position.z=wz;mark.material.opacity=.95}
 function meClick(e){const p=pick(e);if(p){const c=(SEAT[p.id].face==='right'?[[4,-44],[4,44],[30,-30],[30,30],[38,0]]:[[44,-2],[-44,-2],[0,-40]]).find(c=>freeAt(p.x+c[0],p.y+c[1]))||[38,0];meGo(p.x+c[0],p.y+c[1],p);return}
@@ -970,6 +985,36 @@ if(renderer)try{
   g.position.set(RW-.02,8.9,26.6);g.rotation.y=-Math.PI/2;g.traverse(o=>{if(o.isMesh)o.castShadow=false});
   scene.add(g);inn(g);Object.assign(GPHOTO,{canvas:C,photo,group:g,tex});
 }catch(e){console.warn('合照製作失敗',e)}
+
+
+/* ════════ 詢問同仁：打招呼後選問題類別，找對人／找錯人 ════════ */
+var askP=null,askTok=0;
+const ASK_TOPICS=['畢業審查','選課','畢業專題','證照','研究所','會計學相關','財務管理相關','企業實習','其他'];
+/* 職掌表（由使用者提供）：同仁 id → 負責的類別 */
+const DUTY={chen:['畢業審查','選課'],zhou:['畢業專題','證照'],tsai:['會計學相關','企業實習'],gao:['研究所','企業實習','財務管理相關'],hou:['研究所']};
+const DUTY_ORDER=['chen','zhou','tsai','gao','hou'];
+const askEl=document.getElementById('ask'),askSel=document.getElementById('askSel'),askAns=document.getElementById('askAns'),askGo=document.getElementById('askGo'),askLab=document.getElementById('askLab');
+{const ph=document.createElement('option');ph.value='';ph.textContent='請選擇你要問的事…';ph.disabled=true;ph.selected=true;askSel.append(ph);
+ ASK_TOPICS.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;askSel.append(o)})}
+function askReply(p,topic){
+  if(topic==='其他'){if(p.id==='chen')return{text:'找我就對了',ok:true,who:[]};return{text:'其他的問題請詢問陳俐靜',ok:false,who:[P.find(q=>q.id==='chen')]}}
+  if(DUTY[p.id].includes(topic))return{text:'找我就對了',ok:true,who:[]};
+  const who=DUTY_ORDER.filter(id=>DUTY[id].includes(topic)).map(id=>P.find(q=>q.id===id));
+  return{text:`${topic}的問題請詢問${who.map(q=>q.d.name).join('或')}`,ok:false,who}}
+function askOpen(p){askP=p;askTok++;askLab.textContent=`${p.d.name}：有什麼需要幫忙的嗎？`;askSel.selectedIndex=0;askAns.hidden=true;askGo.textContent='';askEl.hidden=false;hintEl.style.visibility='hidden';if(COARSE)joy.hidden=true}
+function askClose(){askP=null;askTok++;if(askEl)askEl.hidden=true;hintEl.style.visibility='';if(COARSE&&ME.on)joy.hidden=false}
+/* 走到某位同仁旁邊並打招呼（站位邏輯同點擊同仁） */
+function goTalk(q){closeCard();const c=(SEAT[q.id].face==='right'?[[4,-44],[4,44],[30,-30],[30,30],[38,0]]:[[44,-2],[-44,-2],[0,-40]]).find(c=>freeAt(q.x+c[0],q.y+c[1]))||[38,0];meGo(q.x+c[0],q.y+c[1],q)}
+askSel.addEventListener('change',()=>{const p=askP,topic=askSel.value;if(!p||!topic||!ME.on||!ME.o)return;askSel.selectedIndex=0;askSel.blur();
+  const tok=++askTok,r=askReply(p,topic);askGo.textContent='';askAns.hidden=false;askAns.className='ans';askAns.textContent=`你：${topic}`;
+  say(ME.o,`想問：${topic}`,.8,'me');sfx('pop');
+  later(.8,()=>{if(askP!==p||askTok!==tok)return;
+    askAns.className='ans'+(r.ok?' ok':'');askAns.textContent=`你：${topic}\n${p.d.name}：${r.text}`;
+    say(p,r.text,6.5);sfx('pop');if(r.ok)p.wave=1.4;
+    r.who.forEach(q=>{const b=document.createElement('button');b.type='button';b.textContent=`去找${q.d.name}`;b.onclick=()=>goTalk(q);askGo.append(b)})})});
+document.getElementById('askX').onclick=askClose;
+/* 走遠了就收起面板 */
+setInterval(()=>{if(!askP)return;if(!ME.on||!ME.o||Math.hypot(askP.x-ME.o.x,askP.y-ME.o.y)>125)askClose()},300);
 
 /* ── loop ── */
 let last=0;

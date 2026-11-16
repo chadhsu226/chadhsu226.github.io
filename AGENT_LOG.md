@@ -10,6 +10,12 @@
 
 ---
 
+## 2026-11-16 — Claude — 財金系辦公室生動版再更新
+- 做了什麼：以本機最新 財金系辦公室_E503_3D_生動版.html 覆蓋 clusters/finance-dept-office.html
+- 為什麼：Sean 改版
+- 動到的檔案：clusters/finance-dept-office.html、AGENT_LOG.md
+- Commit：（見本次 commit）
+
 ## 2026-11-16 — Claude — AI 投資決策中樞入口移到早報下方
 - 做了什麼：把 AI LAB 區塊（ai-hub banner）從「教學資源」下方，移到「今日股市看盤重點」早報卡片正下方、「精選課程」上方。區塊內容不變
 - 為什麼：Sean 指定的位置
