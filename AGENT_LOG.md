@@ -10,6 +10,12 @@
 
 ---
 
+## 2026-11-19 — Claude — 聖誕版改英文檔名、移除中文檔名生動版
+- 做了什麼：clusters/財金系辦公室_E503_3D_聖誕版.html → clusters/finance-dept-office_xmas.html；刪除 clusters/財金系辦公室_E503_3D_生動版.html（與 finance-dept-office.html 內容相同）；首頁卡片改連 finance-dept-office_xmas.html
+- 為什麼：Sean 希望網址用英文檔名
+- 動到的檔案：上述檔案、index.html、AGENT_LOG.md
+- Commit：（見本次 commit）
+
 ## 2026-11-19 — Claude — 新增財金系辦公室聖誕版、生動版中文檔名上傳
 - 做了什麼：新增 clusters/財金系辦公室_E503_3D_聖誕版.html、clusters/財金系辦公室_E503_3D_生動版.html（保留中文原檔名、內容原封不動）；首頁「財金系辦公室」卡片改連聖誕版（頁內右上角下拉可切回原版）。clusters/finance-dept-office.html 保留不刪，舊連結仍可用
 - 為什麼：Sean 要求
