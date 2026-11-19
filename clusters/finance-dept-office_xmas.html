@@ -1128,9 +1128,26 @@ build(t){
     h.traverse(o=>{if(o.isMesh)o.castShadow=true});h.scale.setScalar(sc*.9);return h}
   {const h=santaHat(.72);h.position.set(51.6,8.35,26.6);h.rotation.set(-.12,0,.18);g.add(h)}
   /* ── 角色的聖誕帽 ── */
-  t.hats=(m,on)=>{if(on&&!m.hat){const h=santaHat(1);h.position.set(0,1.0,-.05);h.rotation.set(-.18,0,.1);m.head.add(h);m.hat=h;
-    const p=P.find(q=>q.m===m);if(p)h.traverse(o=>{if(o.isMesh)o.userData.p=p})}   /* 點到帽子也算點到這個人 */
-    else if(!on&&m.hat){m.head.remove(m.hat);m.hat=null}};
+  /* 聖誕老人裝：紅外套＋白毛邊＋黑腰帶，紅褲＋黑靴，袖口白毛邊（換回原版時完整還原） */
+  const suitTex=canvasTex(256,128,(g,w,h)=>{const c=128;g.fillStyle='#c0282d';g.fillRect(0,0,w,h);
+    g.fillStyle='rgba(0,0,0,.08)';g.fillRect(0,0,w,h);g.fillStyle='#c0282d';g.fillRect(0,0,w,h);
+    g.fillStyle='#fffdf6';g.fillRect(0,0,w,16);g.fillRect(c-10,0,20,h);g.fillRect(0,h-18,w,18);
+    g.fillStyle='rgba(180,170,150,.35)';for(let k=0;k<26;k++){g.beginPath();g.arc((k*41)%w,(k%2?6:h-9),3,0,7);g.fill()}
+    g.fillStyle='#1d1a19';g.fillRect(0,70,w,18);g.fillStyle='#f2c165';g.fillRect(c-17,66,34,26);g.fillStyle='#1d1a19';g.fillRect(c-11,72,22,14);
+    g.fillStyle='#1d1a19';[34,52].forEach(y=>{g.beginPath();g.arc(c,y,3.2,0,7);g.fill()})});
+  const SUIT={body:new THREE.MeshStandardMaterial({map:suitTex,roughness:.8}),red:mat('#c0282d',{roughness:.8}),boot:mat('#2b2420',{roughness:.5}),fur:mat('#fffdf6',{roughness:.95})};
+  function dress(m,on,p){
+    if(on&&!m.suit){const o=m.suit={body:m.body.material,parts:[],cuffs:[]};
+      m.body.material=SUIT.body;
+      m.arms.forEach(a=>{o.parts.push([a.children[0],a.children[0].material]);a.children[0].material=SUIT.red;
+        const cf=new THREE.Mesh(new THREE.CylinderGeometry(.34,.33,.26,14),SUIT.fur);cf.position.y=-.98;cf.castShadow=true;if(p)cf.userData.p=p;a.add(cf);o.cuffs.push([a,cf])});
+      m.legs.forEach(l=>{o.parts.push([l.children[0],l.children[0].material],[l.children[1],l.children[1].material]);l.children[0].material=SUIT.red;l.children[1].material=SUIT.boot})}
+    else if(!on&&m.suit){const o=m.suit;m.body.material=o.body;o.parts.forEach(([mesh,mt])=>mesh.material=mt);o.cuffs.forEach(([a,cf])=>a.remove(cf));m.suit=null}}
+  t.hats=(m,on)=>{const p=P.find(q=>q.m===m);
+    if(on&&!m.hat){const h=santaHat(1);h.position.set(0,1.0,-.05);h.rotation.set(-.18,0,.1);m.head.add(h);m.hat=h;
+      if(p)h.traverse(o=>{if(o.isMesh)o.userData.p=p})}   /* 點到帽子也算點到這個人 */
+    else if(!on&&m.hat){m.head.remove(m.hat);m.hat=null}
+    dress(m,on,p)};
   /* ── 天花板：從橫樑垂下的吊飾（鳥瞰時隨天花板隱藏） ── */
   [[4,9],[4,40],[12.4,22],[12.4,46],[20.8,12],[20.8,36],[29.2,28],[29.2,6],[37.6,18],[37.6,44]].forEach(([z,x],i)=>{const len=1.3+(i%4)*.55,c=[RED,GOLD,'#5ab4e8','#ff8fab',GRN][i%5];
     cyl(.025,.025,len,'#e8e0c8',x,15.1-len,z,4,gi);sph(.42,c,x,15.1-len-.4,z,gi);cyl(.14,.14,.16,GOLD,x,15.1-len-.02,z,8,gi)});
