@@ -305,7 +305,7 @@ let WX_MODE='auto',WX_LIVE=null,WX_SRC='wait';  // 天氣：auto / clear / cloud
 function tpParts(){try{const o={};new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(new Date()).forEach(x=>o[x.type]=x.value);
     return{Y:+o.year,Mo:+o.month,D:+o.day,wd:o.weekday,H:+o.hour%24,M:+o.minute,Sec:+o.second}}
   catch(_){const d=new Date();return{Y:d.getFullYear(),Mo:d.getMonth()+1,D:d.getDate(),wd:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()],H:d.getHours(),M:d.getMinutes(),Sec:d.getSeconds()}}}
-function nowTP(){const p=tpParts();if(PREVIEW_T!=null){p.H=Math.floor(PREVIEW_T);p.M=Math.round((PREVIEW_T%1)*60)%60}p.h=p.H+p.M/60+p.Sec/3600;return p}
+function nowTP(){const p=tpParts();if(PREVIEW_T!=null){const tt=Math.round(PREVIEW_T*60);p.H=Math.floor(tt/60)%24;p.M=tt%60}p.h=p.H+p.M/60+p.Sec/3600;return p}
 function dayOfYear(p){return Math.round((Date.UTC(p.Y,p.Mo-1,p.D)-Date.UTC(p.Y,0,0))/864e5)}
 function sunTimes(p){/* NOAA 近似公式，回傳台灣時間（小時） */const n=dayOfYear(p),g=2*Math.PI/365*(n-1),
   eq=229.18*(.000075+.001868*Math.cos(g)-.032077*Math.sin(g)-.014615*Math.cos(2*g)-.040849*Math.sin(2*g)),
@@ -347,7 +347,19 @@ function applyLight(S,wx){const dim=wx==='rain'?.4:wx==='cloudy'?.6:1;
   sun.intensity=Math.max(.05,.85*S.day*dim);sun.color.set(S.day<.25?'#8fa3d9':lerpC('#fff3dd','#ff9a55',S.tw*.9*(wx==='clear'?1:.3)));
   WARM.intensity=.35+.95*(1-S.day)+(wx==='clear'?0:.25);
   const glow=lerpC('#fff4cf','#ffcf6e',1-S.day);BULBMATS.forEach(m=>m.color.set(glow));
-  scene.background.set(lerpC('#1c2236','#efe8dc',S.day));SUNK=S.day*(1-S.tw*.35)*(wx==='clear'?1:wx==='cloudy'?.22:.06);NIGHTK=1-S.day}
+  scene.background.set(lerpC('#1c2236','#efe8dc',S.day));SUNK=S.day*(1-S.tw*.35)*(wx==='clear'?1:wx==='cloudy'?.22:.06);NIGHTK=1-S.day;
+  /* 四個時段的色調：早上偏冷偏亮、中午中性、傍晚更暗更橘紅、晚上偏藍開燈 */
+  {const rs=S.st.rise,ss=S.st.set,h=S.h,cl=v=>Math.max(0,Math.min(1,v)),c=wx==='clear'?1:.45;
+    const mo=cl((rs+3.6-h)/2.6)*cl((h-rs+.2)/.8),du=cl((h-(ss-1.9))/1.9)*cl((ss+.6-h)/.6);S.mo=mo;S.du=du;
+    hemi.intensity*=(1+.14*mo*c)*(1-.3*du*c);
+    hemi.color.set(lerpC(lerpC('#'+hemi.color.getHexString(),'#eef6ff',mo*.85*c),'#ff9f82',du*.75*c));
+    sun.intensity*=(1+.12*mo*c)*(1-.22*du*c);
+    sun.color.set(lerpC(lerpC('#'+sun.color.getHexString(),'#e4f0ff',mo*.7*c),'#ff6a30',du*.85*c));
+    WARM.intensity+=.5*du*c;WARM.color.set(lerpC('#ffd9a0','#ff9650',du));
+    BULBMATS.forEach(m=>m.color.set(lerpC('#'+m.color.getHexString(),'#ffc45a',du*.8)));
+    scene.background.set(lerpC(lerpC('#'+scene.background.getHexString(),'#e6f1fa',mo*.5*c),'#e3a083',du*.45*c));
+    NIGHTK=Math.max(NIGHTK,du*.5);
+    try{SUNM.forEach(m=>m.color.set(lerpC('#ffe6ad','#ff6f3c',du*.95)));moteMat.color.set(lerpC('#fff1c9','#ffa56a',du))}catch(_){}}}
 /* 士林天氣（Open-Meteo，免金鑰）；連不上就依時間顯示晴天 */
 async function fetchWx(){try{const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),7000);
     const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=weather_code,cloud_cover,precipitation&timezone=Asia%2FTaipei`,{signal:ctl.signal});clearTimeout(tm);
